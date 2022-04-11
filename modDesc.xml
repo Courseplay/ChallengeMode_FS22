@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<modDesc descVersion="64">
+    <version>1.0.0.0</version>
+	<author><![CDATA[Courseplay.devTeam]]></author>
+	<title>
+		<en>Challenge Mode</en>
+		<de>Herausvorderungs Modus</de>
+	</title>
+
+    <description>
+        <en><![CDATA[Challenge.
+]]></en>
+		<de><![CDATA[Herausvorderung.
+]]></de>
+    </description>
+
+	<iconFilename>Icon_ChallangeMode.dds</iconFilename>
+    <multiplayer supported="true" />
+
+	<extraSourceFiles>
+		<sourceFile filename="LicensePlatesExtended.lua"/>
+	</extraSourceFiles>
+	<l10n>	
+		<text name="LPT_licensePlateAlreadyUsed"><de>Kennzeichen schon eingebaut in %s</de><en>License plate already in use %s</en></text>	
+		<text name="ui_tps_vehicleHeader"><de>Fahrzeuge</de><en>Vehicles</en></text>	
+		<text name="ui_tps_licensePlateHeader"><de>Kennzeichen</de><en>License plates</en></text>	
+	</l10n>
+	
+</modDesc>
