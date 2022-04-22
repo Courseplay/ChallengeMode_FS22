@@ -7,7 +7,7 @@
 		<de>Herausvorderungs Modus</de>
 	</title>
 
-    <description>
+	<description>
         <en><![CDATA[Challenge.
 ]]></en>
 		<de><![CDATA[Herausvorderung.
@@ -18,7 +18,10 @@
     <multiplayer supported="true" />
 
 	<extraSourceFiles>
-		<sourceFile filename="LicensePlatesExtended.lua"/>
+		<sourceFile filename="scripts/Util.lua"/>
+		<sourceFile filename="scripts/main.lua"/>
+		<sourceFile filename="scripts/challenges/Challenge.lua"/>
+		<sourceFile filename="scripts/managers/ChallengeManager.lua"/>
 	</extraSourceFiles>
 	<l10n>	
 		<text name="LPT_licensePlateAlreadyUsed"><de>Kennzeichen schon eingebaut in %s</de><en>License plate already in use %s</en></text>	
