@@ -20,8 +20,6 @@
 	<extraSourceFiles>
 		<sourceFile filename="scripts/Util.lua"/>
 		<sourceFile filename="scripts/main.lua"/>
-		<sourceFile filename="scripts/challenges/Challenge.lua"/>
-		<sourceFile filename="scripts/managers/ChallengeManager.lua"/>
 	</extraSourceFiles>
 	<l10n>	
 		<text name="LPT_licensePlateAlreadyUsed"><de>Kennzeichen schon eingebaut in %s</de><en>License plate already in use %s</en></text>	

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChallengeMod>
+	<victoryPoints>1000000</victoryPoints>
+	<moneyFactor>0.00001</moneyFactor>
+	<storageFactor>1</storageFactor>
+	<areaFactor>1</areaFactor>
+	<maxHelpers>1</maxHelpers>
+	<leaseVehicle>true</leaseVehicle>
+	<leaseMissionVehicle>true</leaseMissionVehicle>
+</ChallengeMod>
