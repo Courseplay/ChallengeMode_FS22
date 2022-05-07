@@ -104,7 +104,7 @@ function ChallengeMod:getTotalStorageAmount(farmId)
 			end
 		end
 	end
-
+	CmUtil.debugSparse("Total storage of: %.2f", totalFillLevel)
 	return totalFillLevel
 end
 
@@ -115,6 +115,7 @@ function ChallengeMod:getTotalArea(farmId)
 		local farmland = g_farmlandManager:getFarmlandById(farmlandId)
 		totalArea = totalArea + farmland.areaInHa
 	end
+	CmUtil.debugSparse("Total area of: %.2f", totalArea)
 	return totalArea
 end
 
@@ -123,10 +124,14 @@ function ChallengeMod:calculatePoints(farmId, farm)
 	local totalStorageAmount = self:getTotalStorageAmount(farmId)
 	local totalArea = self:getTotalArea(farmId)
 
-	self.victoryPointsByFarmId[farmId] = money * self.moneyFactor + totalStorageAmount * self.storageFactor + totalArea * self.areaFactor
+	local moneyPoints = money * self.moneyFactor
+	local storagePoints = totalStorageAmount * self.storageFactor
+	local areaPoints = totalArea * self.areaFactor
+	self.victoryPointsByFarmId[farmId] = moneyPoints + storagePoints + areaPoints
 	table.insert(self.drawData, {
 		name = farm.name,
-		value = string.format("%.2f", self.victoryPointsByFarmId[farmId])
+		value = string.format("%.2f, %.2f, %.2f, %.2f", self.victoryPointsByFarmId[farmId], 
+								moneyPoints, storagePoints, areaPoints)
 	})
 end
 
@@ -139,12 +144,15 @@ function ChallengeMod:update(dt)
 	self.drawData = {
 		{
 			name = "Farms",
-			value = "Points"
+			value = "Points, moneyPoints, storagePoints, areaPoints"
 		}
 	}
-	for farmId, farm in pairs(farms) do 
-
-		self:calculatePoints(farmId, farm)
+	for _, farm in pairs(farms) do 
+		local farmId = farm.farmId
+		if self:isValidFarm(farmId, farm) then
+			CmUtil.debugSparse("Calculating points for farm id: %d", farmId)
+			self:calculatePoints(farmId, farm)
+		end
 	end
 	table.sort(self.drawData, function (a, b)
 		return a.value>b.value		
@@ -152,7 +160,7 @@ function ChallengeMod:update(dt)
 end
 
 function ChallengeMod:draw()
-	DebugUtil.renderTable(0.61, 0.46, 0.02, self.drawData)	
+	DebugUtil.renderTable(0.2, 0.46, 0.02, self.drawData)	
 end
 
 g_challengeMod = ChallengeMod.new()
