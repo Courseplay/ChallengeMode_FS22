@@ -3,7 +3,7 @@ ChallengeMod = {
 	MOD_NAME = g_currentModName,
 	BASE_DIRECTORY = g_currentModDirectory,
 	baseXmlKey = "ChallengeMod.",
-	saveGameXmlFileName = "ChallengeMod",
+	configFileName = "ChallengeModConfig.xml",
 	areaFactor = 1,
 	storageFactor = 1,
 	moneyFactor = 1,
@@ -41,11 +41,11 @@ end
 function ChallengeMod:setup()
 	self:registerXmlSchema()
 
-	self.configFilePath = Utils.getFilename('config.xml', self.BASE_DIRECTORY)
+	self.configFilePath = Utils.getFilename(self.configFileName, self.BASE_DIRECTORY)
 
 	self:loadConfigData(self.configFilePath)
 
---	self:loadFromSaveGame()
+	self:loadFromSaveGame()
 end
 
 
@@ -59,11 +59,12 @@ end
 function ChallengeMod:loadConfigData(filename)
 	local xmlFile = XMLFile.loadIfExists("xmlFile", filename, self.xmlSchema)
 	if xmlFile then 
+		CmUtil.debug("Challenge setup loaded from %s.", filename)
 		for name, _ in pairs(self.attributes) do 
 			self[name] = xmlFile:getValue(self.baseXmlKey..name)
 		end
 		xmlFile:delete()
-	else 
+	else
 		CmUtil.debug("Challenge setup xml could not be loaded.")
 	end
 
@@ -75,18 +76,21 @@ end
 
 function ChallengeMod:loadFromSaveGame()
 	if g_currentMission.missionInfo.savegameDirectory ~= nil then
-		local fileName = Utils.getFilename(self.saveGameXmlFileName, g_currentMission.missionInfo.savegameDirectory)
-		local xmlFile = XMLFile.loadIfExists("xmlFile", fileName, self.xmlSchema)
-		if xmlFile then 
-
-			xmlFile:delete()
-		end
+		local fileName = g_currentMission.missionInfo.savegameDirectory .. "/" .. self.configFileName
+		self:loadConfigData(fileName)
 	end
 end
 
-function ChallengeMod:saveToSaveGame()
-
+function ChallengeMod:saveToXMLFile()
+	if g_modIsLoaded[ChallengeMod.MOD_NAME] then
+		local saveGamePath =  g_currentMission.missionInfo.savegameDirectory .."/" .. ChallengeMod.configFileName
+		copyFile(g_challengeMod.configFilePath, saveGamePath, false)
+	end
 end
+ItemSystem.save = Utils.prependedFunction(ItemSystem.save, ChallengeMod.saveToXMLFile)
+
+
+
 
 function ChallengeMod:getTotalStorageAmount(farmId)
 	local totalFillLevel = 0
