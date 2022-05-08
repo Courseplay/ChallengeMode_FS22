@@ -81,10 +81,10 @@ function ChallengeMod:loadConfigData(filename)
 			self[name] = xmlFile:getValue(self.baseXmlKey..name)
 		end
 		xmlFile:delete()
+		return true
 	else
 		CmUtil.debug("Challenge setup xml could not be loaded.")
 	end
-
 end
 
 function ChallengeMod:saveConfigData(filename)
@@ -102,6 +102,12 @@ function ChallengeMod:saveConfigData(filename)
 end
 
 function ChallengeMod:reloadConfigData()
+	if g_currentMission.missionInfo.savegameDirectory ~= nil then
+		local saveGamePath =  g_currentMission.missionInfo.savegameDirectory .."/" .. ChallengeMod.configFileName
+		if self:loadConfigData(saveGamePath) then 
+			return 
+		end
+	end
 	self:loadConfigData(self.configFilePath)
 end
 
@@ -167,11 +173,6 @@ function ChallengeMod:calculatePoints(farmId, farm)
 		storagePoints,
 		areaPoints,
 	}
-	self.victoryPointsFactors = {
-		self.moneyFactor,
-		self.storageFactor,
-		self.areaFactor
-	}
 	self.totalVictoryPointsByFarmId[farmId] = totalPoints
 	table.insert(self.drawData, {
 		name = farm.name,
@@ -189,7 +190,11 @@ function ChallengeMod:getTotalPointsForFarmId(farmId)
 end
 
 function ChallengeMod:getPointFactors()
-	return self.victoryPointsFactors
+	return {
+		self.moneyFactor,
+		self.storageFactor,
+		self.areaFactor
+	}
 end
 
 function ChallengeMod:update(dt)
