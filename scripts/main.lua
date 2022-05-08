@@ -2,6 +2,7 @@
 ChallengeMod = {
 	MOD_NAME = g_currentModName,
 	BASE_DIRECTORY = g_currentModDirectory,
+	rootXmlKey = "ChallengeMod",
 	baseXmlKey = "ChallengeMod.",
 	configFileName = "ChallengeModConfig.xml",
 	areaFactor = 1,
@@ -86,6 +87,20 @@ function ChallengeMod:loadConfigData(filename)
 
 end
 
+function ChallengeMod:saveConfigData(filename)
+	local xmlFile = XMLFile.create("xmlFile", filename, self.rootXmlKey, self.xmlSchema)
+	if xmlFile then 
+		CmUtil.debug("Challenge setup saved to %s.", filename)
+		for name, _ in pairs(self.attributes) do 
+			xmlFile:setValue(self.baseXmlKey..name, self[name])
+		end
+		xmlFile:save()
+		xmlFile:delete()
+	else
+		CmUtil.debug("Challenge setup xml could not be created.")
+	end
+end
+
 function ChallengeMod:reloadConfigData()
 	self:loadConfigData(self.configFilePath)
 end
@@ -101,6 +116,7 @@ function ChallengeMod:saveToXMLFile()
 	if g_modIsLoaded[ChallengeMod.MOD_NAME] then
 		local saveGamePath =  g_currentMission.missionInfo.savegameDirectory .."/" .. ChallengeMod.configFileName
 		copyFile(g_challengeMod.configFilePath, saveGamePath, false)
+		g_challengeMod:saveConfigData(saveGamePath)
 	end
 end
 ItemSystem.save = Utils.prependedFunction(ItemSystem.save, ChallengeMod.saveToXMLFile)
