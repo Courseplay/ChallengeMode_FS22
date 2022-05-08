@@ -16,9 +16,14 @@ ChallengeMod = {
 		maxHelpers = XMLValueType.INT,
 		leaseVehicle = XMLValueType.BOOL,
 		leaseMissionVehicle = XMLValueType.BOOL,
-	}
+	},
+	numberOfPointAttributes = 3
 }
 
+ChallengeMod.image = {
+	path = Utils.getFilename('Icon_ChallengeMode.dds', ChallengeMod.BASE_DIRECTORY),
+	uvs = {0, 0,1,1}
+}
 
 
 local ChallengeMod_mt = Class(ChallengeMod)
@@ -28,7 +33,7 @@ function ChallengeMod.new(custom_mt)
 	self.isServer = g_server
 
 	self.victoryPointsByFarmId = {}
-
+	self.totalVictoryPointsByFarmId = {}
 	addConsoleCommand('challengeModReloadConfig', 'Reloading config file', 'reloadConfigData', self)
 
 	return self
@@ -46,6 +51,17 @@ function ChallengeMod:setup()
 	self:loadConfigData(self.configFilePath)
 
 	self:loadFromSaveGame()
+
+	self:setupGui()
+end
+
+function ChallengeMod:setupGui()
+	local frame = ScoreBoardFrame.new()
+	g_gui:loadGui(Utils.getFilename("gui/ScoreBoardFrame.xml", self.BASE_DIRECTORY),
+				 "ScoreBoardPage", frame, true)
+
+	CmUtil.fixInGameMenuPage(frame, "pageScoreBoard", 
+			self.image)
 end
 
 
@@ -113,7 +129,9 @@ function ChallengeMod:getTotalArea(farmId)
 	local farmlands = g_farmlandManager:getOwnedFarmlandIdsByFarmId(farmId)
 	for _, farmlandId in pairs(farmlands) do
 		local farmland = g_farmlandManager:getFarmlandById(farmlandId)
-		totalArea = totalArea + farmland.areaInHa
+		if farmland then
+			totalArea = totalArea + farmland.areaInHa
+		end
 	end
 	CmUtil.debugSparse("Total area of: %.2f", totalArea)
 	return totalArea
@@ -127,16 +145,35 @@ function ChallengeMod:calculatePoints(farmId, farm)
 	local moneyPoints = money * self.moneyFactor
 	local storagePoints = totalStorageAmount * self.storageFactor
 	local areaPoints = totalArea * self.areaFactor
-	self.victoryPointsByFarmId[farmId] = moneyPoints + storagePoints + areaPoints
+	local totalPoints = moneyPoints + storagePoints + areaPoints
+	self.victoryPointsByFarmId[farmId] = {
+		moneyPoints,
+		storagePoints,
+		areaPoints,
+	}
+	self.victoryPointsFactors = {
+		self.moneyFactor,
+		self.storageFactor,
+		self.areaFactor
+	}
+	self.totalVictoryPointsByFarmId[farmId] = totalPoints
 	table.insert(self.drawData, {
 		name = farm.name,
-		value = string.format("%.2f, %.2f, %.2f, %.2f", self.victoryPointsByFarmId[farmId], 
+		value = string.format("%.2f, %.2f, %.2f, %.2f", totalPoints, 
 								moneyPoints, storagePoints, areaPoints)
 	})
 end
 
-function ChallengeMod:isValidFarm(farmId, farm)
-	return not farm.isSpectator
+function ChallengeMod:getPointsForFarmId(farmId)
+	return self.victoryPointsByFarmId[farmId]
+end
+
+function ChallengeMod:getTotalPointsForFarmId(farmId)
+	return self.totalVictoryPointsByFarmId[farmId]
+end
+
+function ChallengeMod:getPointFactors()
+	return self.victoryPointsFactors
 end
 
 function ChallengeMod:update(dt)
@@ -149,7 +186,7 @@ function ChallengeMod:update(dt)
 	}
 	for _, farm in pairs(farms) do 
 		local farmId = farm.farmId
-		if self:isValidFarm(farmId, farm) then
+		if CmUtil.isValidFarm(farmId, farm) then
 			CmUtil.debugSparse("Calculating points for farm id: %d", farmId)
 			self:calculatePoints(farmId, farm)
 		end

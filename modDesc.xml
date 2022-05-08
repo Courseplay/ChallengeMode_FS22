@@ -14,12 +14,13 @@
 ]]></de>
     </description>
 
-	<iconFilename>Icon_ChallangeMode.dds</iconFilename>
+	<iconFilename>Icon_ChallengeMode.dds</iconFilename>
     <multiplayer supported="true" />
 
 	<extraSourceFiles>
 		<sourceFile filename="scripts/Util.lua"/>
 		<sourceFile filename="scripts/main.lua"/>
+		<sourceFile filename="gui/ScoreBoardFrame.lua"/>
 	</extraSourceFiles>
 	<l10n>	
 		<text name="LPT_licensePlateAlreadyUsed"><de>Kennzeichen schon eingebaut in %s</de><en>License plate already in use %s</en></text>	
