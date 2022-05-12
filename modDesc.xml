@@ -20,6 +20,8 @@
 	<extraSourceFiles>
 		<sourceFile filename="scripts/Util.lua"/>
 		<sourceFile filename="scripts/main.lua"/>
+		<sourceFile filename="scripts/VictoryPoint.lua"/>
+		<sourceFile filename="scripts/VictoryPointManager.lua"/>
 		<sourceFile filename="gui/ScoreBoardFrame.lua"/>
 	</extraSourceFiles>
 	<l10n>	

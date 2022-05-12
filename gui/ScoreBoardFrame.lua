@@ -8,26 +8,36 @@ ScoreBoardFrame = {
 		RIGHT_LIST = "rightList",
 		LEFT_COLUMN_HEADER ="leftColumnHeader",
 		RIGHT_COLUMN_HEADER = "rightColumnHeader",
+		GOAL = "goal"
 	},
+	COLOR = {
+		GREEN = {
+			0, 1, 0, 1
+		},
+		WHITE = {
+			1, 1, 1, 1
+		}
+	}
 }
 
 ScoreBoardFrame.translations = {
-	attributes = {
-		"Money Points: ",
-		"Storage Points: ",
-		"Area Points: ",
+	goal = function(goal) return string.format("Goal: %d", goal) end,
+	points = {
+		"Money points: ",
+		"Area points: ",
+		"Total storage points: ",
 	},
 	factors = {
 		function (money)
 			return string.format("%f/%s", g_i18n:getCurrency(money), g_i18n:getCurrencySymbol(true))
 		end,
-		function (liters)
-			return string.format("%f/%s", g_i18n:getFluid(liters), g_i18n:getText("unit_literShort"))
-		end,
 		function (area)
 			return string.format("%f/%s", g_i18n:getArea(area), g_i18n:getAreaUnit())
+		end,
+		function (liters)
+			return string.format("%f/%s", g_i18n:getFluid(liters), g_i18n:getText("unit_literShort"))
 		end
-	}
+	},
 }
 
 ScoreBoardFrame.colors = {
@@ -42,6 +52,7 @@ function ScoreBoardFrame.new(courseStorage,target, custom_mt)
 	self:registerControls(ScoreBoardFrame.CONTROLS)
 	self.farmManager = g_farmManager
 	self.challengeMod = g_challengeMod
+	self.victoryPointManager = g_victoryPointManager
 	self.farms = {}
 	return self
 end
@@ -55,6 +66,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 	self.rightList:setDataSource(self)
 end
 function ScoreBoardFrame:onFrameOpen()
+	g_victoryPointManager:update()
 	self:updateLists()
 	ScoreBoardFrame:superClass().onFrameOpen(self)
 end
@@ -67,6 +79,7 @@ function ScoreBoardFrame:updateLists()
 	self.farms = self:getValidFarms()
 	self.leftList:reloadData()
 	self.rightList:reloadData()
+	self.goal:setText(self.translations.goal(g_victoryPointManager:getGoal()))
 end
 
 function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
@@ -78,7 +91,8 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 	if ix == nil or #self.farms==0 then 
 		return 0
 	end
-	return ChallengeMod.numberOfPointAttributes
+	local farmId = self:getCurrentFarmId()
+	return farmId ~= nil and self.victoryPointManager:getNumberOfPointTypes(farmId) or 0
 end
 
 
@@ -93,15 +107,25 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 				cell:getAttribute("icon"):setImageColor(nil, unpack(self.farms[index]:getColor()))
 			end
 			cell:getAttribute("title"):setText(self.farms[index].name)
-			cell:getAttribute("value"):setText(string.format("%.1f", self.challengeMod:getTotalPointsForFarmId(self.farms[index].farmId)))
+			cell:getAttribute("value"):setText(string.format("%.1f", self.victoryPointManager:getTotalPoints(self.farms[index].farmId)))
+			if self.victoryPointManager:isVictoryGoalReached(self.farms[index].farmId) then
+				cell:getAttribute("value"):setTextColor(unpack(self.COLOR.GREEN))
+			else 
+				cell:getAttribute("value"):setTextColor(unpack(self.COLOR.WHITE))
+			end
+				--isVictoryGoalReached
 		end
 	else
 		local id = self:getCurrentFarmId()
-		cell:getAttribute("title"):setText(self.translations.attributes[index])
 		if id then 
-			cell:getAttribute("value"):setText(string.format("%.1f",  self.challengeMod:getPointsForFarmId(id)[index]))
+			local point = self.victoryPointManager:getPoints(id)[index]
+			if point then
+				cell:getAttribute("title"):setText(point:getTitle())
 
-			cell:getAttribute("conversionValue"):setText(self.translations.factors[index](self.challengeMod:getPointFactors()[index]))
+				cell:getAttribute("value"):setText(point:getText())
+
+				cell:getAttribute("conversionValue"):setText(point:getFactorText())
+			end
 		end
 	end
 end
@@ -121,7 +145,7 @@ function ScoreBoardFrame:getValidFarms()
 		end
 	end
 	table.sort(farms, function(a, b)
-		return  self.challengeMod:getTotalPointsForFarmId(a.farmId) >  self.challengeMod:getTotalPointsForFarmId(b.farmId)
+		return  self.victoryPointManager:getTotalPoints(a.farmId) >  self.victoryPointManager:getTotalPoints(b.farmId)
 	end)
 	return farms, farmsById
 end

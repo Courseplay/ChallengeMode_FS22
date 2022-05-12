@@ -29,7 +29,7 @@
 
             <GuiElement type="empty" profile="ingameMenuPriceRightColumn" id="rightColumn">
                 <GuiElement type="boxLayout" profile="ingameCalendarHeaderBox" id="tableHeaderBox" size="680px 104px">
-                    <GuiElement type="text" profile="ingameMenuPriceHeader" size="330px 104px" id="rightColumnHeader" text=""/> 
+                    <GuiElement type="text" profile="ingameMenuPriceHeader" size="330px 104px"  id="goal" text=""/> 
                     <GuiElement type="text" profile="ingameMenuPriceHeader" size="180px 104px"  text="Factor" />
                     <GuiElement type="text" profile="ingameMenuPriceHeader" size="160px 104px"  text="Points" textOffset="0 0" />
                 </GuiElement>
