@@ -19,20 +19,11 @@ ScoreBoardFrame = {
 		}
 	},
 	LEFT_SECTIONS = {
-		VictoryPoints = 1,
-		Settings = 2
+		POINTS = 1,
+		SETTINGS = 2
 	},
-	RIGHT_SECTIONS = {
-		Points = {
-			points = 1, 
-			fillTypeStoragePoints = 2
-		},
-		Settings ={
-			rule = 1, 
-			missionRules = 2
-		},
-	},
-	NUM_SETTINGS = 1
+	NUM_SETTINGS = 1,
+	NUM_LEFT_SECTIONS = 2
 }
 
 ScoreBoardFrame.translations = {
@@ -41,6 +32,8 @@ ScoreBoardFrame.translations = {
 		"Money points: ",
 		"Area points: ",
 		"Total storage points: ",
+		"Total bale points: ",
+		"Total pallet points: ",
 	},
 	rules = {
 		"Helper limit: ",
@@ -82,13 +75,16 @@ ScoreBoardFrame.translations = {
 	rightSections = {
 		{
 			"",
-			"Fill types"
+			"Fill types",
+			"Bales",
+			"Pallets"
 		},
 		{
 			"",
 			"Missions"
 		},
 	},
+	
 }
 
 ScoreBoardFrame.colors = {
@@ -145,6 +141,13 @@ function ScoreBoardFrame:onGuiSetupFinished()
 			callbackDisabled = self.isChangeButtonDisabled,
 		}
 	}
+
+	self.numSections = {
+		[self.leftList] = function(ix) return self.NUM_LEFT_SECTIONS end,
+		[self.rightList] = function(ix) 
+								return ix == 1 and self.victoryPointManager.NUM_CATEGORIES or self.ruleManager.NUM_CATEGORIES 
+							end 
+	}
 end
 
 function ScoreBoardFrame:onFrameOpen()
@@ -180,7 +183,8 @@ function ScoreBoardFrame:updateMenuButtons()
 end
 
 function ScoreBoardFrame:getNumberOfSections(list)
-	return 2
+	local sx, ix = self.leftList:getSelectedPath()
+	return self.numSections[list](sx)
 end
 
 function ScoreBoardFrame:getTitleForSectionHeader(list, s)
@@ -202,29 +206,21 @@ end
 
 function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 	if list == self.leftList then
-		if section == self.LEFT_SECTIONS.VictoryPoints then 
+		if section == self.LEFT_SECTIONS.POINTS then 
 			return #self.farms
 		else
 			return self.NUM_SETTINGS
 		end
 	else
 		local sx, ix = self.leftList:getSelectedPath()
-		if sx == self.LEFT_SECTIONS.VictoryPoints then 
+		if sx == self.LEFT_SECTIONS.POINTS then 
 			local farmId = self:getCurrentFarmId()
 			if #self.farms==0 or farmId == nil then 
 				return 0
 			end
-			if section == self.RIGHT_SECTIONS.Points.points then 
-				return #self.victoryPointManager:getPoints(farmId)
-			else
-				return #self.victoryPointManager:getFillTypeStoragePoints(farmId)
-			end
+			return #self.victoryPointManager:getPointList(farmId)[section]
 		else
-			if section == self.RIGHT_SECTIONS.Settings.rule then 
-				return #self.rules
-			else
-				return #self.missionRules
-			end
+			return #self.ruleManager:getRuleList()[section]
 		end
 	end
 end
@@ -233,7 +229,7 @@ end
 function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell)
 	
 	if list == self.leftList then
-		if section == self.LEFT_SECTIONS.VictoryPoints then 
+		if section == self.LEFT_SECTIONS.POINTS then 
 			if self.farms[index] then
 				if self.farms[index]:getIconUVs() ~= nil then
 					cell:getAttribute("icon"):setImageUVs(nil, unpack(GuiUtils.getUVs(self.farms[index]:getIconUVs())))
@@ -298,38 +294,17 @@ end
 
 function ScoreBoardFrame:getElement(section, index)
 	local sx, ix = self.leftList:getSelectedPath()
-	if sx == self.LEFT_SECTIONS.VictoryPoints then
+	if sx == self.LEFT_SECTIONS.POINTS then
 		local element
 		local farmId = self:getCurrentFarmId()
 		if farmId then
-			if section == self.RIGHT_SECTIONS.Points.points then
-				element = self.victoryPointManager:getPoints(farmId)[index]
-			else
-				element = self.victoryPointManager:getFillTypeStoragePoints(farmId)[index]
-			end
+			element = self.victoryPointManager:getPointList(farmId)[section][index]
 			--CmUtil.debug("Element found(%s) at %d.", element:getTitle(), index)
 		end
 		return element
 	else
-		if section == self.RIGHT_SECTIONS.Settings.rule then
-			return self.rules[index]
-		else
-			return self.missionRules[index]
-		end
+		return self.ruleManager:getRuleList()[section][index]
 	end
-end
-
-function ScoreBoardFrame:getNumberOfItemsInRightListSection(section)
-	local num = 0
-	local farmId = self:getCurrentFarmId()
-	if farmId ~= nil then
-		if section == self.RIGHT_SECTIONS.Points.rule then 
-			num = #self.victoryPointManager:getPoints(farmId)
-		else
-			num = #self.victoryPointManager:getFillTypeStoragePoints(farmId)
-		end
-	end 	
-	return num
 end
 
 ----------------------------------------------------

@@ -4,8 +4,16 @@ VictoryPointManager = {
 		MONEY = 1,
 		AREA = 2,
 		TOTAL_STORAGE = 3,
-		DEFAULT_STORAGE = 4
-	}
+		BALE_STORAGE = 4,
+		PALLET_STORAGE = 5
+	},
+	POINT_LIST = {
+		POINTS = 1,
+		STORAGE = 2,
+		BALE_STORAGE = 3,
+		PALLET_STORAGE = 4
+	},
+	NUM_CATEGORIES = 4
 }
 local VictoryPointManager_mt = Class(VictoryPointManager)
 ---@class VictoryPointManager
@@ -28,6 +36,11 @@ function VictoryPointManager.new(custom_mt)
 	self.points = {}
 
 	self.fillTypeStoragePoints = {}
+
+	self.balePoints = {}
+	self.palletPoints = {}
+
+	self.pointList = {}
 
 	return self
 end
@@ -107,6 +120,35 @@ function VictoryPointManager:getStorageAmount(farmId)
 	return totalFillLevel, totalFillLevels
 end
 
+function VictoryPointManager:getBaleAmount(farmId)
+	local baleFillLevels = {}
+	for _, object in pairs(g_currentMission.nodeToObject) do
+		if object:isa(Bale) and object:getOwnerFarmId(farmId) == farmId and not object.isMissionBale then 
+			if baleFillLevels[object.fillType] == nil then 
+				baleFillLevels[object.fillType] = 0
+			end
+			baleFillLevels[object.fillType] = baleFillLevels[object.fillType] + object.fillLevel
+		end
+	end
+	return baleFillLevels
+end
+
+function VictoryPointManager:getPalletAmount(farmId)
+	local palletFillLevels = {}
+	for _, object in pairs(g_currentMission.vehicles) do
+		if object.spec_pallet and object:getOwnerFarmId(farmId) == farmId then 
+			local fillUnitIndex = object.spec_pallet.fillUnitIndex
+			local fillLevel = object:getFillUnitFillLevel(fillUnitIndex)
+			local fillType = object:getFillUnitFillType(fillUnitIndex)
+			if palletFillLevels[fillType] == nil then 
+				palletFillLevels[fillType] = 0
+			end
+			palletFillLevels[fillType] = palletFillLevels[fillType] + fillLevel
+		end
+	end
+	return palletFillLevels
+end
+
 function VictoryPointManager:getTotalArea(farmId)
 	local totalArea = 0
 	local farmlands = g_farmlandManager:getOwnedFarmlandIdsByFarmId(farmId)
@@ -123,7 +165,12 @@ end
 function VictoryPointManager:calculatePoints(farmId, farm)
 	local money = farm.money or 0
 	local totalStorageAmount, fillLevels = self:getStorageAmount(farmId)
+	local baleFillLevels = self:getBaleAmount(farmId)
+	local palletFillLevels = self:getPalletAmount(farmId)
 	local totalArea = self:getTotalArea(farmId)
+	
+
+	
 
 	
 	self.points[farmId] = {
@@ -132,7 +179,42 @@ function VictoryPointManager:calculatePoints(farmId, farm)
 	}
 
 	self.fillTypeStoragePoints[farmId] = {}
+	self.balePoints[farmId] = {}
+	self.palletPoints[farmId] = {}
 
+	self:addFillLevels(fillLevels, self.fillTypeStoragePoints[farmId])
+	self:addFillLevels(baleFillLevels, self.balePoints[farmId])
+	self:addFillLevels(palletFillLevels, self.palletPoints[farmId])
+
+	local points = self:countPoints(self.points[farmId])
+	local fillTypePoints = self:countPoints(self.fillTypeStoragePoints[farmId])
+	local balePoints = self:countPoints(self.balePoints[farmId])
+	local palletPoints = self:countPoints(self.palletPoints[farmId])
+
+	table.insert(self.points[farmId], self:newStorageFactor(fillTypePoints, self.FACTORS.TOTAL_STORAGE))
+	table.insert(self.points[farmId], self:newStorageFactor(balePoints, self.FACTORS.BALE_STORAGE))
+	table.insert(self.points[farmId], self:newStorageFactor(palletPoints, self.FACTORS.PALLET_STORAGE))
+
+	self.totalPoints[farmId] = points + fillTypePoints + balePoints + palletPoints
+
+	self.pointList[farmId] = {
+		self.points[farmId],
+		self.fillTypeStoragePoints[farmId],
+		self.balePoints[farmId],
+		self.palletPoints[farmId]
+	}
+
+end
+
+function VictoryPointManager:countPoints(data)
+	local points = 0
+	for _, p in pairs(data) do 
+		points = points + p:getValue()
+	end
+	return points
+end
+
+function VictoryPointManager:addFillLevels(fillLevels, target)
 	local orderedFillLevels = table.toList(fillLevels)
 	
 	table.sort(orderedFillLevels, function (a, b)
@@ -141,22 +223,8 @@ function VictoryPointManager:calculatePoints(farmId, farm)
 
 	for _, fillType in pairs(orderedFillLevels) do 
 
-		table.insert(self.fillTypeStoragePoints[farmId], self:newStorageFillTypeFactor(fillType, fillLevels[fillType]))
+		table.insert(target, self:newStorageFillTypeFactor(fillType, fillLevels[fillType]))
 	end
-
-	local points = 0
-	for _, p in pairs(self.points[farmId]) do 
-		points = points + p:getValue()
-	end
-	local fillTypePoints = 0
-	for _, p in pairs(self.fillTypeStoragePoints[farmId]) do 
-		fillTypePoints = fillTypePoints + p:getValue()
-	end
-
-	table.insert(self.points[farmId], self:newStorageFactor(fillTypePoints, nil))
-
-	self.totalPoints[farmId] = points + fillTypePoints
-
 end
 
 function VictoryPointManager:update()
@@ -171,12 +239,24 @@ function VictoryPointManager:update()
 	end
 end
 
+function VictoryPointManager:getPointList(farmId)
+	return self.pointList[farmId]
+end
+
 function VictoryPointManager:getPoints(farmId)
 	return self.points[farmId]
 end
 
 function VictoryPointManager:getFillTypeStoragePoints(farmId)
 	return self.fillTypeStoragePoints[farmId]
+end
+
+function VictoryPointManager:getBalesPoints(farmId)
+	return self.balePoints[farmId]
+end
+
+function VictoryPointManager:getPalletsPoints(farmId)
+	return self.palletPoints[farmId]
 end
 
 function VictoryPointManager:getTotalPoints(farmId)
@@ -203,8 +283,8 @@ function VictoryPointManager:newAreaFactor(value)
 		ScoreBoardFrame.translations.factors[self.FACTORS.AREA])
 end
 
-function VictoryPointManager:newStorageFactor(value, factor)
-	return VictoryPoint.new(value, factor, ScoreBoardFrame.translations.points[self.FACTORS.TOTAL_STORAGE])
+function VictoryPointManager:newStorageFactor(value, ix)
+	return VictoryPoint.new(value, nil, ScoreBoardFrame.translations.points[ix])
 end
 
 function VictoryPointManager:newStorageFillTypeFactor(fillType, value)

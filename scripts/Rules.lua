@@ -18,9 +18,9 @@ function Rule:getText()
 			return self.texts[self.value]
 		end
 		if self.value == true then 
-			return self.texts[1]
+			return self.texts[2]
 		elseif self.value == false then 
-			return self.texts[0]
+			return self.texts[1]
 		end
 	end
 	return tostring(self.value)

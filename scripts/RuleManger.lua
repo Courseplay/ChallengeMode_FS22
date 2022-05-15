@@ -8,7 +8,8 @@ RuleManager = {
 		DISABLED = 0,
 		ONLY_SHOP_VEHICLES = 1,
 		ENABLED = 2
-	}
+	},
+	NUM_CATEGORIES = 2
 }
 local RuleManager_mt = Class(RuleManager)
 ---@class RuleManager
@@ -18,6 +19,7 @@ function RuleManager.new(custom_mt)
 		
 	self.rules = {}
 	self.missionRules = {}
+	self.ruleList = {}
 
 	self.missionTypes = {}
 	self.missionTypesEnabled = {}
@@ -57,9 +59,17 @@ function RuleManager:loadConfigData(xmlFile, baseXmlKey)
 		Rule.new(self.helperLimit, self.translations.rules[self.RULES.HELPER_LIMIT]),
 		Rule.new(self.leaseVehicles, self.translations.rules[self.RULES.LEASE_VEHICLES], self.translations.leaseVehicleRule)
 	}
-	for name, value in pairs(self.missionTypesEnabled) do 
-		table.insert(self.missionRules,Rule.new(value, name, self.translations.missionRule))
+	local missionNames = table.toList(self.missionTypesEnabled)
+	table.sort(missionNames)
+	self.missionRules = {}
+	for _, name in ipairs(missionNames) do 
+		table.insert(self.missionRules,Rule.new(self.missionTypesEnabled[name], name, self.translations.missionRule))
 	end
+
+	self.ruleList = {
+		self.rules,
+		self.missionRules
+	}
 
 end
 
@@ -83,6 +93,10 @@ end
 
 function RuleManager:getMissionRules()
 	return self.missionRules
+end
+
+function RuleManager:getRuleList()
+	return self.ruleList
 end
 
 g_ruleManager = RuleManager.new()
