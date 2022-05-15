@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ChallengeMod goal="1000000">
-	<moneyFactor>1</moneyFactor>
-	<areaFactor>1</areaFactor>
-	<storageFactors total="1" default="1">
-		<factor fillTypes="wheat barley oat">1</factor>
-		<factor fillTypes="canola sorghum sunflower maize">1</factor>
-		<factor fillTypes="potato sugarbeet">1</factor>
-		<factor fillTypes="soybean">0.5</factor>
-		<factor fillTypes="grass drygrass">1</factor>
-	</storageFactors>
-	<maxHelpers>1</maxHelpers>
-	<leaseVehicle>true</leaseVehicle>
-	<leaseMissionVehicle>true</leaseMissionVehicle>
+<ChallengeMod>
+	<VictoryPoints goal="1000000">
+		<moneyFactor>1</moneyFactor>
+		<areaFactor>1</areaFactor>
+		<storageFactors total="1" default="1">
+			<factor fillTypes="wheat barley oat">1</factor>
+			<factor fillTypes="canola sorghum sunflower maize">1</factor>
+			<factor fillTypes="potato sugarbeet">1</factor>
+			<factor fillTypes="soybean">0.5</factor>
+			<factor fillTypes="grass drygrass">1</factor>
+		</storageFactors>
+	</VictoryPoints>
+	<Rules>
+		<maxHelpers>1</maxHelpers>
+		<!-- 
+			0: deactivated
+			1: only shop vehicles
+			2: everything allowed
+		 -->
+		<leaseVehicle>2</leaseVehicle>
+		<missions>
+			
+		</missions>
+	</Rules>
 </ChallengeMod>

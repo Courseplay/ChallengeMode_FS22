@@ -14,11 +14,15 @@
 					<GuiElement type="text" profile="ingameMenuPriceHeader" size="340px 104px" text="Total points" textAlignment="right" textOffset="-30px 0px" />
                 </GuiElement>
 
-                <GuiElement type="smoothList" profile="ingameMenuPriceList" id="leftList" focusChangeTop="nil" focusChangeBottom="nil" selectedWithoutFocus="true">
+                <GuiElement type="smoothList" profile="ingameMenuPriceList" id="leftList" focusChangeTop="nil" focusChangeBottom="nil" selectedWithoutFocus="true" listSectionHeader="section">
                     <GuiElement type="listItem" profile="ingameMenuPriceListItem">
 						<GuiElement type="bitmap" name="icon" profile="ingameMenuPriceGoodsIcon" imageUVs="330px 0 256px 256px" imageFilename="dataS/menu/hud/multiplayer_icons.png"/>
                         <GuiElement type="text" name="title" profile="ingameMenuPriceItemTitle" />
 						<GuiElement type="text" name="value" profile="ingameMenuPriceItemStorage" />
+                    </GuiElement>
+
+					<GuiElement type="listItem" profile="ingameMenuAnimalsListSectionHeader" name="section">
+                        <GuiElement type="text" profile="ingameMenuAnimalsListSectionHeaderText" name="title" />
                     </GuiElement>
                 </GuiElement>
 
@@ -34,11 +38,15 @@
                     <GuiElement type="text" profile="ingameMenuPriceHeader" size="160px 104px"  text="Points" textOffset="0 0" />
                 </GuiElement>
 
-                <GuiElement type="smoothList" profile="ingameMenuPriceList" id="rightList" focusChangeTop="nil" focusChangeBottom="nil">
+                <GuiElement type="smoothList" profile="ingameMenuPriceList" id="rightList" focusChangeTop="nil" focusChangeBottom="nil" listSectionHeader="section">
                     <GuiElement type="listItem" profile="ingameMenuPriceListItem">
                         <GuiElement type="text" name="title" profile="ingameMenuPriceSellpointTitle" />
 						<GuiElement type="text" name="value" profile="ingameMenuPriceItemBuyPrice" />
 						<GuiElement type="text" name="conversionValue" profile="ingameMenuPriceItemPrice" textOffset="-30px 0" />
+                    </GuiElement>
+
+					<GuiElement type="listItem" profile="ingameMenuAnimalsListSectionHeader" name="section">
+                        <GuiElement type="text" profile="ingameMenuAnimalsListSectionHeaderText" name="title" />
                     </GuiElement>
                 </GuiElement>
 

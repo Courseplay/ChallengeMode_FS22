@@ -27,28 +27,30 @@ function VictoryPointManager.new(custom_mt)
 
 	self.points = {}
 
+	self.fillTypeStoragePoints = {}
+
 	return self
 end
 
 function VictoryPointManager:registerXmlSchema(xmlSchema, baseXmlKey)
-	xmlSchema:register(XMLValueType.FLOAT,baseXmlKey.."#goal","Victory goal")
-	xmlSchema:register(XMLValueType.FLOAT,baseXmlKey..".moneyFactor","Money factor")
-	xmlSchema:register(XMLValueType.FLOAT,baseXmlKey..".areaFactor","Area factor")
-	xmlSchema:register(XMLValueType.FLOAT,baseXmlKey..".storageFactors#total","Storage total factor")
-	xmlSchema:register(XMLValueType.FLOAT,baseXmlKey..".storageFactors#default","Storage default factor")
+	local key = baseXmlKey .. ".VictoryPoints"
+	xmlSchema:register(XMLValueType.FLOAT,key.."#goal","Victory goal")
+	xmlSchema:register(XMLValueType.FLOAT,key..".moneyFactor","Money factor")
+	xmlSchema:register(XMLValueType.FLOAT,key..".areaFactor","Area factor")
+	xmlSchema:register(XMLValueType.FLOAT,key..".storageFactors#default","Storage default factor")
 
-	xmlSchema:register(XMLValueType.STRING,baseXmlKey..".storageFactors.factor(?)#fillTypes","Storage fillType name")
-	xmlSchema:register(XMLValueType.FLOAT,baseXmlKey..".storageFactors.factor(?)","Storage fillType factor")
+	xmlSchema:register(XMLValueType.STRING,key..".storageFactors.factor(?)#fillTypes","Storage fillType name")
+	xmlSchema:register(XMLValueType.FLOAT,key..".storageFactors.factor(?)","Storage fillType factor")
 end
 
 function VictoryPointManager:loadConfigData(xmlFile, baseXmlKey)
-	self.victoryGoal = xmlFile:getValue(baseXmlKey.."#goal", 100000)
-	self.factors[self.FACTORS.MONEY] = xmlFile:getValue(baseXmlKey..".moneyFactor", 1)
-	self.factors[self.FACTORS.AREA] = xmlFile:getValue(baseXmlKey..".areaFactor", 1)
-	self.factors[self.FACTORS.TOTAL_STORAGE] = xmlFile:getValue(baseXmlKey .. ".storageFactors#total", 1)
-	self.defaultStorageFactor = xmlFile:getValue(baseXmlKey .. ".storageFactors#default", 1)
+	local baseKey = baseXmlKey .. ".VictoryPoints"
+	self.victoryGoal = xmlFile:getValue(baseKey.."#goal", 100000)
+	self.factors[self.FACTORS.MONEY] = xmlFile:getValue(baseKey..".moneyFactor", 1)
+	self.factors[self.FACTORS.AREA] = xmlFile:getValue(baseKey..".areaFactor", 1)
+	self.defaultStorageFactor = xmlFile:getValue(baseKey .. ".storageFactors#default", 1)
 
-	xmlFile:iterate(baseXmlKey .. ".storageFactors.factor", function (i, key)
+	xmlFile:iterate(baseKey .. ".storageFactors.factor", function (i, key)
 		local names = xmlFile:getValue(key.."#fillTypes")	
 		CmUtil.debug("Trying to find fill types: %s", names)
 		if names then
@@ -67,15 +69,16 @@ function VictoryPointManager:loadConfigData(xmlFile, baseXmlKey)
 end
 
 function VictoryPointManager:saveConfigData(xmlFile, baseXmlKey)
-	xmlFile:setValue(baseXmlKey.."#goal", self.victoryGoal)
-	xmlFile:setValue(baseXmlKey..".moneyFactor", self.factors[self.FACTORS.MONEY])
-	xmlFile:setValue(baseXmlKey..".areaFactor", self.factors[self.FACTORS.AREA])
-	xmlFile:setValue(baseXmlKey..".storageFactors#total", self.factors[self.FACTORS.TOTAL_STORAGE])
-	xmlFile:setValue(baseXmlKey .. ".storageFactors#default", self.defaultStorageFactor)
+	local baseKey = baseXmlKey .. ".VictoryPoints"
+	xmlFile:setValue(baseKey.."#goal", self.victoryGoal)
+	xmlFile:setValue(baseKey..".moneyFactor", self.factors[self.FACTORS.MONEY])
+	xmlFile:setValue(baseKey..".areaFactor", self.factors[self.FACTORS.AREA])
+	xmlFile:setValue(baseKey..".storageFactors#total", self.factors[self.FACTORS.TOTAL_STORAGE])
+	xmlFile:setValue(baseKey .. ".storageFactors#default", self.defaultStorageFactor)
 
 	local ix, key = 0, ""
 	for names, value in pairs(self.loadedStorageFactors) do 
-		key = string.format("%s.storageFactors.factor(%d)", baseXmlKey, ix)
+		key = string.format("%s.storageFactors.factor(%d)", baseKey, ix)
 		xmlFile:setValue(key.."#fillTypes", names)
 		xmlFile:setValue(key, value)
 		ix = ix + 1
@@ -122,11 +125,13 @@ function VictoryPointManager:calculatePoints(farmId, farm)
 	local totalStorageAmount, fillLevels = self:getStorageAmount(farmId)
 	local totalArea = self:getTotalArea(farmId)
 
+	
 	self.points[farmId] = {
 		self:newMoneyFactor(money),
 		self:newAreaFactor(totalArea),
-		self:newStorageFactor(totalStorageAmount),
 	}
+
+	self.fillTypeStoragePoints[farmId] = {}
 
 	local orderedFillLevels = table.toList(fillLevels)
 	
@@ -136,14 +141,21 @@ function VictoryPointManager:calculatePoints(farmId, farm)
 
 	for _, fillType in pairs(orderedFillLevels) do 
 
-		table.insert(self.points[farmId], self:newStorageFillTypeFactor(fillType, fillLevels[fillType]))
+		table.insert(self.fillTypeStoragePoints[farmId], self:newStorageFillTypeFactor(fillType, fillLevels[fillType]))
 	end
 
 	local points = 0
 	for _, p in pairs(self.points[farmId]) do 
 		points = points + p:getValue()
 	end
-	self.totalPoints[farmId] = points
+	local fillTypePoints = 0
+	for _, p in pairs(self.fillTypeStoragePoints[farmId]) do 
+		fillTypePoints = fillTypePoints + p:getValue()
+	end
+
+	table.insert(self.points[farmId], self:newStorageFactor(fillTypePoints, nil))
+
+	self.totalPoints[farmId] = points + fillTypePoints
 
 end
 
@@ -163,6 +175,10 @@ function VictoryPointManager:getPoints(farmId)
 	return self.points[farmId]
 end
 
+function VictoryPointManager:getFillTypeStoragePoints(farmId)
+	return self.fillTypeStoragePoints[farmId]
+end
+
 function VictoryPointManager:getTotalPoints(farmId)
 	return self.totalPoints[farmId]
 end
@@ -173,10 +189,6 @@ end
 
 function VictoryPointManager:getGoal()
 	return self.victoryGoal	
-end
-
-function VictoryPointManager:getNumberOfPointTypes(farmId)
-	return #self.points[farmId]
 end
 
 function VictoryPointManager:newMoneyFactor(value)
@@ -191,10 +203,8 @@ function VictoryPointManager:newAreaFactor(value)
 		ScoreBoardFrame.translations.factors[self.FACTORS.AREA])
 end
 
-function VictoryPointManager:newStorageFactor(value)
-	local factor = self.factors[self.FACTORS.TOTAL_STORAGE]
-	return VictoryPoint.new(value, factor, ScoreBoardFrame.translations.points[self.FACTORS.TOTAL_STORAGE], 
-		ScoreBoardFrame.translations.factors[self.FACTORS.TOTAL_STORAGE])
+function VictoryPointManager:newStorageFactor(value, factor)
+	return VictoryPoint.new(value, factor, ScoreBoardFrame.translations.points[self.FACTORS.TOTAL_STORAGE])
 end
 
 function VictoryPointManager:newStorageFillTypeFactor(fillType, value)

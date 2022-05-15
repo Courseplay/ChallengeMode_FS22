@@ -1,6 +1,6 @@
 ---@class CmUtil
 CmUtil = {
-	debugActive = true
+	debugActive = false
 }
 
 function CmUtil.debug(str, ...)

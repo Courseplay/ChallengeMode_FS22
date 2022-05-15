@@ -53,7 +53,7 @@ function ChallengeMod:registerXmlSchema()
     self.xmlSchema = XMLSchema.new("ChallengeMod")
 
 	g_victoryPointManager:registerXmlSchema(self.xmlSchema, self.baseXmlKey)
-
+	g_ruleManager:registerXmlSchema(self.xmlSchema, self.baseXmlKey)
 end
 
 function ChallengeMod:loadConfigData(filename)
@@ -61,6 +61,7 @@ function ChallengeMod:loadConfigData(filename)
 	if xmlFile then 
 		CmUtil.debug("Challenge setup loaded from %s.", filename)
 		g_victoryPointManager:loadConfigData(xmlFile, self.baseXmlKey)
+		g_ruleManager:loadConfigData(xmlFile, self.baseXmlKey)
 		xmlFile:delete()
 		return true
 	else
@@ -74,6 +75,7 @@ function ChallengeMod:saveConfigData(filename)
 	if xmlFile then 
 		CmUtil.debug("Challenge setup saved to %s.", filename)
 		g_victoryPointManager:saveConfigData(xmlFile, self.baseXmlKey)
+		g_ruleManager:saveConfigData(xmlFile, self.baseXmlKey)
 		xmlFile:save()
 		xmlFile:delete()
 	else

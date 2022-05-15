@@ -1,15 +1,16 @@
 VictoryPoint = {
 
 }
-local VictoryPoint_mt = Class(VictoryPoint)
----@class VictoryPoint
+local VictoryPoint_mt = Class(VictoryPoint, ScoreBoardElement)
+---@class VictoryPoint : ScoreBoardElement
 function VictoryPoint.new(value, factor, title, factorTextFunc, custom_mt)
-	local self = setmetatable({}, custom_mt or VictoryPoint_mt)	
+	local self = ScoreBoardElement.new(title, custom_mt or VictoryPoint_mt)
 	self.value = value
 	self.factor = factor
 	self.title = title
-	self.factorText = factorTextFunc(factor)
-
+	if factorTextFunc then
+		self.factorText = factorTextFunc(factor)
+	end
 	return self
 end
 
@@ -19,7 +20,11 @@ function VictoryPoint:getValue()
 end
 
 function VictoryPoint:getText()
-	return string.format("%.1f",self.value * self.factor)
+	if self.factor then 
+		return string.format("%.1f",self.value * self.factor)
+	else 
+		return string.format("%.1f",self.value)
+	end
 end
 
 function VictoryPoint:getTitle()
@@ -27,7 +32,7 @@ function VictoryPoint:getTitle()
 end
 
 function VictoryPoint:getFactorText()
-	return self.factorText
+	return self.factorText or ""
 end
 
 function VictoryPoint:__tostring()
