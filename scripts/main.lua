@@ -18,9 +18,23 @@ function ChallengeMod.new(custom_mt)
 	local self = setmetatable({}, custom_mt or ChallengeMod_mt)
 	self.isServer = g_server
 
-	addConsoleCommand('challengeModReloadConfig', 'Reloading config file', 'reloadConfigData', self)
+	--addConsoleCommand('challengeModReloadConfig', 'Reloading config file', 'reloadConfigData', self)
 
 	return self
+end
+
+function ChallengeMod:changeAdminPassword(newPassword)
+	if newPassword ~= nil then
+		self.adminPassword = newPassword
+	end
+end
+
+function ChallengeMod:getAdminPassword()
+	return self.adminPassword
+end
+
+function ChallengeMod:getDefaultAdminPassword()
+	return self.adminPassword
 end
 
 function ChallengeMod:loadMap()
@@ -51,15 +65,22 @@ end
 
 function ChallengeMod:registerXmlSchema()
     self.xmlSchema = XMLSchema.new("ChallengeMod")
-
+	self.xmlSchema:register(XMLValueType.STRING, self.baseXmlKey .. "#password", "Admin password")
 	g_victoryPointManager:registerXmlSchema(self.xmlSchema, self.baseXmlKey)
 	g_ruleManager:registerXmlSchema(self.xmlSchema, self.baseXmlKey)
+
+    self.xmlConfigSchema = XMLSchema.new("ChallengeMod")
+	self.xmlConfigSchema:register(XMLValueType.STRING, self.baseXmlKey .. "#defaultPassword", "Admin password", "")
+	g_victoryPointManager:registerConfigXmlSchema(self.xmlConfigSchema, self.baseXmlKey)
+	g_ruleManager:registerConfigXmlSchema(self.xmlConfigSchema, self.baseXmlKey)
 end
 
 function ChallengeMod:loadConfigData(filename)
-	local xmlFile = XMLFile.loadIfExists("xmlFile", filename, self.xmlSchema)
+	local xmlFile = XMLFile.loadIfExists("xmlFile", filename,  self.xmlConfigSchema)
 	if xmlFile then 
 		CmUtil.debug("Challenge setup loaded from %s.", filename)
+		self.adminPassword = xmlFile:getValue(self.baseXmlKey.."#defaultPassword")
+		self.defaultAdminPassword = self.adminPassword
 		g_victoryPointManager:loadConfigData(xmlFile, self.baseXmlKey)
 		g_ruleManager:loadConfigData(xmlFile, self.baseXmlKey)
 		xmlFile:delete()
@@ -69,13 +90,13 @@ function ChallengeMod:loadConfigData(filename)
 	end
 end
 
-
-function ChallengeMod:saveConfigData(filename)
+function ChallengeMod:saveToXMLFile(filename)
 	local xmlFile = XMLFile.create("xmlFile", filename, self.baseXmlKey, self.xmlSchema)
 	if xmlFile then 
 		CmUtil.debug("Challenge setup saved to %s.", filename)
-		g_victoryPointManager:saveConfigData(xmlFile, self.baseXmlKey)
-		g_ruleManager:saveConfigData(xmlFile, self.baseXmlKey)
+		xmlFile:setValue(self.baseXmlKey .. "#password", self.adminPassword)
+		g_victoryPointManager:saveToXMLFile(xmlFile, self.baseXmlKey)
+		g_ruleManager:saveToXMLFile(xmlFile, self.baseXmlKey)
 		xmlFile:save()
 		xmlFile:delete()
 	else
@@ -83,33 +104,38 @@ function ChallengeMod:saveConfigData(filename)
 	end
 end
 
-
+function ChallengeMod:loadFromXMLFile(filename)
+	local xmlFile = XMLFile.loadIfExists("xmlFile", filename, self.xmlSchema)
+	if xmlFile then 
+		CmUtil.debug("Challenge setup loaded from %s.", filename)
+		self.adminPassword = xmlFile:getValue(self.baseXmlKey .."#password", self.adminPassword)
+		g_victoryPointManager:loadFromXMLFile(xmlFile, self.baseXmlKey)
+		g_ruleManager:loadFromXMLFile(xmlFile, self.baseXmlKey)
+		xmlFile:delete()
+		return true
+	else
+		CmUtil.debug("Challenge setup xml could not be loaded.")
+	end
+end
 
 function ChallengeMod:reloadConfigData()
-	if g_currentMission.missionInfo.savegameDirectory ~= nil then
-		local saveGamePath =  g_currentMission.missionInfo.savegameDirectory .."/" .. ChallengeMod.configFileName
-		if self:loadConfigData(saveGamePath) then 
-			return 
-		end
-	end
-	self:loadConfigData(self.configFilePath)
+	--self:loadConfigData(self.configFilePath)
 end
 
 function ChallengeMod:loadFromSaveGame()
 	if g_currentMission.missionInfo.savegameDirectory ~= nil then
 		local fileName = g_currentMission.missionInfo.savegameDirectory .. "/" .. self.configFileName
-		self:loadConfigData(fileName)
+		self:loadFromXMLFile(fileName)
 	end
 end
 
-function ChallengeMod:saveToXMLFile()
+function ChallengeMod:saveToSaveGame()
 	if g_modIsLoaded[ChallengeMod.MOD_NAME] then
 		local saveGamePath =  g_currentMission.missionInfo.savegameDirectory .."/" .. ChallengeMod.configFileName
-	--	copyFile(g_challengeMod.configFilePath, saveGamePath, false)
-		g_challengeMod:saveConfigData(saveGamePath)
+		g_challengeMod:saveToXMLFile(saveGamePath)
 	end
 end
-ItemSystem.save = Utils.prependedFunction(ItemSystem.save, ChallengeMod.saveToXMLFile)
+ItemSystem.save = Utils.prependedFunction(ItemSystem.save, ChallengeMod.saveToSaveGame)
 
 g_challengeMod = ChallengeMod.new()
 

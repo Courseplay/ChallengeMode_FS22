@@ -1,6 +1,6 @@
 ---@class CmUtil
 CmUtil = {
-	debugActive = false
+	debugActive = true
 }
 
 function CmUtil.debug(str, ...)
@@ -23,6 +23,86 @@ function CmUtil.isValidFarm(farmId, farm)
 	return true --not farm.isSpectator
 end
 
+--- Registers a config xml schema.
+---@param xmlSchema table
+---@param baseXmlKey string
+function CmUtil.registerConfigXmlSchema(xmlSchema, baseXmlKey)
+
+	xmlSchema:register(XMLValueType.STRING, baseXmlKey .. "#leftTitle", "Page title left")
+	xmlSchema:register(XMLValueType.STRING, baseXmlKey .. "#middleTitle", "Page title middle")
+	xmlSchema:register(XMLValueType.STRING, baseXmlKey .. "#rightTitle", "Page title right")
+
+	local cKey =  string.format("%s.Category(?)", baseXmlKey)
+	xmlSchema:register(XMLValueType.STRING, cKey .. "#name", "Category name")
+	xmlSchema:register(XMLValueType.STRING, cKey .. "#title", "Category title")
+
+	local eKey = string.format("%s.Element(?)", cKey)
+	xmlSchema:register(XMLValueType.STRING, eKey .. "#name", "Element name")
+	xmlSchema:register(XMLValueType.INT, eKey  .. "#default", "Element default value")
+	xmlSchema:register(XMLValueType.STRING, eKey .. "#title", "Element title")
+	xmlSchema:register(XMLValueType.STRING, eKey .. "#genericFunc", "Element generic func")
+	xmlSchema:register(XMLValueType.STRING, eKey .. "#unitTextFunc", "Element unit text func")
+	xmlSchema:register(XMLValueType.STRING, eKey .. "#dependency", "Element dependency on category")
+
+	local vKey = string.format("%s.Values.Value(?)", eKey)
+	xmlSchema:register(XMLValueType.INT, vKey, "Value")
+	xmlSchema:register(XMLValueType.STRING, vKey .. "#name", "Value name")
+	xmlSchema:register(XMLValueType.STRING, vKey .. "#text", "Value text")
+
+end
+
+--- Loads the config values.
+---@param xmlFile table
+---@param baseXmlKey string
+---@return table
+function CmUtil.loadConfigCategories(xmlFile, baseXmlKey)
+	local categories = {}
+	local titles = {
+		xmlFile:getValue(baseXmlKey .. "#leftTitle",""),
+		xmlFile:getValue(baseXmlKey .. "#middleTitle",""),
+		xmlFile:getValue(baseXmlKey .. "#rightTitle","")
+	}
+	local baseKey = string.format("%s.Category", baseXmlKey)
+	xmlFile:iterate(baseKey, function (ix, categoryKey)
+		local category = {
+			name = xmlFile:getValue(categoryKey .. "#name"),
+			title = xmlFile:getValue(categoryKey .. "#title"),
+			elements = {}
+		}
+		xmlFile:iterate(string.format("%s.Element", categoryKey), function (ix, elementKey)
+			local element = {
+				name = xmlFile:getValue(elementKey .. "#name"),
+				default = xmlFile:getValue(elementKey .. "#default"),
+				title = xmlFile:getValue(elementKey .. "#title"),
+				genericFunc = xmlFile:getValue(elementKey .. "#genericFunc"),
+				unitTextFunc = xmlFile:getValue(elementKey .. "#unitTextFunc"),
+				dependency = xmlFile:getValue(elementKey .. "#dependency")
+			}
+			local values = {}
+			xmlFile:iterate(string.format("%s.Values.Value", elementKey), function (ix, valueKey)
+				local value = {
+					value = xmlFile:getValue(valueKey, 1),
+					name = xmlFile:getValue(valueKey .. "#name"),
+					text = xmlFile:getValue(valueKey .. "#text"),
+				}
+				table.insert(values, value)
+			end)
+			element.values = values
+			table.insert(category.elements, element)
+		end)
+		table.insert(categories, category)
+	end)
+	
+	return categories, titles
+end
+
+function CmUtil.getCategoryByName(categories, name)
+	for i, category in pairs(categories) do 
+		if category:getName() == name then 
+			return category
+		end
+	end
+end
 
 function CmUtil.fixInGameMenuPage(frame, pageName, image, position, predicateFunc)
 

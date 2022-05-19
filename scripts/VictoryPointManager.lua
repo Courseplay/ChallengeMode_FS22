@@ -13,7 +13,13 @@ VictoryPointManager = {
 		BALE_STORAGE = 3,
 		PALLET_STORAGE = 4
 	},
-	NUM_CATEGORIES = 4
+	NUM_CATEGORIES = 4,
+	CONFIG_CATEGORIES = {
+		"GeneralFactors",
+		"StorageFactors",
+		"BaleFactors",
+		"PalletFactors",
+	},
 }
 local VictoryPointManager_mt = Class(VictoryPointManager)
 ---@class VictoryPointManager
@@ -21,188 +27,159 @@ function VictoryPointManager.new(custom_mt)
 	local self = setmetatable({}, custom_mt or VictoryPointManager_mt)
 	self.isServer = g_server
 		
-	self.factors = {}
-
-	self.pointsByFarmId = {}
 	self.totalPoints = {}
-	self.pointTitles = {}
-	self.factorTexts = {}
-
-	--- Factors 
-	self.storageFactors = {}
-	self.loadedStorageFactors = {}
-	self.storageFillTypes = {}
-
-	self.points = {}
-
-	self.fillTypeStoragePoints = {}
-
-	self.balePoints = {}
-	self.palletPoints = {}
-
 	self.pointList = {}
 
 	return self
 end
 
 function VictoryPointManager:registerXmlSchema(xmlSchema, baseXmlKey)
-	local key = baseXmlKey .. ".VictoryPoints"
-	xmlSchema:register(XMLValueType.FLOAT,key.."#goal","Victory goal")
-	xmlSchema:register(XMLValueType.FLOAT,key..".moneyFactor","Money factor")
-	xmlSchema:register(XMLValueType.FLOAT,key..".areaFactor","Area factor")
-	xmlSchema:register(XMLValueType.FLOAT,key..".storageFactors#default","Storage default factor")
+	ScoreBoardCategory.registerXmlSchema(xmlSchema, baseXmlKey .. ".VictoryPoints")
+end
 
-	xmlSchema:register(XMLValueType.STRING,key..".storageFactors.factor(?)#fillTypes","Storage fillType name")
-	xmlSchema:register(XMLValueType.FLOAT,key..".storageFactors.factor(?)","Storage fillType factor")
+
+function VictoryPointManager:registerConfigXmlSchema(xmlSchema, baseXmlKey)
+	CmUtil.registerConfigXmlSchema(xmlSchema, baseXmlKey .. ".VictoryPoints")
+	xmlSchema:register(XMLValueType.INT, baseXmlKey .. ".VictoryPoints#goal", "Victory point goal")
 end
 
 function VictoryPointManager:loadConfigData(xmlFile, baseXmlKey)
-	local baseKey = baseXmlKey .. ".VictoryPoints"
-	self.victoryGoal = xmlFile:getValue(baseKey.."#goal", 100000)
-	self.factors[self.FACTORS.MONEY] = xmlFile:getValue(baseKey..".moneyFactor", 1)
-	self.factors[self.FACTORS.AREA] = xmlFile:getValue(baseKey..".areaFactor", 1)
-	self.defaultStorageFactor = xmlFile:getValue(baseKey .. ".storageFactors#default", 1)
+	
+	self.configData, self.titles = CmUtil.loadConfigCategories(xmlFile, baseXmlKey .. ".VictoryPoints")
+	self.victoryGoal = xmlFile:getValue(baseXmlKey .. ".VictoryPoints#goal", 100000)
 
-	xmlFile:iterate(baseKey .. ".storageFactors.factor", function (i, key)
-		local names = xmlFile:getValue(key.."#fillTypes")	
-		CmUtil.debug("Trying to find fill types: %s", names)
-		if names then
-			local value = xmlFile:getValue(key)
-			local fillTypes = g_fillTypeManager:getFillTypesByNames(names)
-			if fillTypes and next(fillTypes) then
-				self.loadedStorageFactors[names] = value
-				for i, fillType in pairs(fillTypes) do 
-					if fillType then
-						self.storageFactors[fillType] = value
-					end
+	self.staticPointList = self:getNewPointList()
+end
+
+function VictoryPointManager:saveToXMLFile(xmlFile, baseXmlKey)
+	for i, category in ipairs(self.staticPointList) do 
+		category:saveToXMLFile(xmlFile, string.format("%s.VictoryPoints.Category(%d)", baseXmlKey, i-1))
+	end
+	--[[
+	local baseKey = string.format("%s.VictoryPoints", baseXmlKey)
+	for cIx, category in ipairs(self.configData) do 
+		local cKey = string.format("%s.Category(%d)", baseKey, cIx-1)
+		xmlFile:setValue(cKey .. "#name", category.name)
+		for eIx, element in ipairs(category.elements) do 
+			if not element.dependency then
+				local eKey = string.format("%s.Element(%d)", cKey, eIx-1)
+				xmlFile:setValue(eKey .. "#name", element.name)
+				xmlFile:setValue(eKey, element.default)
+			end
+		end
+	end
+	]]--
+end
+
+function VictoryPointManager:loadFromXMLFile(xmlFile, baseXmlKey)
+	xmlFile:iterate(baseXmlKey .. ".VictoryPoints.Category", function (ix, key)
+		local name = xmlFile:getValue(key .. "#name")
+		if name then
+			local category = CmUtil.getCategoryByName(self.staticPointList, name)
+			if category then 
+				category:loadFromXMLFile(xmlFile, key)
+			end
+		end
+	end)
+	--[[
+	local setup = {}
+	xmlFile:iterate(baseXmlKey .. ".VictoryPoints.Category", function (ix, categoryKey)
+		local categoryName = xmlFile:getValue(categoryKey .. "#name")
+		if categoryName then
+			setup[categoryName] = {}
+			xmlFile:iterate(categoryKey .. ".Element", function (ix, elementKey)
+				local elementName = xmlFile:getValue(elementKey .. "#name")
+				local value = xmlFile:getValue(elementKey)
+				if elementName and value ~= nil then 
+					setup[categoryName][elementName] = value
+				end
+			end)
+		end
+	end)
+	for _, category in ipairs(self.configData) do 
+		local e = setup[category.name]
+		if e then 
+			for _, element in ipairs(category.elements) do 
+				local v = setup[category.name][element.name]
+				if v ~= nil then 
+					element.default = v
 				end
 			end
 		end
-	end)	
-end
-
-function VictoryPointManager:saveConfigData(xmlFile, baseXmlKey)
-	local baseKey = baseXmlKey .. ".VictoryPoints"
-	xmlFile:setValue(baseKey.."#goal", self.victoryGoal)
-	xmlFile:setValue(baseKey..".moneyFactor", self.factors[self.FACTORS.MONEY])
-	xmlFile:setValue(baseKey..".areaFactor", self.factors[self.FACTORS.AREA])
-	xmlFile:setValue(baseKey..".storageFactors#total", self.factors[self.FACTORS.TOTAL_STORAGE])
-	xmlFile:setValue(baseKey .. ".storageFactors#default", self.defaultStorageFactor)
-
-	local ix, key = 0, ""
-	for names, value in pairs(self.loadedStorageFactors) do 
-		key = string.format("%s.storageFactors.factor(%d)", baseKey, ix)
-		xmlFile:setValue(key.."#fillTypes", names)
-		xmlFile:setValue(key, value)
-		ix = ix + 1
 	end
+	]]--
 end
 
-function VictoryPointManager:getStorageAmount(farmId)
-	local totalFillLevel = 0
-	local totalFillLevels = {}
-	local usedStorages = {}
-	for _, storage in pairs(g_currentMission.storageSystem:getStorages()) do
-		if usedStorages[storage] == nil and storage:getOwnerFarmId() == farmId and not storage.foreignSilo then
-			usedStorages[storage] = true
-			local fillLevels = storage:getFillLevels()
-			for fillType, v in pairs(fillLevels) do 
-				CmUtil.debug("Storage fillType(%s) found.", g_fillTypeManager:getFillTypeNameByIndex(fillType))
-				totalFillLevel = totalFillLevel + v
-				if totalFillLevels[fillType] == nil then 
-					totalFillLevels[fillType] = 0
+function VictoryPointManager:addStorageFactors(category, factorData, farmId, farm)
+	local fillLevels = VictoryPointsUtil.getStorageAmount(farmId)
+	VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
+end
+
+function VictoryPointManager:addBaleFactors(category, factorData, farmId, farm)
+	local fillLevels = VictoryPointsUtil.getBaleAmount(farmId)
+	VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
+end
+
+function VictoryPointManager:addPalletFactors(category, factorData, farmId, farm)
+	local fillLevels = VictoryPointsUtil.getPalletAmount(farmId)
+	VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
+end
+
+function VictoryPointManager:addMoneyFactor(category, factorData, farmId, farm)
+	local money = farm and farm.money or 0
+	category:addElement(VictoryPoint.createFromXml(factorData, money))
+end
+
+function VictoryPointManager:addAreaFactor(category, factorData, farmId, farm)
+	local area = VictoryPointsUtil.getTotalArea(farmId)
+	category:addElement(VictoryPoint.createFromXml(factorData, area))
+end
+
+function VictoryPointManager:addDependentPoint(category, factorData, farmId, farm, dependency)
+	category:addElement(VictoryPoint.createFromXml(factorData, farmId ~=nil and dependency:count() or 0))
+end
+
+function VictoryPointManager:getNewPointList(farmId, farm)
+	local dependedPoints = {}
+	local pointList = {}
+	for cIx, categoryData in ipairs(self.configData) do 
+		local category = ScoreBoardCategory.new(categoryData.name, categoryData.title)
+		for pIx, pointData in ipairs(categoryData.elements) do 
+			if pointData.dependency == nil then 
+				if pointData.genericFunc == nil then
+					category:addElement(VictoryPoint.createFromXml(pointData))
+				else 
+					self[pointData.genericFunc](self, category, pointData, farmId, farm)
 				end
-				totalFillLevels[fillType] = totalFillLevels[fillType] + v
+			else 
+				table.insert(dependedPoints, {
+					data = pointData,
+					cIx = cIx,
+					pIx = pIx
+				})
 			end
 		end
+		table.insert(pointList, category)
 	end
-	CmUtil.debug("Total storage of: %.2f", totalFillLevel )
-	return totalFillLevel, totalFillLevels
-end
-
-function VictoryPointManager:getBaleAmount(farmId)
-	local baleFillLevels = {}
-	for _, object in pairs(g_currentMission.nodeToObject) do
-		if object:isa(Bale) and object:getOwnerFarmId(farmId) == farmId and not object.isMissionBale then 
-			if baleFillLevels[object.fillType] == nil then 
-				baleFillLevels[object.fillType] = 0
-			end
-			baleFillLevels[object.fillType] = baleFillLevels[object.fillType] + object.fillLevel
+	for i, point in ipairs(dependedPoints) do 
+		local category = pointList[point.cIx]
+		if point.data.genericFunc == nil then
+			category:addElement(VictoryPoint.createFromXml(point.data), point.pIx)
+		else 
+			local dependency = CmUtil.getCategoryByName(pointList, point.data.dependency)
+			self[point.data.genericFunc](self, category, point.data, farmId, farm, dependency)
 		end
 	end
-	return baleFillLevels
-end
-
-function VictoryPointManager:getPalletAmount(farmId)
-	local palletFillLevels = {}
-	for _, object in pairs(g_currentMission.vehicles) do
-		if object.spec_pallet and object:getOwnerFarmId(farmId) == farmId then 
-			local fillUnitIndex = object.spec_pallet.fillUnitIndex
-			local fillLevel = object:getFillUnitFillLevel(fillUnitIndex)
-			local fillType = object:getFillUnitFillType(fillUnitIndex)
-			if palletFillLevels[fillType] == nil then 
-				palletFillLevels[fillType] = 0
-			end
-			palletFillLevels[fillType] = palletFillLevels[fillType] + fillLevel
-		end
-	end
-	return palletFillLevels
-end
-
-function VictoryPointManager:getTotalArea(farmId)
-	local totalArea = 0
-	local farmlands = g_farmlandManager:getOwnedFarmlandIdsByFarmId(farmId)
-	for _, farmlandId in pairs(farmlands) do
-		local farmland = g_farmlandManager:getFarmlandById(farmlandId)
-		if farmland then
-			totalArea = totalArea + farmland.areaInHa
-		end
-	end
-	CmUtil.debug("Total area of: %.2f", totalArea)
-	return totalArea
+	return pointList
 end
 
 function VictoryPointManager:calculatePoints(farmId, farm)
-	local money = farm.money or 0
-	local totalStorageAmount, fillLevels = self:getStorageAmount(farmId)
-	local baleFillLevels = self:getBaleAmount(farmId)
-	local palletFillLevels = self:getPalletAmount(farmId)
-	local totalArea = self:getTotalArea(farmId)
-	
-
-	
-
-	
-	self.points[farmId] = {
-		self:newMoneyFactor(money),
-		self:newAreaFactor(totalArea),
-	}
-
-	self.fillTypeStoragePoints[farmId] = {}
-	self.balePoints[farmId] = {}
-	self.palletPoints[farmId] = {}
-
-	self:addFillLevels(fillLevels, self.fillTypeStoragePoints[farmId])
-	self:addFillLevels(baleFillLevels, self.balePoints[farmId])
-	self:addFillLevels(palletFillLevels, self.palletPoints[farmId])
-
-	local points = self:countPoints(self.points[farmId])
-	local fillTypePoints = self:countPoints(self.fillTypeStoragePoints[farmId])
-	local balePoints = self:countPoints(self.balePoints[farmId])
-	local palletPoints = self:countPoints(self.palletPoints[farmId])
-
-	table.insert(self.points[farmId], self:newStorageFactor(fillTypePoints, self.FACTORS.TOTAL_STORAGE))
-	table.insert(self.points[farmId], self:newStorageFactor(balePoints, self.FACTORS.BALE_STORAGE))
-	table.insert(self.points[farmId], self:newStorageFactor(palletPoints, self.FACTORS.PALLET_STORAGE))
-
-	self.totalPoints[farmId] = points + fillTypePoints + balePoints + palletPoints
-
-	self.pointList[farmId] = {
-		self.points[farmId],
-		self.fillTypeStoragePoints[farmId],
-		self.balePoints[farmId],
-		self.palletPoints[farmId]
-	}
+	self.pointList[farmId] = self:getNewPointList(farmId, farm)
+	self.totalPoints[farmId] = 0
+	for i, category in ipairs(self.staticPointList) do 
+		self.pointList[farmId][i]:applyValues(category)
+		self.totalPoints[farmId] = self.totalPoints[farmId] + self.pointList[farmId][i]:count()
+	end
 
 end
 
@@ -214,21 +191,9 @@ function VictoryPointManager:countPoints(data)
 	return points
 end
 
-function VictoryPointManager:addFillLevels(fillLevels, target)
-	local orderedFillLevels = table.toList(fillLevels)
-	
-	table.sort(orderedFillLevels, function (a, b)
-		return g_fillTypeManager:getFillTypeTitleByIndex(a) < g_fillTypeManager:getFillTypeTitleByIndex(b)
-	end)
-
-	for _, fillType in pairs(orderedFillLevels) do 
-
-		table.insert(target, self:newStorageFillTypeFactor(fillType, fillLevels[fillType]))
-	end
-end
-
 function VictoryPointManager:update()
-
+	self.pointList = {}
+	self.totalPoints = {}
 	local farms = g_farmManager:getFarms()
 	for _, farm in pairs(farms) do 
 		local farmId = farm.farmId
@@ -239,24 +204,20 @@ function VictoryPointManager:update()
 	end
 end
 
-function VictoryPointManager:getPointList(farmId)
-	return self.pointList[farmId]
+function VictoryPointManager:getCategories(farmId)
+	return farmId~=nil and self.pointList[farmId]
 end
 
-function VictoryPointManager:getPoints(farmId)
-	return self.points[farmId]
+function VictoryPointManager:getNumberOfCategories()
+	return #self.configData
 end
 
-function VictoryPointManager:getFillTypeStoragePoints(farmId)
-	return self.fillTypeStoragePoints[farmId]
+function VictoryPointManager:getTitles()
+	return self.titles	
 end
 
-function VictoryPointManager:getBalesPoints(farmId)
-	return self.balePoints[farmId]
-end
-
-function VictoryPointManager:getPalletsPoints(farmId)
-	return self.palletPoints[farmId]
+function VictoryPointManager:getSectionTitle(sec)
+	return self.configData[sec].title or ""
 end
 
 function VictoryPointManager:getTotalPoints(farmId)
@@ -271,32 +232,19 @@ function VictoryPointManager:getGoal()
 	return self.victoryGoal	
 end
 
-function VictoryPointManager:newMoneyFactor(value)
-	local factor = self.factors[self.FACTORS.MONEY]
-	return VictoryPoint.new(value, factor, ScoreBoardFrame.translations.points[self.FACTORS.MONEY], 
-		ScoreBoardFrame.translations.factors[self.FACTORS.MONEY])
-end
-
-function VictoryPointManager:newAreaFactor(value)
-	local factor = self.factors[self.FACTORS.AREA]
-	return VictoryPoint.new(value, factor, ScoreBoardFrame.translations.points[self.FACTORS.AREA], 
-		ScoreBoardFrame.translations.factors[self.FACTORS.AREA])
-end
-
-function VictoryPointManager:newStorageFactor(value, ix)
-	return VictoryPoint.new(value, nil, ScoreBoardFrame.translations.points[ix])
-end
-
-function VictoryPointManager:newStorageFillTypeFactor(fillType, value)
-	local title = g_fillTypeManager:getFillTypeTitleByIndex(fillType)
-	local factor = self.storageFactors[fillType] 
-	if factor == nil then 
-		factor = self.defaultStorageFactor
+function VictoryPointManager:onTextInput(element, category, value)
+	local v = tonumber(value)
+	if v ~= nil then
+		for _, c in pairs(self.staticPointList) do 
+			if c:getName() == category:getName() then 
+				local e = c:getElementByName(element:getName())
+				if e then
+					e:setFactor(v)
+					self:update()
+				end
+			end
+		end
 	end
-	return VictoryPoint.new(value, factor, title, 	
-		ScoreBoardFrame.translations.factors[self.FACTORS.TOTAL_STORAGE])
-	
 end
-
 
 g_victoryPointManager = VictoryPointManager.new()

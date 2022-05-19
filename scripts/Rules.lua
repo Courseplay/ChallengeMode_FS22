@@ -3,25 +3,58 @@ Rule = {
 }
 local Rule_mt = Class(Rule, ScoreBoardElement)
 ---@class Rule : ScoreBoardElement
-function Rule.new(value, title, texts, custom_mt)
-	local self = ScoreBoardElement.new(title, custom_mt or Rule_mt)
-	self.value = value
+function Rule.new(name, default, title, valuesData, custom_mt)
+	local self = ScoreBoardElement.new(name, title, custom_mt or Rule_mt)
+	self.currentIx = default or 1
 	self.title = title
-	self.texts = texts
+	self.values = {}
+	self.texts = {}
+	if valuesData then
+		for i, data in pairs(valuesData) do 
+			if data.name then
+				Rule[data.name] = data.value
+			end
+			table.insert(self.values, data.value)
+			table.insert(self.texts, data.text)
+		end
+	end
 	return self
 end
 
+function Rule.createFromXml(data)
+	return Rule.new(data.name, data.default, data.title, data.values)
+end
 
 function Rule:getText()
-	if self.texts then 
-		if self.texts[self.value] then 
-			return self.texts[self.value]
-		end
-		if self.value == true then 
-			return self.texts[2]
-		elseif self.value == false then 
-			return self.texts[1]
-		end
+	if next(self.texts) ~= nil and self.texts[self.currentIx] then 
+		return self.texts[self.currentIx]
 	end
-	return tostring(self.value)
+	return tostring(self.values[self.currentIx])
+end
+
+function Rule:onTextInput(value)
+		
+end
+
+function Rule:isTextInputAllowed()
+	return false
+end
+
+function Rule:onClick()
+	self.currentIx = self.currentIx + 1 
+	if self.currentIx > #self.values then 
+		self.currentIx = 1
+	end
+end
+
+function Rule:saveToXMLFile(xmlFile, baseXmlKey)
+	xmlFile:setValue(baseXmlKey .. "#name", self.name)
+	xmlFile:setValue(baseXmlKey, self.currentIx)
+end
+
+function Rule:loadFromXMLFile(xmlFile, baseXmlKey)
+	local value = xmlFile:getValue(baseXmlKey)
+	if value then 
+		self.currentIx = value
+	end
 end

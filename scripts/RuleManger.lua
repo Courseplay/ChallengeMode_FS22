@@ -9,7 +9,15 @@ RuleManager = {
 		ONLY_SHOP_VEHICLES = 1,
 		ENABLED = 2
 	},
-	NUM_CATEGORIES = 2
+	NUM_CATEGORIES = 2,
+	CONFIG_CATEGORIES = {
+		"GeneralRules",
+		"MissionRules"
+	},
+	CATEGORIES = {
+		GENERAL = 1,
+		MISSION = 2
+	}
 }
 local RuleManager_mt = Class(RuleManager)
 ---@class RuleManager
@@ -17,86 +25,92 @@ function RuleManager.new(custom_mt)
 	local self = setmetatable({}, custom_mt or RuleManager_mt)
 	self.isServer = g_server
 		
-	self.rules = {}
-	self.missionRules = {}
 	self.ruleList = {}
 
 	self.missionTypes = {}
-	self.missionTypesEnabled = {}
 	for i, missionType in pairs(g_missionManager.missionTypes) do 
 		self.missionTypes[missionType.name] = missionType
-		self.missionTypesEnabled[missionType.name] = true
 	end
-	self.translations = ScoreBoardFrame.translations
 	return self
 end
 
 
 function RuleManager:registerXmlSchema(xmlSchema, baseXmlKey)
-	local baseKey = baseXmlKey .. ".Rules"
-	xmlSchema:register(XMLValueType.INT, baseKey..".helperLimit", "Helper limit")
-	xmlSchema:register(XMLValueType.INT, baseKey..".leaseVehicles", "Vehicle leasing allowed.")
-	xmlSchema:register(XMLValueType.STRING, baseKey..".missions.mission(?)#name", "Mission name")
-	xmlSchema:register(XMLValueType.BOOL, baseKey..".missions.mission(?)", "Mission disabled.")
+	ScoreBoardCategory.registerXmlSchema(xmlSchema, baseXmlKey .. ".Rules")
+end
+
+function RuleManager:registerConfigXmlSchema(xmlSchema, baseXmlKey)
+	CmUtil.registerConfigXmlSchema(xmlSchema, baseXmlKey .. ".Rules")
 end
 
 function RuleManager:loadConfigData(xmlFile, baseXmlKey)
-	local baseKey = baseXmlKey .. ".Rules"
-	self.helperLimit = xmlFile:getValue(baseKey..".helperLimit", g_currentMission.maxNumHirables)
-	self.leaseVehicles = xmlFile:getValue(baseKey..".leaseVehicles", self.LEASE_VEHICLES.ENABLED)
+		
+	self.configData, self.titles = CmUtil.loadConfigCategories(xmlFile, baseXmlKey .. ".Rules")
 
-
-	xmlFile:iterate(baseKey .. ".missions.mission", function (i, key)
-		local name = xmlFile:getValue(key.."#name")	
-		CmUtil.debug("Trying to find mission type: %s", name)
-		if name and self.missionTypes[name] then 
-			local value = xmlFile:getValue(key, true)
-			self.missionTypesEnabled[name] = value
-		end			
-	end)	
-
-	self.rules = {
-		Rule.new(self.helperLimit, self.translations.rules[self.RULES.HELPER_LIMIT]),
-		Rule.new(self.leaseVehicles, self.translations.rules[self.RULES.LEASE_VEHICLES], self.translations.leaseVehicleRule)
-	}
-	local missionNames = table.toList(self.missionTypesEnabled)
-	table.sort(missionNames)
-	self.missionRules = {}
-	for _, name in ipairs(missionNames) do 
-		table.insert(self.missionRules,Rule.new(self.missionTypesEnabled[name], name, self.translations.missionRule))
+	self.ruleList = {}
+	for _, categoryData in pairs(self.configData) do 
+		local category = ScoreBoardCategory.new(categoryData.name, categoryData.title)
+		for _, rule in pairs(categoryData.elements) do 
+			if rule.genericFunc == nil then
+				category:addElement(Rule.createFromXml(rule))
+			else 
+				self[rule.genericFunc](self, category, rule)
+			end
+		end
+		table.insert(self.ruleList, category)
 	end
-
-	self.ruleList = {
-		self.rules,
-		self.missionRules
-	}
-
 end
 
-function RuleManager:saveConfigData(xmlFile, baseXmlKey)
-	local baseKey = baseXmlKey .. ".Rules"
-	xmlFile:setValue(baseKey..".helperLimit", self.helperLimit)
-	xmlFile:setValue(baseKey..".leaseVehicles", self.leaseVehicles)
+function RuleManager:saveToXMLFile(xmlFile, baseXmlKey)
+	for i, category in ipairs(self.ruleList) do 
+		category:saveToXMLFile(xmlFile, string.format("%s.Rules.Category(%d)", baseXmlKey, i-1))
+	end
+end
 
-	local ix, key = 0, ""
-	for name, value in pairs(self.missionTypesEnabled) do 
-		key = string.format("%s.missions.mission(%d)", baseKey, ix)
-		xmlFile:setValue(key.."#name", name)
-		xmlFile:setValue(key, value)
-		ix = ix + 1
+function RuleManager:loadFromXMLFile(xmlFile, baseXmlKey)
+	xmlFile:iterate(baseXmlKey .. ".Rules.Category", function (ix, key)
+		local name = xmlFile:getValue(key .. "#name")
+		if name then
+			local category = CmUtil.getCategoryByName(self.ruleList, name)
+			if category then 
+				category:loadFromXMLFile(xmlFile, key)
+			end
+		end
+	end)
+end
+
+function RuleManager:addMissionRules(category, ruleData)
+	local missionNames = table.toList(self.missionTypes)
+	table.sort(missionNames)
+	for _, name in ipairs(missionNames) do 
+		ruleData.name = name
+		ruleData.title = name
+		category:addElement(Rule.createFromXml(ruleData))
 	end
 end
 
 function RuleManager:getRules()
-	return self.rules
+	return self.ruleList[self.CATEGORIES.GENERAL]
 end
 
 function RuleManager:getMissionRules()
-	return self.missionRules
+	return self.ruleList[self.CATEGORIES.MISSION]
 end
 
-function RuleManager:getRuleList()
+function RuleManager:getCategories()
 	return self.ruleList
+end
+
+function RuleManager:getNumberOfCategories()
+	return #self.configData
+end
+
+function RuleManager:getTitles()
+	return self.titles	
+end
+
+function RuleManager:getSectionTitle(sec)
+	return self.configData[sec].title or ""
 end
 
 g_ruleManager = RuleManager.new()

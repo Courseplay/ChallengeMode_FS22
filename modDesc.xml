@@ -20,17 +20,15 @@
 	<extraSourceFiles>
 		<sourceFile filename="scripts/Util.lua"/>
 		<sourceFile filename="scripts/main.lua"/>
+		<sourceFile filename="scripts/VictoryPointsUtil.lua"/>
 		<sourceFile filename="gui/ScoreBoardFrame.lua"/>
 		<sourceFile filename="scripts/ScoreBoardElement.lua"/>
+		<sourceFile filename="scripts/ScoreBoardCategory.lua"/>
 		<sourceFile filename="scripts/VictoryPoint.lua"/>
 		<sourceFile filename="scripts/VictoryPointManager.lua"/>
 		<sourceFile filename="scripts/Rules.lua"/>
 		<sourceFile filename="scripts/RuleManger.lua"/>
 	</extraSourceFiles>
-	<l10n>	
-		<text name="LPT_licensePlateAlreadyUsed"><de>Kennzeichen schon eingebaut in %s</de><en>License plate already in use %s</en></text>	
-		<text name="ui_tps_vehicleHeader"><de>Fahrzeuge</de><en>Vehicles</en></text>	
-		<text name="ui_tps_licensePlateHeader"><de>Kennzeichen</de><en>License plates</en></text>	
-	</l10n>
+	<l10n filenamePrefix="translations/translation" />
 	
 </modDesc>

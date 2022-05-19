@@ -1,26 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ChallengeMod>
-	<VictoryPoints goal="1000000">
-		<moneyFactor>1</moneyFactor>
-		<areaFactor>1</areaFactor>
-		<storageFactors total="1" default="1">
-			<factor fillTypes="wheat barley oat">1</factor>
-			<factor fillTypes="canola sorghum sunflower maize">1</factor>
-			<factor fillTypes="potato sugarbeet">1</factor>
-			<factor fillTypes="soybean">0.5</factor>
-			<factor fillTypes="grass drygrass">1</factor>
-		</storageFactors>
-	</VictoryPoints>
-	<Rules>
-		<maxHelpers>1</maxHelpers>
-		<!-- 
-			0: deactivated
-			1: only shop vehicles
-			2: everything allowed
-		 -->
-		<leaseVehicle>2</leaseVehicle>
-		<missions>
+<ChallengeMod defaultPassword = "0000">
+	<VictoryPoints goal="1000000" leftTitle="Points" middleTitle = "Factor" rightTitle="Value">
+		<Category name="general" title="">
+			<Element genericFunc="addMoneyFactor" unitTextFunc = "MONEY_TEXT" name="money" default="1" title="Money"></Element>
+			<Element genericFunc="addAreaFactor" unitTextFunc = "AREA_TEXT" name="area" default="1" title="Area"></Element>
 			
-		</missions>
+			<Element dependency="storage" genericFunc="addDependentPoint" unitTextFunc = "VOLUME_TEXT" name="totalStorage" default="1" title="Total storage"></Element>
+			<Element dependency="bales" genericFunc="addDependentPoint" unitTextFunc = "VOLUME_TEXT" name="totalBales" default="1" title="Total bales"></Element>
+			<Element dependency="pallets" genericFunc="addDependentPoint" unitTextFunc = "VOLUME_TEXT" name="totalPallets" default="1" title="Total pallets"></Element>
+		</Category>
+		<Category name="storage" title="Storage">
+			<Element genericFunc="addStorageFactors" unitTextFunc = "VOLUME_TEXT" default="1"></Element>
+		</Category>
+		<Category name="bales" title="Bale storage">
+			<Element genericFunc="addBaleFactors" unitTextFunc = "VOLUME_TEXT" default="1"></Element>
+		</Category>
+		<Category name="pallets" title="Pallet storage">
+			<Element genericFunc="addPalletFactors" unitTextFunc = "VOLUME_TEXT" default="1"></Element>
+		</Category>
+	</VictoryPoints>
+
+	<Rules leftTitle="Rule" middleTitle = "" rightTitle="Value">
+		<Category name="general" title="" >
+			<Element name="maxHelpers" default="5" title="Max Helpers: ">
+				<Values>
+					<Value name="HELPER_DEACTIVATED" text="Deactivated">0</Value>
+					<Value>2</Value>
+					<Value>4</Value>
+					<Value>8</Value>
+					<Value>10</Value>
+					<Value>12</Value>
+				</Values>
+			</Element>
+			<Element name="leaseVehicle" default="3" title="Lease helpers">
+				<Values>
+					<Value name="LEASE_VEHICLE_DEACTIVATED" text="Deactivated">0</Value>
+					<Value name="LEASE_VEHICLE_SHOP_ONLY" text="ShopOnly">1</Value>
+					<Value name="LEASE_VEHICLE_ALLOWED" text="Allowed">2</Value>
+				</Values>
+			</Element>
+		</Category>
+		<Category name="missions" title="Mission rules">
+			<Element genericFunc="addMissionRules" default="1">
+				<Values>
+					<Value name="MISSION_DEACTIVATED" text="Deactivated">0</Value>
+					<Value name="MISSION_ACTIVATED" text="ACTIVATED">1</Value>
+				</Values>
+			</Element>
+		</Category>
 	</Rules>
 </ChallengeMod>
+
+<!--
+<ChallengeMod>
+	<VictoryPoints>
+		<Category name="general" title="">
+			<Element name="money">default</Element>
+			<Element name="area">default</Element>
+		</Category>
+	</VictoryPoints>
+	<Rules>
+
+	</Rules>
+</ChallengeMod>
+	-->

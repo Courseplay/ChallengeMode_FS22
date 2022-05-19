@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+	<texts>
+		<text name="CM_title" 							text="Challenge mod" />
+		<text name="CM_leftList_leftTitle" 				text="Farm" />
+		<text name="CM_leftList_rightTitle" 			text="Total points" />
+		<text name="CM_leftList_section_two" 			text="Settings" />
+		<text name="CM_leftList_ruleTitle" 				text="Rules" />
+
+		<text name="CM_rightList_leftTitle" 			text="Goal: %d" />
+
+		<text name="CM_menuBtn_admin" 					text="Login" />
+		<text name="CM_menuBtn_admin_changePassword"	text="Login" />
+		<text name="CM_menuBtn_change" 					text="Change value" />
+
+		<text name="CM_dialog_changeTitle" 				text="Change value" />
+		<text name="CM_dialog_adminTitle" 				text="Login(default: %s)" />
+		<text name="CM_dialog_adminChangePasswordTitle"	text="Current password: %s" />
+	</texts>
+</l10n>

@@ -3,15 +3,15 @@
     <GuiElement type="empty" profile="uiInGameMenuFrame">
         <GuiElement type="empty" profile="ingameMenuFrameHeaderPanel">
             <GuiElement type="bitmap" profile="ingameMenuPriceHeaderIcon" />
-            <GuiElement type="text" profile="ingameMenuFrameHeaderText" id="header" text="Challenge Mod"/>
+            <GuiElement type="text" profile="ingameMenuFrameHeaderText" id="header" text="$l10n_CM_title"/>
         </GuiElement>
 
         <GuiElement type="empty" profile="ingameMenuSettingsBox" id="mainBox">
 
             <GuiElement type="empty" profile="ingameMenuPriceLeftColumn" id="leftColumn">
                 <GuiElement type="boxLayout" profile="ingameCalendarHeaderBox" id="tableHeaderBox" size="680px 104px">
-                    <GuiElement type="text" profile="ingameMenuPriceHeader" size="340px 104px" id="leftColumnHeader" text="Farm"/>
-					<GuiElement type="text" profile="ingameMenuPriceHeader" size="340px 104px" text="Total points" textAlignment="right" textOffset="-30px 0px" />
+                    <GuiElement type="text" profile="ingameMenuPriceHeader" size="340px 104px" id="leftColumnHeader" text="$l10n_CM_leftList_leftTitle"/>
+					<GuiElement type="text" profile="ingameMenuPriceHeader" size="340px 104px" text="$l10n_CM_leftList_rightTitle" textAlignment="right" textOffset="-30px 0px" />
                 </GuiElement>
 
                 <GuiElement type="smoothList" profile="ingameMenuPriceList" id="leftList" focusChangeTop="nil" focusChangeBottom="nil" selectedWithoutFocus="true" listSectionHeader="section">
@@ -34,8 +34,8 @@
             <GuiElement type="empty" profile="ingameMenuPriceRightColumn" id="rightColumn">
                 <GuiElement type="boxLayout" profile="ingameCalendarHeaderBox" id="tableHeaderBox" size="680px 104px">
                     <GuiElement type="text" profile="ingameMenuPriceHeader" size="330px 104px"  id="goal" text=""/> 
-                    <GuiElement type="text" profile="ingameMenuPriceHeader" size="180px 104px"  text="Factor" />
-                    <GuiElement type="text" profile="ingameMenuPriceHeader" size="160px 104px"  text="Points" textOffset="0 0" />
+                    <GuiElement type="text" profile="ingameMenuPriceHeader" size="180px 104px"  text="" id="rightList_middleTitle" />
+                    <GuiElement type="text" profile="ingameMenuPriceHeader" size="160px 104px"  text="" id="rightList_rightTitle" textOffset="0 0" />
                 </GuiElement>
 
                 <GuiElement type="smoothList" profile="ingameMenuPriceList" id="rightList" focusChangeTop="nil" focusChangeBottom="nil" listSectionHeader="section">
