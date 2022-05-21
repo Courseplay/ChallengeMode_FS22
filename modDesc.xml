@@ -29,6 +29,9 @@
 		<sourceFile filename="scripts/VictoryPointManager.lua"/>
 		<sourceFile filename="scripts/Rules.lua"/>
 		<sourceFile filename="scripts/RuleManger.lua"/>
+		<sourceFile filename="events/ChangeElementEvent.lua"/>
+		<sourceFile filename="events/JoinEvent.lua"/>
+		<sourceFile filename="events/ChangeAdminPasswordEvent.lua"/>
 	</extraSourceFiles>
 	<l10n filenamePrefix="translations/translation" />
 	

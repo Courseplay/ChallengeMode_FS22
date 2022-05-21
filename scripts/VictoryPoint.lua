@@ -73,6 +73,7 @@ function VictoryPoint:onTextInput(value)
 	local v = tonumber(value)
 	if v ~= nil then
 		self.staticElement:setFactor(v)
+		ChangeElementEvent.sendEvent(self, ChangeElementEvent.POINT)
 	end
 end
 
@@ -104,4 +105,17 @@ function VictoryPoint:applyValues(staticCategory)
 		self:setFactor(element:getFactor())
 		self.staticElement = element
 	end
+end
+
+function VictoryPoint:writeStream(streamId, connection)
+	streamWriteUInt8(streamId, self:getParent().id)
+	streamWriteUInt8(streamId, self.id)
+	streamWriteFloat32(streamId, self:getFactor())
+end
+
+function VictoryPoint.readStream(streamId, connection)
+	local categoryId = streamReadUInt8(streamId)
+	local id = streamReadUInt8(streamId)
+	local value = streamReadFloat32(streamId)
+	g_victoryPointManager:getList():getElement(categoryId, id):setFactor(value)
 end

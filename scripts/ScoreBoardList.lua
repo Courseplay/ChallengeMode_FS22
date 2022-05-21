@@ -44,13 +44,25 @@ function ScoreBoardList.loadFromXMLFile(manager, xmlFile, baseXmlKey)
 	end)
 end
 
+function ScoreBoardList:writeStream(...)
+	for i, element in ipairs(self.elements) do 
+		element:writeStream(...)
+	end
+end
+
+function ScoreBoardList:readStream(...)
+	for i, element in ipairs(self.elements) do 
+		element:readStream(...)
+	end
+end
+
 function ScoreBoardList:addElement(element, ix)
 	if ix ~= nil then 
 		table.insert(self.elements, ix, element)
 	else
 		table.insert(self.elements, element)
 	end
-	element:setParent(self)
+	element:setParent(self, ix or #self.elements)
 end
 
 function ScoreBoardList:getElement(index, ...)

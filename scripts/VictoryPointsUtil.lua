@@ -27,7 +27,13 @@ end
 
 function VictoryPointsUtil.getBaleAmount(farmId)
 	if farmId == nil then 
-		return g_fillTypeManager:getFillTypes()
+		local fillTypes = {}
+		for i, bale in pairs(g_baleManager.bales) do 
+			for _,data in pairs(bale.fillTypes) do 
+				fillTypes[data.fillTypeIndex] = 1
+			end
+		end
+		return fillTypes
 	end
 	local baleFillLevels = {}
 	for _, object in pairs(g_currentMission.nodeToObject) do

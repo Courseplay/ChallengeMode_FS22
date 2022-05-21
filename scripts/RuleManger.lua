@@ -69,6 +69,14 @@ function RuleManager:loadFromXMLFile(xmlFile, baseXmlKey)
 	ScoreBoardList.loadFromXMLFile(self, xmlFile, baseXmlKey .. ".Rules")
 end
 
+function RuleManager:writeStream(streamId, connection)
+	self.ruleList:writeStream(streamId)
+end
+
+function RuleManager:readStream(streamId, connection)
+	self.ruleList:readStream(streamId)
+end
+
 function RuleManager:addMissionRules(category, ruleData)
 	local missionNames = table.toList(self.missionTypes)
 	table.sort(missionNames)

@@ -24,8 +24,9 @@ function ScoreBoardCategory:getName()
 	return self.name	
 end
 
-function ScoreBoardCategory:setParent(parent)
+function ScoreBoardCategory:setParent(parent, id)
 	self.parent = parent	
+	self.id = id
 end
 
 function ScoreBoardCategory:getParent()
@@ -38,7 +39,7 @@ function ScoreBoardCategory:addElement(element, ix)
 	else
 		table.insert(self.elements, element)
 	end
-	element:setParent(self)
+	element:setParent(self, ix or #self.elements)
 end
 
 function ScoreBoardCategory:getElement(index)
@@ -128,5 +129,17 @@ function ScoreBoardCategory:applyValues(staticList)
 		for i, e in ipairs(self.elements) do 
 			e:applyValues(element)
 		end	
+	end
+end
+
+function ScoreBoardList:writeStream(...)
+	for i, element in ipairs(self.elements) do 
+		element:writeJoinStream(...)
+	end
+end
+
+function ScoreBoardList:readStream(...)
+	for i, element in ipairs(self.elements) do 
+		element:readJoinStream(...)
 	end
 end

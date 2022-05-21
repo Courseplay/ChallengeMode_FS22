@@ -39,8 +39,9 @@ function ScoreBoardElement:getName()
 	return self.name	
 end
 
-function ScoreBoardElement:setParent(parent)
-	self.parent = parent	
+function ScoreBoardElement:setParent(parent, id)
+	self.parent = parent
+	self.id = id
 end
 
 function ScoreBoardElement:getParent(parent)
@@ -79,4 +80,16 @@ end
 
 function ScoreBoardElement:applyValues()
 
+end
+
+function ScoreBoardElement:writeJoinStream(streamId, connection)
+	if not self.dependency then 
+		streamWriteFloat32(streamId, self:getValueToSave())
+	end
+end
+
+function ScoreBoardElement:readJoinStream(streamId, connection)
+	if not self.dependency then 
+		self:setSavedValue(streamReadFloat32(streamId))
+	end
 end

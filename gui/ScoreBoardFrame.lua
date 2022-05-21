@@ -41,7 +41,8 @@ ScoreBoardFrame.translations = {
 	dialogs = {
 		admin = g_i18n:getText("CM_dialog_adminTitle"),
 		adminChangePassword = g_i18n:getText("CM_dialog_adminChangePasswordTitle"),
-		value = g_i18n:getText("CM_dialog_changeTitle")
+		adminWrongPassword = g_i18n:getText("CM_dialog_adminWrongPassword"),
+		value = g_i18n:getText("CM_dialog_changeTitle"),
 	},
 	leftSections = {
 		"",
@@ -357,6 +358,10 @@ function ScoreBoardFrame:onTextInputAdminPassword(text, clickOk)
 		if text == self.challengeMod:getAdminPassword() then 
 			self.isAdminModeActive = true
 			self:updateMenuButtons()
+		else 
+			g_gui:showInfoDialog({
+				text = string.format(self.translations.dialogs.adminWrongPassword, text)
+			})
 		end
 	end
 end

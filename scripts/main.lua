@@ -26,6 +26,7 @@ end
 function ChallengeMod:changeAdminPassword(newPassword)
 	if newPassword ~= nil then
 		self.adminPassword = newPassword
+		ChangeAdminPasswordEvent.sendEvent(newPassword)
 	end
 end
 
@@ -34,7 +35,7 @@ function ChallengeMod:getAdminPassword()
 end
 
 function ChallengeMod:getDefaultAdminPassword()
-	return self.adminPassword
+	return self.defaultAdminPassword
 end
 
 function ChallengeMod:loadMap()
@@ -116,6 +117,18 @@ function ChallengeMod:loadFromXMLFile(filename)
 	else
 		CmUtil.debug("Challenge setup xml could not be loaded.")
 	end
+end
+
+function ChallengeMod:writeStream(streamId, connection)
+	streamWriteString(streamId, self.adminPassword)
+	g_victoryPointManager:writeStream(streamId, connection)
+	g_victoryPointManager:writeStream(streamId, connection)
+end
+
+function ChallengeMod:readStream(streamId, connection)
+	self.adminPassword = streamReadString(streamId)
+	g_victoryPointManager:readStream(streamId, connection)
+	g_victoryPointManager:readStream(streamId, connection)
 end
 
 function ChallengeMod:reloadConfigData()

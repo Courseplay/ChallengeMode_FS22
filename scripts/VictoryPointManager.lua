@@ -59,6 +59,14 @@ function VictoryPointManager:loadFromXMLFile(xmlFile, baseXmlKey)
 	ScoreBoardList.loadFromXMLFile(self, xmlFile, baseXmlKey .. ".VictoryPoints")
 end
 
+function VictoryPointManager:writeStream(streamId, connection)
+	self.staticPointList:writeStream(streamId)
+end
+
+function VictoryPointManager:readStream(streamId, connection)
+	self.staticPointList:readStream(streamId)
+end
+
 function VictoryPointManager:addStorageFactors(category, factorData, farmId, farm)
 	local fillLevels = VictoryPointsUtil.getStorageAmount(farmId)
 	VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
