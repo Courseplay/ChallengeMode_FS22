@@ -27,7 +27,11 @@ function Rule:getText()
 	if next(self.texts) ~= nil and self.texts[self.currentIx] then 
 		return self.texts[self.currentIx]
 	end
-	return tostring(self.values[self.currentIx])
+	return tostring(self:getValue())
+end
+
+function Rule:getValue()
+	return self.values[self.currentIx]
 end
 
 function Rule:onTextInput(value)
@@ -67,3 +71,46 @@ function Rule.readStream(streamId, connection)
 	local id = streamReadUInt8(streamId)
 	g_ruleManager:getList():getElement(categoryId, id):onClick()
 end
+
+local function updateVehicleLeaseRule(screen, storeItem, vehicle, saleItem)
+	screen.leaseButton:setVisible(screen.leaseButton:getIsVisible() and g_ruleManager:getGeneralRuleValue("leaseVehicle") ~= Rule.LEASE_VEHICLE_DEACTIVATED)
+	screen.buttonsPanel:invalidateLayout()
+end
+ShopConfigScreen.updateButtons = Utils.appendedFunction(ShopConfigScreen.updateButtons, updateVehicleLeaseRule)
+
+local function updateVehicleLeaseMissionRule(screen, superFunc, state, canLease)
+	if g_ruleManager:getGeneralRuleValue("leaseVehicle") ~= Rule.LEASE_VEHICLE_ALLOWED then
+		superFunc(screen, state, false)
+		return
+	end
+	superFunc(screen, state, canLease)
+end
+InGameMenuContractsFrame.setButtonsForState = Utils.overwrittenFunction(InGameMenuContractsFrame.setButtonsForState, updateVehicleLeaseMissionRule)
+
+local function updateMissionRules(mission, superFunc, ...)
+	if not g_ruleManager:isMissionAllowed(mission) then 
+		return false
+	end
+	return superFunc(mission, ...)
+end
+AbstractMission.init = Utils.overwrittenFunction(AbstractMission.init, updateMissionRules)
+
+local function updateMissionRules2(manager, ...)
+	for _, mission in ipairs(manager.missions) do
+		if not g_ruleManager:isMissionAllowed(mission) then
+			mission:delete()
+		end
+	end
+end
+MissionManager.updateMissions = Utils.appendedFunction(MissionManager.updateMissions, updateMissionRules2)
+
+function Rule.getCanStartHelper(currentMission, superFunc, permission, ...)
+	if permission == "hireAssistant" and g_ruleManager:getGeneralRuleValue("maxHelpers") <= #currentMission.aiSystem.activeJobVehicles  then 
+		return false
+	end
+	
+	return superFunc(currentMission, permission, ...)
+end
+
+--g_currentMission:getHasPlayerPermission("hireAssistant", connection, vehicle:getOwnerFarmId())
+

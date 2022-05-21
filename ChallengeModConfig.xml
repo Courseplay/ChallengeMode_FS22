@@ -43,8 +43,8 @@
 		<Category name="missions" title="Mission rules">
 			<Element genericFunc="addMissionRules" default="1">
 				<Values>
-					<Value name="MISSION_DEACTIVATED" text="Deactivated">0</Value>
-					<Value name="MISSION_ACTIVATED" text="ACTIVATED">1</Value>
+					<Value name="MISSION_DEACTIVATED" text="Deactivated">1</Value>
+					<Value name="MISSION_ACTIVATED" text="ACTIVATED">2</Value>
 				</Values>
 			</Element>
 		</Category>

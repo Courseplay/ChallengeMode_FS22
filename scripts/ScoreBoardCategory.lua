@@ -132,13 +132,13 @@ function ScoreBoardCategory:applyValues(staticList)
 	end
 end
 
-function ScoreBoardList:writeStream(...)
+function ScoreBoardCategory:writeStream(...)
 	for i, element in ipairs(self.elements) do 
 		element:writeJoinStream(...)
 	end
 end
 
-function ScoreBoardList:readStream(...)
+function ScoreBoardCategory:readStream(...)
 	for i, element in ipairs(self.elements) do 
 		element:readJoinStream(...)
 	end
