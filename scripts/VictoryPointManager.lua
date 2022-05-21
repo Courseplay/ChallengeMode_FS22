@@ -34,7 +34,7 @@ function VictoryPointManager.new(custom_mt)
 end
 
 function VictoryPointManager:registerXmlSchema(xmlSchema, baseXmlKey)
-	ScoreBoardCategory.registerXmlSchema(xmlSchema, baseXmlKey .. ".VictoryPoints")
+	ScoreBoardList.registerXmlSchema(xmlSchema, baseXmlKey .. ".VictoryPoints")
 end
 
 
@@ -52,62 +52,11 @@ function VictoryPointManager:loadConfigData(xmlFile, baseXmlKey)
 end
 
 function VictoryPointManager:saveToXMLFile(xmlFile, baseXmlKey)
-	for i, category in ipairs(self.staticPointList) do 
-		category:saveToXMLFile(xmlFile, string.format("%s.VictoryPoints.Category(%d)", baseXmlKey, i-1))
-	end
-	--[[
-	local baseKey = string.format("%s.VictoryPoints", baseXmlKey)
-	for cIx, category in ipairs(self.configData) do 
-		local cKey = string.format("%s.Category(%d)", baseKey, cIx-1)
-		xmlFile:setValue(cKey .. "#name", category.name)
-		for eIx, element in ipairs(category.elements) do 
-			if not element.dependency then
-				local eKey = string.format("%s.Element(%d)", cKey, eIx-1)
-				xmlFile:setValue(eKey .. "#name", element.name)
-				xmlFile:setValue(eKey, element.default)
-			end
-		end
-	end
-	]]--
+	self.staticPointList:saveToXMLFile(xmlFile, baseXmlKey .. ".VictoryPoints", 0)
 end
 
 function VictoryPointManager:loadFromXMLFile(xmlFile, baseXmlKey)
-	xmlFile:iterate(baseXmlKey .. ".VictoryPoints.Category", function (ix, key)
-		local name = xmlFile:getValue(key .. "#name")
-		if name then
-			local category = CmUtil.getCategoryByName(self.staticPointList, name)
-			if category then 
-				category:loadFromXMLFile(xmlFile, key)
-			end
-		end
-	end)
-	--[[
-	local setup = {}
-	xmlFile:iterate(baseXmlKey .. ".VictoryPoints.Category", function (ix, categoryKey)
-		local categoryName = xmlFile:getValue(categoryKey .. "#name")
-		if categoryName then
-			setup[categoryName] = {}
-			xmlFile:iterate(categoryKey .. ".Element", function (ix, elementKey)
-				local elementName = xmlFile:getValue(elementKey .. "#name")
-				local value = xmlFile:getValue(elementKey)
-				if elementName and value ~= nil then 
-					setup[categoryName][elementName] = value
-				end
-			end)
-		end
-	end)
-	for _, category in ipairs(self.configData) do 
-		local e = setup[category.name]
-		if e then 
-			for _, element in ipairs(category.elements) do 
-				local v = setup[category.name][element.name]
-				if v ~= nil then 
-					element.default = v
-				end
-			end
-		end
-	end
-	]]--
+	ScoreBoardList.loadFromXMLFile(self, xmlFile, baseXmlKey .. ".VictoryPoints")
 end
 
 function VictoryPointManager:addStorageFactors(category, factorData, farmId, farm)
@@ -141,8 +90,8 @@ end
 
 function VictoryPointManager:getNewPointList(farmId, farm)
 	local dependedPoints = {}
-	local pointList = {}
-	for cIx, categoryData in ipairs(self.configData) do 
+	local pointList = ScoreBoardList.new("victoryPoints", self.titles)
+	for _, categoryData in ipairs(self.configData) do 
 		local category = ScoreBoardCategory.new(categoryData.name, categoryData.title)
 		for pIx, pointData in ipairs(categoryData.elements) do 
 			if pointData.dependency == nil then 
@@ -154,19 +103,19 @@ function VictoryPointManager:getNewPointList(farmId, farm)
 			else 
 				table.insert(dependedPoints, {
 					data = pointData,
-					cIx = cIx,
+					cName = categoryData.name,
 					pIx = pIx
 				})
 			end
 		end
-		table.insert(pointList, category)
+		pointList:addElement(category)
 	end
 	for i, point in ipairs(dependedPoints) do 
-		local category = pointList[point.cIx]
+		local category = pointList:getElementByName(point.cName)
 		if point.data.genericFunc == nil then
 			category:addElement(VictoryPoint.createFromXml(point.data), point.pIx)
 		else 
-			local dependency = CmUtil.getCategoryByName(pointList, point.data.dependency)
+			local dependency = pointList:getElementByName(point.data.dependency)
 			self[point.data.genericFunc](self, category, point.data, farmId, farm, dependency)
 		end
 	end
@@ -175,20 +124,8 @@ end
 
 function VictoryPointManager:calculatePoints(farmId, farm)
 	self.pointList[farmId] = self:getNewPointList(farmId, farm)
-	self.totalPoints[farmId] = 0
-	for i, category in ipairs(self.staticPointList) do 
-		self.pointList[farmId][i]:applyValues(category)
-		self.totalPoints[farmId] = self.totalPoints[farmId] + self.pointList[farmId][i]:count()
-	end
-
-end
-
-function VictoryPointManager:countPoints(data)
-	local points = 0
-	for _, p in pairs(data) do 
-		points = points + p:getValue()
-	end
-	return points
+	self.pointList[farmId]:applyValues(self.staticPointList)
+	self.totalPoints[farmId] = self.pointList[farmId]:count()
 end
 
 function VictoryPointManager:update()
@@ -204,20 +141,12 @@ function VictoryPointManager:update()
 	end
 end
 
-function VictoryPointManager:getCategories(farmId)
-	return farmId~=nil and self.pointList[farmId]
+function VictoryPointManager:getList(farmId)
+	return farmId~=nil and self.pointList[farmId] or self.staticPointList
 end
 
-function VictoryPointManager:getNumberOfCategories()
-	return #self.configData
-end
-
-function VictoryPointManager:getTitles()
-	return self.titles	
-end
-
-function VictoryPointManager:getSectionTitle(sec)
-	return self.configData[sec].title or ""
+function VictoryPointManager:getListByName()
+	return self.staticPointList
 end
 
 function VictoryPointManager:getTotalPoints(farmId)
@@ -230,21 +159,6 @@ end
 
 function VictoryPointManager:getGoal()
 	return self.victoryGoal	
-end
-
-function VictoryPointManager:onTextInput(element, category, value)
-	local v = tonumber(value)
-	if v ~= nil then
-		for _, c in pairs(self.staticPointList) do 
-			if c:getName() == category:getName() then 
-				local e = c:getElementByName(element:getName())
-				if e then
-					e:setFactor(v)
-					self:update()
-				end
-			end
-		end
-	end
 end
 
 g_victoryPointManager = VictoryPointManager.new()

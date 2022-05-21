@@ -127,19 +127,19 @@ function ScoreBoardFrame:onGuiSetupFinished()
 	self.numSections = {
 		[self.leftList] = function(ix) return self.NUM_LEFT_SECTIONS end,
 		[self.rightList] = function(ix) 
-								return self.managers[ix]:getNumberOfCategories()
+								return self.managers[ix]:getList():getNumberOfElements()
 							end 
 	}
 	self.sectionTitles = {
 		[self.leftList] = function(ix, sx) return self.translations.leftSections[sx] end,
 		[self.rightList] = function(ix, sx) 
-			return self.managers[ix]:getSectionTitle(sx)
+			return self.managers[ix]:getList():getElement(sx):getTitle()
 		end 
 	}
 end
 
 function ScoreBoardFrame:onFrameOpen()
-	g_victoryPointManager:update()
+	self.victoryPointManager:update()
 	self:updateLists()
 	self:updateMenuButtons()
 	self:updateTitles()
@@ -154,12 +154,12 @@ function ScoreBoardFrame:updateLists()
 	self.farms = self:getValidFarms()
 	self.leftList:reloadData()
 	self.rightList:reloadData()
-	self.goal:setText(self.translations.goal(g_victoryPointManager:getGoal()))
+	self.goal:setText(self.translations.goal(self.victoryPointManager:getGoal()))
 end
 
 function ScoreBoardFrame:updateTitles()
 	local sx, ix = self.leftList:getSelectedPath()
-	local titles = self.managers[sx]:getTitles()
+	local titles = self.managers[sx]:getList():getTitles()
 	self.rightList_middleTitle:setText(titles[2])
 	self.rightList_rightTitle:setText(titles[3])
 end
@@ -198,13 +198,13 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 	else
 		local sx, ix = self.leftList:getSelectedPath()
 		local farmId = self:getCurrentFarmId()
-		local categories = self.managers[sx]:getCategories(farmId)
-		if categories == nil then 
+		local l = self.managers[sx]:getList(farmId)
+		if l == nil then 
 			CmUtil.debug("Categories for not found %d", section)
 			printCallstack()
 			return 0
 		end
-		return categories[section]:getNumberOfElements()
+		return l:getNumberOfElements(section)
 	end
 end
 
@@ -285,13 +285,13 @@ function ScoreBoardFrame:getElement(section, index)
 	end
 	local sx, ix = self.leftList:getSelectedPath()
 	local farmId = self:getCurrentFarmId()
-	local categories = self.managers[sx]:getCategories(farmId)
-	if categories == nil then 
+	local list = self.managers[sx]:getList(farmId)
+	if list == nil then 
 		CmUtil.debug("Element not found for (%s|%s).", tostring(section), tostring(index))
 		printCallstack()
 		return
 	end
-	return categories[section]:getElement(index)
+	return list:getElement(section,index)
 end
 
 ----------------------------------------------------
@@ -369,8 +369,9 @@ end
 
 function ScoreBoardFrame:onTextInputChangeValue(text, clickOk, element)
 	if clickOk then 
-		if text ~= nil and element ~= nil then 
+		if text ~= nil and element ~= nil then
 			element:onTextInput(text)
+			self.victoryPointManager:update()
 			self:updateLists()
 		end
 	end

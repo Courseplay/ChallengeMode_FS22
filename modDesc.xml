@@ -24,6 +24,7 @@
 		<sourceFile filename="gui/ScoreBoardFrame.lua"/>
 		<sourceFile filename="scripts/ScoreBoardElement.lua"/>
 		<sourceFile filename="scripts/ScoreBoardCategory.lua"/>
+		<sourceFile filename="scripts/ScoreBoardList.lua"/>
 		<sourceFile filename="scripts/VictoryPoint.lua"/>
 		<sourceFile filename="scripts/VictoryPointManager.lua"/>
 		<sourceFile filename="scripts/Rules.lua"/>

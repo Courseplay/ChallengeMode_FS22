@@ -1,10 +1,10 @@
 
 ScoreBoardCategory = {}
 
-local ScoreBoardElement_mt = Class(ScoreBoardCategory)
+local ScoreBoardCategory_mt = Class(ScoreBoardCategory)
 ---@class ScoreBoardCategory
 function ScoreBoardCategory.new(name, title, elements, custom_mt)
-	local self = setmetatable({}, custom_mt or ScoreBoardElement_mt)	
+	local self = setmetatable({}, custom_mt or ScoreBoardCategory_mt)	
 	self.title = title
 	self.name = name
 	self.elements = elements or {}
@@ -24,20 +24,31 @@ function ScoreBoardCategory:getName()
 	return self.name	
 end
 
+function ScoreBoardCategory:setParent(parent)
+	self.parent = parent	
+end
+
+function ScoreBoardCategory:getParent()
+	return self.parent
+end
+
 function ScoreBoardCategory:addElement(element, ix)
 	if ix ~= nil then 
 		table.insert(self.elements, ix, element)
 	else
 		table.insert(self.elements, element)
 	end
-	element:setCategory(self)
+	element:setParent(self)
 end
 
 function ScoreBoardCategory:getElement(index)
-	return self.elements[index]
+	return index ~= nil and self.elements[index] or self
 end
 
 function ScoreBoardCategory:getElementByName(name)
+	if name == nil then 
+		return self
+	end
 	for _, element in pairs(self.elements) do 
 		if element:getName() == name then 
 			return element
@@ -65,20 +76,21 @@ function ScoreBoardCategory:onClick()
 		
 end
 
-function ScoreBoardCategory:saveToXMLFile(xmlFile, baseXmlKey)
+function ScoreBoardCategory:saveToXMLFile(xmlFile, baseXmlKey, ix)
+	local baseKey = string.format("%s.Category(%d)", baseXmlKey, ix)
+	xmlFile:setValue(baseKey .. "#name", self.name)
 	for i, element in ipairs(self.elements) do 
-		xmlFile:setValue(baseXmlKey .. "#name", self.name)
-		element:saveToXMLFile(xmlFile, string.format("%s.Element(%d)", baseXmlKey, i-1))
+		element:saveToXMLFile(xmlFile, baseKey, i-1)
 	end
 end
 
-function ScoreBoardCategory:loadFromXMLFile(xmlFile, baseXmlKey)
-	xmlFile:iterate(baseXmlKey .. ".Element", function (ix, key)
+function ScoreBoardCategory.loadFromXMLFile(list, xmlFile, baseXmlKey)
+	xmlFile:iterate(baseXmlKey .. ".Category", function (ix, key)
 		local name = xmlFile:getValue(key .. "#name")
 		if name then
-			local element = self:getElementByName(name)
-			if element then 
-				element:loadFromXMLFile(xmlFile, key)
+			local category = list:getElementByName(name)
+			if category then 
+				ScoreBoardElement.loadFromXMLFile(category, xmlFile, key)
 			end
 		end
 	end)
@@ -110,8 +122,11 @@ function ScoreBoardCategory.cloneCategories(list, ...)
 	return newList
 end
 
-function ScoreBoardCategory:applyValues(staticCategory)
-	for i, element in ipairs(self.elements) do 
-		element:applyValues(staticCategory)
-	end	
+function ScoreBoardCategory:applyValues(staticList)
+	local element = staticList:getElementByName(self.name)
+	if element then 
+		for i, e in ipairs(self.elements) do 
+			e:applyValues(element)
+		end	
+	end
 end

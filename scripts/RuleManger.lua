@@ -36,7 +36,7 @@ end
 
 
 function RuleManager:registerXmlSchema(xmlSchema, baseXmlKey)
-	ScoreBoardCategory.registerXmlSchema(xmlSchema, baseXmlKey .. ".Rules")
+	ScoreBoardList.registerXmlSchema(xmlSchema, baseXmlKey .. ".Rules")
 end
 
 function RuleManager:registerConfigXmlSchema(xmlSchema, baseXmlKey)
@@ -47,7 +47,7 @@ function RuleManager:loadConfigData(xmlFile, baseXmlKey)
 		
 	self.configData, self.titles = CmUtil.loadConfigCategories(xmlFile, baseXmlKey .. ".Rules")
 
-	self.ruleList = {}
+	self.ruleList = ScoreBoardList.new("rules", self.titles)
 	for _, categoryData in pairs(self.configData) do 
 		local category = ScoreBoardCategory.new(categoryData.name, categoryData.title)
 		for _, rule in pairs(categoryData.elements) do 
@@ -57,26 +57,16 @@ function RuleManager:loadConfigData(xmlFile, baseXmlKey)
 				self[rule.genericFunc](self, category, rule)
 			end
 		end
-		table.insert(self.ruleList, category)
+		self.ruleList:addElement(category)
 	end
 end
 
 function RuleManager:saveToXMLFile(xmlFile, baseXmlKey)
-	for i, category in ipairs(self.ruleList) do 
-		category:saveToXMLFile(xmlFile, string.format("%s.Rules.Category(%d)", baseXmlKey, i-1))
-	end
+	self.ruleList:saveToXMLFile(xmlFile, baseXmlKey .. ".Rules", 0)
 end
 
 function RuleManager:loadFromXMLFile(xmlFile, baseXmlKey)
-	xmlFile:iterate(baseXmlKey .. ".Rules.Category", function (ix, key)
-		local name = xmlFile:getValue(key .. "#name")
-		if name then
-			local category = CmUtil.getCategoryByName(self.ruleList, name)
-			if category then 
-				category:loadFromXMLFile(xmlFile, key)
-			end
-		end
-	end)
+	ScoreBoardList.loadFromXMLFile(self, xmlFile, baseXmlKey .. ".Rules")
 end
 
 function RuleManager:addMissionRules(category, ruleData)
@@ -89,28 +79,12 @@ function RuleManager:addMissionRules(category, ruleData)
 	end
 end
 
-function RuleManager:getRules()
-	return self.ruleList[self.CATEGORIES.GENERAL]
-end
-
-function RuleManager:getMissionRules()
-	return self.ruleList[self.CATEGORIES.MISSION]
-end
-
-function RuleManager:getCategories()
+function RuleManager:getList()
 	return self.ruleList
 end
 
-function RuleManager:getNumberOfCategories()
-	return #self.configData
-end
-
-function RuleManager:getTitles()
-	return self.titles	
-end
-
-function RuleManager:getSectionTitle(sec)
-	return self.configData[sec].title or ""
+function RuleManager:getListByName()
+	return self.ruleList
 end
 
 g_ruleManager = RuleManager.new()

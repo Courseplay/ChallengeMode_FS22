@@ -47,14 +47,12 @@ function Rule:onClick()
 	end
 end
 
-function Rule:saveToXMLFile(xmlFile, baseXmlKey)
-	xmlFile:setValue(baseXmlKey .. "#name", self.name)
-	xmlFile:setValue(baseXmlKey, self.currentIx)
-end
-
-function Rule:loadFromXMLFile(xmlFile, baseXmlKey)
-	local value = xmlFile:getValue(baseXmlKey)
-	if value then 
+function Rule:setSavedValue(value)
+	if value ~= nil then
 		self.currentIx = value
 	end
+end
+
+function Rule:getValueToSave()
+	return self.currentIx
 end

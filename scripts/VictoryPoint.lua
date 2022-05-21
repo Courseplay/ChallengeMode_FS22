@@ -22,6 +22,7 @@ function VictoryPoint.new(name, value, factor, title, unitTextFunc, dependency, 
 	if unitTextFunc then
 		self.factorText = self[unitTextFunc](factor)
 	end
+	self.staticElement = nil
 	return self
 end
 
@@ -69,13 +70,14 @@ function VictoryPoint:getFactorText()
 end
 
 function VictoryPoint:onTextInput(value)
-	if not self.dependency then
-		g_victoryPointManager:onTextInput(self, self.category, value)
+	local v = tonumber(value)
+	if v ~= nil then
+		self.staticElement:setFactor(v)
 	end
 end
 
 function VictoryPoint:isTextInputAllowed()
-	return true
+	return not self.dependency
 end
 
 function VictoryPoint:clone(farmId, farm)
@@ -86,21 +88,20 @@ function VictoryPoint:__tostring()
 	return string.format("title: %s, value*factor: %.1f", self.title, self.value * self.factor)
 end
 
-function VictoryPoint:saveToXMLFile(xmlFile, baseXmlKey)
-	xmlFile:setValue(baseXmlKey .. "#name", self.name)
-	xmlFile:setValue(baseXmlKey, self.factor)
-end
-
-function VictoryPoint:loadFromXMLFile(xmlFile, baseXmlKey)
-	local value = xmlFile:getValue(baseXmlKey)
+function VictoryPoint:setSavedValue(value)
 	if value ~= nil then 
 		self.factor = value
 	end
+end
+
+function VictoryPoint:getValueToSave()
+	return self.factor
 end
 
 function VictoryPoint:applyValues(staticCategory)
 	local element = staticCategory:getElementByName(self.name)
 	if element then 
 		self:setFactor(element:getFactor())
+		self.staticElement = element
 	end
 end

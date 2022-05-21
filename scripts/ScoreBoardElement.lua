@@ -27,12 +27,24 @@ function ScoreBoardElement:getFactorText()
 	return ""
 end
 
+function ScoreBoardElement:getValueToSave()
+	
+end
+
+function ScoreBoardElement:setSavedValue(value)
+	
+end
+
 function ScoreBoardElement:getName()
 	return self.name	
 end
 
-function ScoreBoardElement:setCategory(category)
-	self.category = category	
+function ScoreBoardElement:setParent(parent)
+	self.parent = parent	
+end
+
+function ScoreBoardElement:getParent(parent)
+	return self.parent
 end
 
 function ScoreBoardElement:onTextInput(value)
@@ -47,10 +59,24 @@ function ScoreBoardElement:onClick()
 		
 end
 
-function ScoreBoardElement:saveToXMLFile(xmlFile, baseXmlKey)
-	
+function ScoreBoardElement:saveToXMLFile(xmlFile, baseXmlKey, ix)
+	local key = string.format("%s.Element(%d)", baseXmlKey, ix)
+	xmlFile:setValue(key .. "#name", self.name)
+	xmlFile:setValue(key, self:getValueToSave())
 end
 
-function ScoreBoardElement:loadFromXMLFile(xmlFile, baseXmlKey)
-	
+function ScoreBoardElement.loadFromXMLFile(category, xmlFile, baseXmlKey)
+	xmlFile:iterate(baseXmlKey .. ".Element", function (ix, key)
+		local name = xmlFile:getValue(key .. "#name")
+		if name then
+			local element = category:getElementByName(name)
+			if element then 
+				element:setSavedValue(xmlFile:getValue(key))
+			end
+		end
+	end)
+end
+
+function ScoreBoardElement:applyValues()
+
 end
