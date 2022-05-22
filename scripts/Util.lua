@@ -28,18 +28,14 @@ end
 ---@param baseXmlKey string
 function CmUtil.registerConfigXmlSchema(xmlSchema, baseXmlKey)
 
-	xmlSchema:register(XMLValueType.STRING, baseXmlKey .. "#leftTitle", "Page title left")
-	xmlSchema:register(XMLValueType.STRING, baseXmlKey .. "#middleTitle", "Page title middle")
-	xmlSchema:register(XMLValueType.STRING, baseXmlKey .. "#rightTitle", "Page title right")
+	xmlSchema:register(XMLValueType.STRING, baseXmlKey .. "#prefix", "Translation prefix")
 
 	local cKey =  string.format("%s.Category(?)", baseXmlKey)
 	xmlSchema:register(XMLValueType.STRING, cKey .. "#name", "Category name")
-	xmlSchema:register(XMLValueType.STRING, cKey .. "#title", "Category title")
 
 	local eKey = string.format("%s.Element(?)", cKey)
 	xmlSchema:register(XMLValueType.STRING, eKey .. "#name", "Element name")
 	xmlSchema:register(XMLValueType.INT, eKey  .. "#default", "Element default value")
-	xmlSchema:register(XMLValueType.STRING, eKey .. "#title", "Element title")
 	xmlSchema:register(XMLValueType.STRING, eKey .. "#genericFunc", "Element generic func")
 	xmlSchema:register(XMLValueType.STRING, eKey .. "#unitTextFunc", "Element unit text func")
 	xmlSchema:register(XMLValueType.STRING, eKey .. "#dependency", "Element dependency on category")
@@ -56,34 +52,47 @@ end
 ---@param baseXmlKey string
 ---@return table
 function CmUtil.loadConfigCategories(xmlFile, baseXmlKey)
+	local function getText(...)
+		return g_i18n:getText(string.format(...))
+	end
+
 	local categories = {}
+	local textPrefix = xmlFile:getValue(baseXmlKey .. "#prefix", "")
 	local titles = {
-		xmlFile:getValue(baseXmlKey .. "#leftTitle",""),
-		xmlFile:getValue(baseXmlKey .. "#middleTitle",""),
-		xmlFile:getValue(baseXmlKey .. "#rightTitle","")
+		getText("%s_leftTitle", textPrefix),
+		getText("%s_middleTitle", textPrefix),
+		getText("%s_rightTitle", textPrefix),
 	}
 	local baseKey = string.format("%s.Category", baseXmlKey)
 	xmlFile:iterate(baseKey, function (ix, categoryKey)
+		local categoryName = xmlFile:getValue(categoryKey .. "#name")
 		local category = {
-			name = xmlFile:getValue(categoryKey .. "#name"),
-			title = xmlFile:getValue(categoryKey .. "#title"),
+			name = categoryName,
+			title = getText("%s_%s_title", textPrefix, categoryName),
 			elements = {}
 		}
 		xmlFile:iterate(string.format("%s.Element", categoryKey), function (ix, elementKey)
+			local elementName =  xmlFile:getValue(elementKey .. "#name")
 			local element = {
-				name = xmlFile:getValue(elementKey .. "#name"),
+				name = elementName,
 				default = xmlFile:getValue(elementKey .. "#default"),
-				title = xmlFile:getValue(elementKey .. "#title"),
+				title = elementName and getText("%s_%s_%s_title", textPrefix, categoryName, elementName),
 				genericFunc = xmlFile:getValue(elementKey .. "#genericFunc"),
 				unitTextFunc = xmlFile:getValue(elementKey .. "#unitTextFunc"),
 				dependency = xmlFile:getValue(elementKey .. "#dependency")
 			}
 			local values = {}
 			xmlFile:iterate(string.format("%s.Values.Value", elementKey), function (ix, valueKey)
+				local vText = xmlFile:getValue(valueKey .. "#text")
+				if elementName then 
+					vText = getText("%s_%s_%s_%s", textPrefix, categoryName, elementName, vText)
+				else 
+					vText = getText("%s_%s_%s", textPrefix, categoryName, vText)
+				end
 				local value = {
 					value = xmlFile:getValue(valueKey, 1),
 					name = xmlFile:getValue(valueKey .. "#name"),
-					text = xmlFile:getValue(valueKey .. "#text"),
+					text = vText,
 				}
 				table.insert(values, value)
 			end)

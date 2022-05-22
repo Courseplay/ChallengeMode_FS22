@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ChallengeMod defaultPassword = "0000">
-	<VictoryPoints goal="1000000" leftTitle="Points" middleTitle = "Factor" rightTitle="Value">
-		<Category name="general" title="">
-			<Element genericFunc="addMoneyFactor" unitTextFunc = "MONEY_TEXT" name="money" default="1" title="Money"></Element>
-			<Element genericFunc="addAreaFactor" unitTextFunc = "AREA_TEXT" name="area" default="1" title="Area"></Element>
+	<VictoryPoints prefix="CM_VictoryPoints" goal="1000000">
+		<Category name="general">
+			<Element genericFunc="addMoneyFactor" unitTextFunc = "MONEY_TEXT" name="money" default="1"></Element>
+			<Element genericFunc="addAreaFactor" unitTextFunc = "AREA_TEXT" name="area" default="1"></Element>
 			
-			<Element dependency="storage" genericFunc="addDependentPoint" unitTextFunc = "VOLUME_TEXT" name="totalStorage" default="1" title="Total storage"></Element>
-			<Element dependency="bales" genericFunc="addDependentPoint" unitTextFunc = "VOLUME_TEXT" name="totalBales" default="1" title="Total bales"></Element>
-			<Element dependency="pallets" genericFunc="addDependentPoint" unitTextFunc = "VOLUME_TEXT" name="totalPallets" default="1" title="Total pallets"></Element>
+			<Element dependency="storage" genericFunc="addDependentPoint" unitTextFunc = "VOLUME_TEXT" name="totalStorage" default="1"></Element>
+			<Element dependency="bales" genericFunc="addDependentPoint" unitTextFunc = "VOLUME_TEXT" name="totalBales" default="1"></Element>
+			<Element dependency="pallets" genericFunc="addDependentPoint" unitTextFunc = "VOLUME_TEXT" name="totalPallets" default="1"></Element>
 		</Category>
-		<Category name="storage" title="Storage">
+		<Category name="storage">
 			<Element genericFunc="addStorageFactors" unitTextFunc = "VOLUME_TEXT" default="1"></Element>
 		</Category>
-		<Category name="bales" title="Bale storage">
+		<Category name="bales">
 			<Element genericFunc="addBaleFactors" unitTextFunc = "VOLUME_TEXT" default="1"></Element>
 		</Category>
-		<Category name="pallets" title="Pallet storage">
+		<Category name="pallets">
 			<Element genericFunc="addPalletFactors" unitTextFunc = "VOLUME_TEXT" default="1"></Element>
 		</Category>
 	</VictoryPoints>
 
-	<Rules leftTitle="Rule" middleTitle = "" rightTitle="Value">
-		<Category name="general" title="" >
-			<Element name="maxHelpers" default="5" title="Max Helpers: ">
+	<Rules prefix="CM_Rules">
+		<Category name="general" >
+			<Element name="maxHelpers" default="5">
 				<Values>
-					<Value name="HELPER_DEACTIVATED" text="Deactivated">0</Value>
+					<Value name="HELPER_DEACTIVATED" text="deactivated">0</Value>
 					<Value>2</Value>
 					<Value>4</Value>
 					<Value>8</Value>
@@ -32,19 +32,19 @@
 					<Value>12</Value>
 				</Values>
 			</Element>
-			<Element name="leaseVehicle" default="3" title="Lease helpers">
+			<Element name="leaseVehicle" default="3">
 				<Values>
-					<Value name="LEASE_VEHICLE_DEACTIVATED" text="Deactivated">0</Value>
-					<Value name="LEASE_VEHICLE_SHOP_ONLY" text="ShopOnly">1</Value>
-					<Value name="LEASE_VEHICLE_ALLOWED" text="Allowed">2</Value>
+					<Value name="LEASE_VEHICLE_DEACTIVATED" text="deactivated">0</Value>
+					<Value name="LEASE_VEHICLE_SHOP_ONLY" text="shopOnly">1</Value>
+					<Value name="LEASE_VEHICLE_ALLOWED" text="allowed">2</Value>
 				</Values>
 			</Element>
 		</Category>
-		<Category name="missions" title="Mission rules">
+		<Category name="missions">
 			<Element genericFunc="addMissionRules" default="1">
 				<Values>
-					<Value name="MISSION_DEACTIVATED" text="Deactivated">1</Value>
-					<Value name="MISSION_ACTIVATED" text="ACTIVATED">2</Value>
+					<Value name="MISSION_DEACTIVATED" text="deactivated">1</Value>
+					<Value name="MISSION_ACTIVATED" text="activated">2</Value>
 				</Values>
 			</Element>
 		</Category>

@@ -17,5 +17,38 @@
 		<text name="CM_dialog_adminTitle" 				text="Login(default: %s)" />
 		<text name="CM_dialog_adminChangePasswordTitle"	text="Current password: %s" />
 		<text name="CM_dialog_adminWrongPassword"		text="Wrong password(%s)"/>
+
+		<text name="CM_VictoryPoints_leftTitle"			text=""/>
+		<text name="CM_VictoryPoints_middleTitle"		text="Factor"/>
+		<text name="CM_VictoryPoints_rightTitle"		text="Value"/>
+
+		<text name="CM_VictoryPoints_general_title"					text=""/>
+		<text name="CM_VictoryPoints_general_money_title"			text="Money"/>
+		<text name="CM_VictoryPoints_general_area_title"			text="Area"/>
+		<text name="CM_VictoryPoints_general_totalStorage_title"	text="Total storage"/>
+		<text name="CM_VictoryPoints_general_totalBales_title"		text="Total bales"/>
+		<text name="CM_VictoryPoints_general_totalPallets_title"	text="Total pallets"/>
+		
+		<text name="CM_VictoryPoints_storage_title"					text="Storage"/>
+		<text name="CM_VictoryPoints_bales_title"					text="Bale storage"/>
+		<text name="CM_VictoryPoints_pallets_title"					text="Pallet storage"/>
+
+		
+		<text name="CM_Rules_leftTitle"					text=""/>
+		<text name="CM_Rules_middleTitle"				text=""/>
+		<text name="CM_Rules_rightTitle"				text="Value"/>
+		
+		<text name="CM_Rules_general_title"							text=""/>
+		<text name="CM_Rules_general_maxHelpers_title"				text="Max Helpers: "/>
+		<text name="CM_Rules_general_maxHelpers_deactivated"		text="Deactivated"/>
+		<text name="CM_Rules_general_leaseVehicle_title"			text="Lease helpers"/>
+		<text name="CM_Rules_general_leaseVehicle_deactivated"		text="Deactivated"/>
+		<text name="CM_Rules_general_leaseVehicle_shopOnly"			text="Shop only"/>
+		<text name="CM_Rules_general_leaseVehicle_allowed"			text="Allowed"/>
+
+		<text name="CM_Rules_missions_title"				text=""/>
+		<text name="CM_Rules_missions_activated"			text="Activated"/>
+		<text name="CM_Rules_missions_deactivated"			text="Deactivated"/>
+
 	</texts>
 </l10n>
