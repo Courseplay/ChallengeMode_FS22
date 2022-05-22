@@ -8,7 +8,7 @@ ChallengeMod = {
 
 ChallengeMod.image = {
 	path = Utils.getFilename('Icon_ChallengeMode.dds', ChallengeMod.BASE_DIRECTORY),
-	uvs = {0, 0,1,1}
+	--uvs = {0, 0,1,1}
 }
 
 
