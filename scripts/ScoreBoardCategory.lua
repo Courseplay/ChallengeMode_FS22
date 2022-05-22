@@ -100,7 +100,7 @@ end
 function ScoreBoardCategory:count()
 	local value = 0
 	for _, element in pairs(self.elements) do 
-		value = value + element:getValue()
+		value = value + element:count()
 	end
 	return value
 end

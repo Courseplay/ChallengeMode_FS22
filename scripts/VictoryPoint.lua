@@ -38,6 +38,13 @@ function VictoryPoint:getValue()
 	return self.value * self.factor
 end
 
+function VictoryPoint:count()
+	if self.dependency then 
+		return 0
+	end
+	return self:getValue()
+end
+
 function VictoryPoint:getFactor()
 	return self.factor
 end

@@ -118,6 +118,9 @@ function VictoryPointManager:getNewPointList(farmId, farm)
 		end
 		pointList:addElement(category)
 	end
+	if self.staticPointList then
+		pointList:applyValues(self.staticPointList)
+	end
 	for i, point in ipairs(dependedPoints) do 
 		local category = pointList:getElementByName(point.cName)
 		if point.data.genericFunc == nil then
@@ -132,7 +135,6 @@ end
 
 function VictoryPointManager:calculatePoints(farmId, farm)
 	self.pointList[farmId] = self:getNewPointList(farmId, farm)
-	self.pointList[farmId]:applyValues(self.staticPointList)
 	self.totalPoints[farmId] = self.pointList[farmId]:count()
 end
 
