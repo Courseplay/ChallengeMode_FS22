@@ -2,7 +2,7 @@ VictoryPointsUtil = {}
 
 function VictoryPointsUtil.getStorageAmount(farmId)
 	if farmId == nil then 
-		return g_fillTypeManager:getFillTypes()
+		return VictoryPointsUtil.getFillTypes()
 	end
 	local totalFillLevel = 0
 	local totalFillLevels = {}
@@ -49,7 +49,7 @@ end
 
 function VictoryPointsUtil.getPalletAmount(farmId)
 	if farmId == nil then 
-		return g_fillTypeManager:getFillTypes()
+		return VictoryPointsUtil.getFillTypes()
 	end
 	local palletFillLevels = {}
 	for _, object in pairs(g_currentMission.vehicles) do
@@ -94,4 +94,12 @@ function VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
 		factorData.title = g_fillTypeManager:getFillTypeTitleByIndex(fillType)
 		category:addElement(VictoryPoint.createFromXml(factorData, fillLevels[fillType]))
 	end
+end
+
+function VictoryPointsUtil.getFillTypes()
+	local fillTypes = table.copy(g_fillTypeManager:getFillTypes())
+	for fillType, _ in pairs(VictoryPointManager.ignoredFillTypes)	 do 
+		fillTypes[fillType] = nil
+	end
+	return fillTypes
 end

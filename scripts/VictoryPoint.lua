@@ -31,9 +31,13 @@ function VictoryPoint.createFromXml(data, value)
 end
 
 function VictoryPoint:getValue()
+	if self.staticElement == nil then 
+		return 0
+	end
 	if self.value == nil then 
 		CmUtil.debug("Victory point value is nil: %s", self.name)
 		printCallstack()
+		return 0
 	end
 	return self.value * self.factor
 end
@@ -54,8 +58,11 @@ function VictoryPoint:setFactor(newFactor)
 end
 
 function VictoryPoint:getText()
+	if self.staticElement == nil then 
+		return ""
+	end
 	if self.factor and math.abs(self.factor) > 0 then 
-		return string.format("%.1f",self.value * self.factor)
+		return string.format("%.1f", self:getValue())
 	else 
 		return ""
 	end
@@ -79,8 +86,9 @@ end
 function VictoryPoint:onTextInput(value)
 	local v = tonumber(value)
 	if v ~= nil then
-		self.staticElement:setFactor(v)
-		ChangeElementEvent.sendEvent(self, ChangeElementEvent.POINT)
+		local element = self.staticElement and self.staticElement or self
+		element:setFactor(v)
+		ChangeElementEvent.sendEvent(element, ChangeElementEvent.POINT)
 	end
 end
 

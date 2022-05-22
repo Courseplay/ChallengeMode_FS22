@@ -41,12 +41,28 @@ end
 function VictoryPointManager:registerConfigXmlSchema(xmlSchema, baseXmlKey)
 	CmUtil.registerConfigXmlSchema(xmlSchema, baseXmlKey .. ".VictoryPoints")
 	xmlSchema:register(XMLValueType.INT, baseXmlKey .. ".VictoryPoints#goal", "Victory point goal")
+
+	xmlSchema:register(XMLValueType.STRING, baseXmlKey .. ".VictoryPoints.IgnoredFillTypes.IgnoredFillType(?)", "Ignored fill type")
+
 end
 
 function VictoryPointManager:loadConfigData(xmlFile, baseXmlKey)
 	
 	self.configData, self.titles = CmUtil.loadConfigCategories(xmlFile, baseXmlKey .. ".VictoryPoints")
 	self.victoryGoal = xmlFile:getValue(baseXmlKey .. ".VictoryPoints#goal", 100000)
+
+
+	VictoryPointManager.ignoredFillTypes = {}
+	xmlFile:iterate(baseXmlKey .. ".VictoryPoints.IgnoredFillTypes.IgnoredFillType", function (ix, key)
+		local name = xmlFile:getValue(key)
+		if name then 
+			CmUtil.debug("Ignored fill type: %s", name)
+			local fillType = g_fillTypeManager:getFillTypeIndexByName(name)
+			if fillType then
+				VictoryPointManager.ignoredFillTypes[fillType] = true
+			end
+		end
+	end)
 
 	self.staticPointList = self:getNewPointList()
 end
@@ -120,14 +136,14 @@ function VictoryPointManager:getNewPointList(farmId, farm)
 	end
 	if self.staticPointList then
 		pointList:applyValues(self.staticPointList)
-	end
-	for i, point in ipairs(dependedPoints) do 
-		local category = pointList:getElementByName(point.cName)
-		if point.data.genericFunc == nil then
-			category:addElement(VictoryPoint.createFromXml(point.data), point.pIx)
-		else 
-			local dependency = pointList:getElementByName(point.data.dependency)
-			self[point.data.genericFunc](self, category, point.data, farmId, farm, dependency)
+		for i, point in ipairs(dependedPoints) do 
+			local category = pointList:getElementByName(point.cName)
+			if point.data.genericFunc == nil then
+				category:addElement(VictoryPoint.createFromXml(point.data), point.pIx)
+			else 
+				local dependency = pointList:getElementByName(point.data.dependency)
+				self[point.data.genericFunc](self, category, point.data, farmId, farm, dependency)
+			end
 		end
 	end
 	return pointList

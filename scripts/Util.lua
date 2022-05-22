@@ -20,7 +20,7 @@ function CmUtil.getUniqueUserByConnection(connection)
 end
 
 function CmUtil.isValidFarm(farmId, farm)
-	return true --not farm.isSpectator
+	return not farm.isSpectator
 end
 
 --- Registers a config xml schema.

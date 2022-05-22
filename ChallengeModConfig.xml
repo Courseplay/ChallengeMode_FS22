@@ -18,6 +18,12 @@
 		<Category name="pallets">
 			<Element genericFunc="addPalletFactors" unitTextFunc = "VOLUME_TEXT" default="1"></Element>
 		</Category>
+
+		<IgnoredFillTypes>
+			<IgnoredFillType>AIR</IgnoredFillType>
+			<IgnoredFillType>UNKNOWN</IgnoredFillType>
+		</IgnoredFillTypes>
+
 	</VictoryPoints>
 
 	<Rules prefix="CM_Rules">
