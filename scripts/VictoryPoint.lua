@@ -50,7 +50,7 @@ function VictoryPoint:count()
 end
 
 function VictoryPoint:getFactor()
-	return self.factor
+	return self.factor or 0
 end
 
 function VictoryPoint:setFactor(newFactor)
@@ -58,14 +58,10 @@ function VictoryPoint:setFactor(newFactor)
 end
 
 function VictoryPoint:getText()
-	if self.staticElement == nil then 
+	if not self.staticElement and not self.dependency then 
 		return ""
 	end
-	if self.factor and math.abs(self.factor) > 0 then 
-		return string.format("%.1f", self:getValue())
-	else 
-		return ""
-	end
+	return string.format("%.1f", self:getValue())
 end
 
 function VictoryPoint:getTitle()

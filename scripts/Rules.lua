@@ -13,7 +13,11 @@ function Rule.new(name, default, title, valuesData, custom_mt)
 				Rule[data.name] = data.value
 			end
 			table.insert(self.values, data.value)
-			table.insert(self.texts, data.text)
+			local text = data.text
+			if not text then 
+				text =  data.value
+			end
+			table.insert(self.texts, text)
 		end
 	end
 	return self

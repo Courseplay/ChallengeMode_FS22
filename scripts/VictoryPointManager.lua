@@ -108,6 +108,21 @@ function VictoryPointManager:addAreaFactor(category, factorData, farmId, farm)
 	category:addElement(VictoryPoint.createFromXml(factorData, area))
 end
 
+function VictoryPointManager:addBuildingsFactor(category, factorData, farmId, farm)
+	local value = VictoryPointsUtil.getTotalBuildingSellValue(farmId)
+	category:addElement(VictoryPoint.createFromXml(factorData, value))
+end
+
+function VictoryPointManager:addProductionsFactor(category, factorData, farmId, farm)
+	local value = VictoryPointsUtil.getTotalProductionValue(farmId)
+	category:addElement(VictoryPoint.createFromXml(factorData, value))
+end
+
+function VictoryPointManager:addVehiclesFactor(category, factorData, farmId, farm)
+	local value = VictoryPointsUtil.getVehicleSellValue(farmId)
+	category:addElement(VictoryPoint.createFromXml(factorData, value))
+end
+
 function VictoryPointManager:addDependentPoint(category, factorData, farmId, farm, dependency)
 	category:addElement(VictoryPoint.createFromXml(factorData, farmId ~=nil and dependency:count() or 0))
 end

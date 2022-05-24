@@ -84,10 +84,12 @@ function CmUtil.loadConfigCategories(xmlFile, baseXmlKey)
 			local values = {}
 			xmlFile:iterate(string.format("%s.Values.Value", elementKey), function (ix, valueKey)
 				local vText = xmlFile:getValue(valueKey .. "#text")
-				if elementName then 
-					vText = getText("%s_%s_%s_%s", textPrefix, categoryName, elementName, vText)
-				else 
-					vText = getText("%s_%s_%s", textPrefix, categoryName, vText)
+				if vText then
+					if elementName then 
+						vText = getText("%s_%s_%s_%s", textPrefix, categoryName, elementName, vText)
+					else 
+						vText = getText("%s_%s_%s", textPrefix, categoryName, vText)
+					end
 				end
 				local value = {
 					value = xmlFile:getValue(valueKey, 1),

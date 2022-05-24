@@ -2,21 +2,24 @@
 <ChallengeMod defaultPassword = "0000">
 	<VictoryPoints prefix="CM_VictoryPoints" goal="1000000">
 		<Category name="general">
-			<Element genericFunc="addMoneyFactor" unitTextFunc = "MONEY_TEXT" name="money" default="1"></Element>
-			<Element genericFunc="addAreaFactor" unitTextFunc = "AREA_TEXT" name="area" default="1"></Element>
-			
-			<Element dependency="storage" genericFunc="addDependentPoint" unitTextFunc = "VOLUME_TEXT" name="totalStorage" default="1"></Element>
-			<Element dependency="bales" genericFunc="addDependentPoint" unitTextFunc = "VOLUME_TEXT" name="totalBales" default="1"></Element>
-			<Element dependency="pallets" genericFunc="addDependentPoint" unitTextFunc = "VOLUME_TEXT" name="totalPallets" default="1"></Element>
+			<Element genericFunc="addMoneyFactor" unitTextFunc = "MONEY_TEXT" name="money" default="1"/>
+			<Element genericFunc="addAreaFactor" unitTextFunc = "AREA_TEXT" name="area" default="1"/>
+			<Element genericFunc="addBuildingsFactor" unitTextFunc = "MONEY_TEXT" name="ownedBuildingValue" default="1"/>
+			<Element genericFunc="addVehiclesFactor" unitTextFunc = "MONEY_TEXT" name="ownedVehicleValue" default="1"/>
+		<!--TODO	<Element genericFunc="addProductionsFactor" unitTextFunc = "VOLUME_TEXT" name="productionValue" default="1"/> -->
+
+			<Element dependency="storage" genericFunc="addDependentPoint" unitTextFunc = "VOLUME_TEXT" name="totalStorage" default="1"/>
+			<Element dependency="bales" genericFunc="addDependentPoint" unitTextFunc = "VOLUME_TEXT" name="totalBales" default="1"/>
+			<Element dependency="pallets" genericFunc="addDependentPoint" unitTextFunc = "VOLUME_TEXT" name="totalPallets" default="1"/>
 		</Category>
 		<Category name="storage">
-			<Element genericFunc="addStorageFactors" unitTextFunc = "VOLUME_TEXT" default="1"></Element>
+			<Element genericFunc="addStorageFactors" unitTextFunc = "VOLUME_TEXT" default="1"/>
 		</Category>
 		<Category name="bales">
-			<Element genericFunc="addBaleFactors" unitTextFunc = "VOLUME_TEXT" default="1"></Element>
+			<Element genericFunc="addBaleFactors" unitTextFunc = "VOLUME_TEXT" default="1"/>
 		</Category>
 		<Category name="pallets">
-			<Element genericFunc="addPalletFactors" unitTextFunc = "VOLUME_TEXT" default="1"></Element>
+			<Element genericFunc="addPalletFactors" unitTextFunc = "VOLUME_TEXT" default="1"/>
 		</Category>
 
 		<IgnoredFillTypes>

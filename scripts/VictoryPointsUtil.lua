@@ -82,6 +82,41 @@ function VictoryPointsUtil.getTotalArea(farmId)
 	return totalArea
 end
 
+function VictoryPointsUtil.getTotalBuildingSellValue(farmId)
+	local value = 0
+	for _, placeable in pairs(g_currentMission.placeables) do
+		if placeable:getOwnerFarmId() == farmId then
+			value = value + placeable:getSellPrice()
+		end
+	end
+	return value
+end
+
+function VictoryPointsUtil.getVehicleSellValue(farmId)
+	local value = 0
+	if g_currentMission.player ~= nil then
+		for _, vehicle in ipairs(g_currentMission.vehicles) do
+			local hasAccess = vehicle:getOwnerFarmId() == farmId
+			local isProperty = vehicle.propertyState == Vehicle.PROPERTY_STATE_OWNED
+			local isPallet = vehicle.typeName == "pallet"
+
+			if hasAccess and vehicle.getSellPrice ~= nil and vehicle.price ~= nil and isProperty and not isPallet and not SpecializationUtil.hasSpecialization(Rideable, vehicle.specializations) then
+				value = value + vehicle:getSellPrice()
+			end
+		end
+	end
+	return value
+end
+
+function VictoryPointsUtil.getTotalProductionValue(farmId)
+	local value = 0
+	local productionPoints = g_currentMission.productionChainManager:getProductionPointsForFarmId(farmId)
+	for i, production in pairs(productionPoints) do 
+
+	end
+	return value
+end
+
 function VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
 	local orderedFillLevels = table.toList(fillLevels)
 	
