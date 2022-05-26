@@ -48,10 +48,17 @@
 					<Value name="LEASE_VEHICLE_ALLOWED" text="allowed">2</Value>
 				</Values>
 			</Element>
-			<Element name="borrowMoney" default="2">
+			<Element name="creditLimit" default="2">
 				<Values>
-					<Value name="BORROW_MONEY_DEACTIVATED" text="deactivated">1</Value>
-					<Value name="BORROW_MONEY_ACTIVATED" text="activated">2</Value>
+					<Value name="CREDIT_DISABLED" text="deactivated">0</Value>
+					<Value >250000</Value>
+					<Value >500000</Value>
+					<Value >1000000</Value>
+					<Value >2000000</Value>
+					<Value >3000000</Value>
+					<Value >4000000</Value>
+					<Value >5000000</Value>
+					<Value >10000000</Value>
 				</Values>
 			</Element>
 		</Category>

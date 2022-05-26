@@ -99,7 +99,7 @@ function VictoryPointManager:addPalletFactors(category, factorData, farmId, farm
 end
 
 function VictoryPointManager:addMoneyFactor(category, factorData, farmId, farm)
-	local money = farm and farm.money or 0
+	local money = farm and farm.money - farm.loan or 0
 	category:addElement(VictoryPoint.createFromXml(factorData, money))
 end
 

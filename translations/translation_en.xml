@@ -24,7 +24,7 @@
 		<text name="CM_VictoryPoints_rightTitle"						text="Value"/>
 
 		<text name="CM_VictoryPoints_general_title"						text=""/>
-		<text name="CM_VictoryPoints_general_money_title"				text="Money"/>
+		<text name="CM_VictoryPoints_general_money_title"				text="Money without credit"/>
 		<text name="CM_VictoryPoints_general_area_title"				text="Area"/>
 		<text name="CM_VictoryPoints_general_ownedBuildingValue_title"	text="Building sell value"/>
 		<text name="CM_VictoryPoints_general_ownedVehicleValue_title"	text="Vehicle sell value"/>
@@ -50,9 +50,9 @@
 		<text name="CM_Rules_general_leaseVehicle_deactivated"			text="Deactivated"/>
 		<text name="CM_Rules_general_leaseVehicle_shopOnly"				text="Shop only"/>
 		<text name="CM_Rules_general_leaseVehicle_allowed"				text="Allowed"/>
-		<text name="CM_Rules_general_borrowMoney_title"					text="Borrow money:"/>
-		<text name="CM_Rules_general_borrowMoney_deactivated"			text="Deactivated"/>
-		<text name="CM_Rules_general_borrowMoney_activated"				text="Activated"/>
+		
+		<text name="CM_Rules_general_creditLimit_title"					text="Credit limit:"/>
+		<text name="CM_Rules_general_creditLimit_deactivated"			text="Deactivated"/>
 
 		<text name="CM_Rules_missions_title"							text="Missions"/>
 		<text name="CM_Rules_missions_activated"						text="Activated"/>

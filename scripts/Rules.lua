@@ -121,10 +121,10 @@ function Rule.getCanStartHelper(currentMission, superFunc, permission, ...)
 end
 
 function Rule.updateLoanRule(frame)
-	if g_ruleManager:getGeneralRuleValue("borrowMoney") == Rule.BORROW_MONEY_DEACTIVATED then 
-		frame.borrowButtonInfo.disabled = true
-		frame:setMenuButtonInfoDirty()
-	end
+	local limit = g_ruleManager:getGeneralRuleValue("creditLimit")
+	frame.borrowButtonInfo.disabled = frame.borrowButtonInfo.disabled or frame.playerFarm.loan >= limit
+	frame:setMenuButtonInfoDirty()
+	
 end
 InGameMenuFinancesFrame.updateFinancesLoanButtons = Utils.appendedFunction(InGameMenuFinancesFrame.updateFinancesLoanButtons, Rule.updateLoanRule)
 
