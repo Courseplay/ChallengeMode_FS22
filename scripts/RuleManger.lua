@@ -17,8 +17,21 @@ RuleManager = {
 	CATEGORIES = {
 		GENERAL = 1,
 		MISSION = 2
+	},
+	MISSION_TITLES = {
+		cultivate = "fieldJob_jobType_cultivating",
+		mow_bale = "fieldJob_jobType_baling",
+		plow = "fieldJob_jobType_plowing",
+		spray = "fieldJob_jobType_spraying",
+		sow = "fieldJob_jobType_sowing",
+		weed = "fieldJob_jobType_weeding",
+		harvest = "fieldJob_jobType_harvesting",
+		fertilize = "fieldJob_jobType_fertilizing",
+		transport = "fieldJob_jobType_transporting"
 	}
 }
+HusbandrySystem.GAME_LIMIT = 1000
+
 local RuleManager_mt = Class(RuleManager)
 ---@class RuleManager
 function RuleManager.new(custom_mt)
@@ -62,6 +75,8 @@ function RuleManager:loadConfigData(xmlFile, baseXmlKey)
 	end
 
 	g_currentMission.getHasPlayerPermission = Utils.overwrittenFunction(g_currentMission.getHasPlayerPermission, Rule.getCanStartHelper)
+
+	g_currentMission.maxNumHirables = 1000
 end
 
 function RuleManager:saveToXMLFile(xmlFile, baseXmlKey)
@@ -85,7 +100,24 @@ function RuleManager:addMissionRules(category, ruleData)
 	table.sort(missionNames)
 	for _, name in ipairs(missionNames) do 
 		ruleData.name = name
-		ruleData.title = name
+		ruleData.title = g_i18n:getText(self.MISSION_TITLES[name])
+		category:addElement(Rule.createFromXml(ruleData))
+	end
+end
+
+function RuleManager:addAnimalHusbandryLimitRules(category, ruleData)
+	local types = {}
+	for i, type in pairs(g_currentMission.animalSystem:getTypes()) do 
+		table.insert(types, type)
+	end
+	table.sort(types, function (a, b)
+		local aName = "fillType_"..string.lower(a.name)
+		local bName = "fillType_"..string.lower(b.name)
+		return g_i18n:getText(aName) < g_i18n:getText(bName)
+	end)
+	for _, type in ipairs(types) do 
+		ruleData.name = type.name
+		ruleData.title = g_i18n:getText("fillType_"..string.lower(type.name))
 		category:addElement(Rule.createFromXml(ruleData))
 	end
 end
@@ -117,6 +149,10 @@ end
 
 function RuleManager:getMissionRules()
 	return self.ruleList:getElementByName("missions"):getElements()
+end
+
+function RuleManager:getAnimalHusbandryLimitByName(name)
+	return self.ruleList:getElementByName("animalHusbandryLimits"):getElementByName(name)
 end
 
 g_ruleManager = RuleManager.new()

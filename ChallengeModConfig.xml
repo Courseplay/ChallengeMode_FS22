@@ -48,6 +48,30 @@
 					<Value name="LEASE_VEHICLE_ALLOWED" text="allowed">2</Value>
 				</Values>
 			</Element>
+			<Element name="borrowMoney" default="2">
+				<Values>
+					<Value name="BORROW_MONEY_DEACTIVATED" text="deactivated">1</Value>
+					<Value name="BORROW_MONEY_ACTIVATED" text="activated">2</Value>
+				</Values>
+			</Element>
+		</Category>
+		<Category name="animalHusbandryLimits">
+			<Element genericFunc="addAnimalHusbandryLimitRules" default="1">
+				<Values>
+					<Value name="ANIMAL_DEACTIVATED" text="deactivated">0</Value>
+					<Value >1</Value>
+					<Value >2</Value>
+					<Value >3</Value>
+					<Value >4</Value>
+					<Value >5</Value>
+					<Value >6</Value>
+					<Value >7</Value>
+					<Value >8</Value>
+					<Value >9</Value>
+					<Value >10</Value>
+					<Value name="ANIMAL_NO_LIMIT" text="noLimit">5000</Value>
+				</Values>
+			</Element>
 		</Category>
 		<Category name="missions">
 			<Element genericFunc="addMissionRules" default="1">

@@ -76,6 +76,10 @@ function Rule.readStream(streamId, connection)
 	g_ruleManager:getList():getElement(categoryId, id):onClick()
 end
 
+----------------------------------------------------
+--- Rule implementations
+----------------------------------------------------
+
 local function updateVehicleLeaseRule(screen, storeItem, vehicle, saleItem)
 	screen.leaseButton:setVisible(screen.leaseButton:getIsVisible() and g_ruleManager:getGeneralRuleValue("leaseVehicle") ~= Rule.LEASE_VEHICLE_DEACTIVATED)
 	screen.buttonsPanel:invalidateLayout()
@@ -116,5 +120,32 @@ function Rule.getCanStartHelper(currentMission, superFunc, permission, ...)
 	return superFunc(currentMission, permission, ...)
 end
 
---g_currentMission:getHasPlayerPermission("hireAssistant", connection, vehicle:getOwnerFarmId())
+function Rule.updateLoanRule(frame)
+	if g_ruleManager:getGeneralRuleValue("borrowMoney") == Rule.BORROW_MONEY_DEACTIVATED then 
+		frame.borrowButtonInfo.disabled = true
+		frame:setMenuButtonInfoDirty()
+	end
+end
+InGameMenuFinancesFrame.updateFinancesLoanButtons = Utils.appendedFunction(InGameMenuFinancesFrame.updateFinancesLoanButtons, Rule.updateLoanRule)
 
+function Rule.updateAnimalHusbandryLimitRules(husbandry, superFunc, ...)
+	if husbandry.spec_husbandryAnimals then
+		local animalType = husbandry.spec_husbandryAnimals.animalType
+		local husbandryList = g_currentMission.husbandrySystem:getPlaceablesByFarm(nil)
+		local animalTypeList = {}
+		for i, p in pairs(husbandryList) do 
+			if p:getAnimalTypeIndex() == animalType.typeIndex then
+				table.insert(animalTypeList, p)
+			end		
+		end
+		local rule = g_ruleManager:getAnimalHusbandryLimitByName(animalType.name)
+		if rule then 
+			if rule:getValue() <= #animalTypeList then 
+				return false, g_i18n:getText("warning_tooManyHusbandries")
+			end
+		end
+	end
+	return superFunc(husbandry, ...)
+end
+PlaceableHusbandry.getCanBePlacedAt = Utils.overwrittenFunction(PlaceableHusbandry.getCanBePlacedAt, Rule.updateAnimalHusbandryLimitRules)
+PlaceableHusbandry.canBuy = Utils.overwrittenFunction(PlaceableHusbandry.canBuy, Rule.updateAnimalHusbandryLimitRules)
