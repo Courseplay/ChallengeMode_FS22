@@ -34,11 +34,12 @@
 			<Element name="maxHelpers" default="5">
 				<Values>
 					<Value name="HELPER_DEACTIVATED" text="deactivated">0</Value>
+					<Value>1</Value>
 					<Value>2</Value>
+					<Value>3</Value>
 					<Value>4</Value>
-					<Value>8</Value>
-					<Value>10</Value>
-					<Value>12</Value>
+					<Value>5</Value>
+					<Value>6</Value>
 				</Values>
 			</Element>
 			<Element name="leaseVehicle" default="3">
