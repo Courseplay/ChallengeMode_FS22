@@ -1,25 +1,6 @@
 
 VictoryPointManager = {
-	FACTORS = {
-		MONEY = 1,
-		AREA = 2,
-		TOTAL_STORAGE = 3,
-		BALE_STORAGE = 4,
-		PALLET_STORAGE = 5
-	},
-	POINT_LIST = {
-		POINTS = 1,
-		STORAGE = 2,
-		BALE_STORAGE = 3,
-		PALLET_STORAGE = 4
-	},
-	NUM_CATEGORIES = 4,
-	CONFIG_CATEGORIES = {
-		"GeneralFactors",
-		"StorageFactors",
-		"BaleFactors",
-		"PalletFactors",
-	},
+	
 }
 local VictoryPointManager_mt = Class(VictoryPointManager)
 ---@class VictoryPointManager

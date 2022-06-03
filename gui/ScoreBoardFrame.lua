@@ -52,11 +52,6 @@ ScoreBoardFrame.translations = {
 	
 }
 
-ScoreBoardFrame.colors = {
-	move = {0, 0, 0, 0.35},
-	default = {0.3140, 0.8069, 1.0000, 0.02}
-}
-
 local ScoreBoardFrame_mt = Class(ScoreBoardFrame, TabbedMenuFrameElement)
 ---@class ScoreBoardFrame
 ---@field private rightList SmoothListElement

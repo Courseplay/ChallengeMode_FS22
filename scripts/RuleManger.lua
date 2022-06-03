@@ -1,23 +1,5 @@
 
 RuleManager = {
-	RULES = {
-		HELPER_LIMIT = 1,
-		LEASE_VEHICLES = 2,
-	},
-	LEASE_VEHICLES = {
-		DISABLED = 0,
-		ONLY_SHOP_VEHICLES = 1,
-		ENABLED = 2
-	},
-	NUM_CATEGORIES = 2,
-	CONFIG_CATEGORIES = {
-		"GeneralRules",
-		"MissionRules"
-	},
-	CATEGORIES = {
-		GENERAL = 1,
-		MISSION = 2
-	},
 	MISSION_TITLES = {
 		cultivate = "fieldJob_jobType_cultivating",
 		mow_bale = "fieldJob_jobType_baling",
