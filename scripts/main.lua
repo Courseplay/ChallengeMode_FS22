@@ -24,7 +24,7 @@ function ChallengeMod.new(custom_mt)
 end
 
 function ChallengeMod:generateContracts()
-	g_missionManager:generateMissions()
+	g_missionManager:consoleGenerateFieldMission()
 end
 
 function ChallengeMod:changeAdminPassword(newPassword)
@@ -74,7 +74,7 @@ function ChallengeMod:registerXmlSchema()
 	g_victoryPointManager:registerXmlSchema(self.xmlSchema, self.baseXmlKey)
 	g_ruleManager:registerXmlSchema(self.xmlSchema, self.baseXmlKey)
 
-    self.xmlConfigSchema = XMLSchema.new("ChallengeMod")
+    self.xmlConfigSchema = XMLSchema.new("ChallengeModConfig")
 	self.xmlConfigSchema:register(XMLValueType.STRING, self.baseXmlKey .. "#defaultPassword", "Admin password", "")
 	g_victoryPointManager:registerConfigXmlSchema(self.xmlConfigSchema, self.baseXmlKey)
 	g_ruleManager:registerConfigXmlSchema(self.xmlConfigSchema, self.baseXmlKey)
@@ -82,12 +82,12 @@ end
 
 function ChallengeMod:loadConfigData(filename)
 	local xmlFile = XMLFile.loadIfExists("xmlFile", filename,  self.xmlConfigSchema)
-	if xmlFile then 
+	if xmlFile ~=nil then 
 		CmUtil.debug("Challenge setup loaded from %s.", filename)
 		self.adminPassword = xmlFile:getValue(self.baseXmlKey.."#defaultPassword")
 		self.defaultAdminPassword = self.adminPassword
-		g_victoryPointManager:loadConfigData(xmlFile, self.baseXmlKey)
 		g_ruleManager:loadConfigData(xmlFile, self.baseXmlKey)
+		g_victoryPointManager:loadConfigData(xmlFile, self.baseXmlKey)
 		xmlFile:delete()
 		return true
 	else
@@ -97,11 +97,11 @@ end
 
 function ChallengeMod:saveToXMLFile(filename)
 	local xmlFile = XMLFile.create("xmlFile", filename, self.baseXmlKey, self.xmlSchema)
-	if xmlFile then 
+	if xmlFile ~= nil then 
 		CmUtil.debug("Challenge setup saved to %s.", filename)
 		xmlFile:setValue(self.baseXmlKey .. "#password", self.adminPassword)
-		g_victoryPointManager:saveToXMLFile(xmlFile, self.baseXmlKey)
 		g_ruleManager:saveToXMLFile(xmlFile, self.baseXmlKey)
+		g_victoryPointManager:saveToXMLFile(xmlFile, self.baseXmlKey)
 		xmlFile:save()
 		xmlFile:delete()
 	else
@@ -111,11 +111,11 @@ end
 
 function ChallengeMod:loadFromXMLFile(filename)
 	local xmlFile = XMLFile.loadIfExists("xmlFile", filename, self.xmlSchema)
-	if xmlFile then 
+	if xmlFile ~= nil then 
 		CmUtil.debug("Challenge setup loaded from %s.", filename)
 		self.adminPassword = xmlFile:getValue(self.baseXmlKey .."#password", self.adminPassword)
-		g_victoryPointManager:loadFromXMLFile(xmlFile, self.baseXmlKey)
 		g_ruleManager:loadFromXMLFile(xmlFile, self.baseXmlKey)
+		g_victoryPointManager:loadFromXMLFile(xmlFile, self.baseXmlKey)
 		xmlFile:delete()
 		return true
 	else
@@ -125,13 +125,13 @@ end
 
 function ChallengeMod:writeStream(streamId, connection)
 	streamWriteString(streamId, self.adminPassword)
-	g_victoryPointManager:writeStream(streamId, connection)
+	g_ruleManager:writeStream(streamId, connection)
 	g_victoryPointManager:writeStream(streamId, connection)
 end
 
 function ChallengeMod:readStream(streamId, connection)
 	self.adminPassword = streamReadString(streamId)
-	g_victoryPointManager:readStream(streamId, connection)
+	g_ruleManager:readStream(streamId, connection)
 	g_victoryPointManager:readStream(streamId, connection)
 end
 

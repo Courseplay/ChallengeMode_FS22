@@ -99,18 +99,37 @@ local function updateMissionRules(mission, superFunc, ...)
 	if not g_ruleManager:isMissionAllowed(mission) then 
 		return false
 	end
+	if #g_missionManager.missions >= g_ruleManager:getGeneralRuleValue("maxMissions") then 
+		CmUtil.debug("Max mission amount reached.")
+		return false
+	end
 	return superFunc(mission, ...)
 end
 AbstractMission.init = Utils.overwrittenFunction(AbstractMission.init, updateMissionRules)
 
-local function updateMissionRules2(manager, ...)
+local function updateMissionRules2(manager, dt, ...)
+	local maxMissions = g_ruleManager:getGeneralRuleValue("maxMissions")
 	for _, mission in ipairs(manager.missions) do
-		if not g_ruleManager:isMissionAllowed(mission) then
+		if not g_ruleManager:isMissionAllowed(mission) or #manager.missions > maxMissions then
 			mission:delete()
 		end
 	end
+	--- Only for debugging.
+	if CmUtil.debugActive and #manager.missions < maxMissions then 
+		manager:generateMissions(dt)
+	end
 end
 MissionManager.updateMissions = Utils.appendedFunction(MissionManager.updateMissions, updateMissionRules2)
+
+local function generateMissions(manager, superFunc, ...)
+	if #manager.missions >= g_ruleManager:getGeneralRuleValue("maxMissions") then 
+		CmUtil.debug("Max mission amount reached.")
+		return false
+	end
+	superFunc(manager, ...)
+end
+MissionManager.generateMissions = Utils.overwrittenFunction(MissionManager.generateMissions, generateMissions)
+
 
 function Rule.getCanStartHelper(currentMission, superFunc, permission, ...)
 	if permission == "hireAssistant" and g_ruleManager:getGeneralRuleValue("maxHelpers") <= #currentMission.aiSystem.activeJobVehicles  then 

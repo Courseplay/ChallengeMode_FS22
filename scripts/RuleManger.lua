@@ -109,7 +109,6 @@ function RuleManager:isMissionAllowed(mission)
 		if missionRule:getValue() == Rule.MISSION_DEACTIVATED then 
 			local missionType = self.missionTypes[missionRule:getName()]
 			if mission.type == missionType then 
-				CmUtil.debug("Mission type %s disabled", missionRule:getName())
 				return false
 			end
 		end

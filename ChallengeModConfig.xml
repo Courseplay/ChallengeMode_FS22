@@ -42,6 +42,19 @@
 					<Value>6</Value>
 				</Values>
 			</Element>
+			<Element name="maxMissions" default="3">
+				<Values>
+					<Value name="MISSIONS_DISABLED" text="deactivated">0</Value>
+					<Value >1</Value>
+					<Value >2</Value>
+					<Value >3</Value>
+					<Value >4</Value>
+					<Value >5</Value>
+					<Value >6</Value>
+					<Value >7</Value>
+					<Value >8</Value>
+				</Values>
+			</Element>
 			<Element name="leaseVehicle" default="3">
 				<Values>
 					<Value name="LEASE_VEHICLE_DEACTIVATED" text="deactivated">0</Value>
@@ -60,6 +73,18 @@
 					<Value >4000000</Value>
 					<Value >5000000</Value>
 					<Value >10000000</Value>
+				</Values>
+			</Element>
+			<Element name="maxFillLevel" default="1">
+				<Values>
+					<Value name="MAX_FILL_LEVEL_DISABLED" text="deactivated">0</Value>
+					<Value >10000</Value>
+					<Value >25000</Value>
+					<Value >50000</Value>
+					<Value >100000</Value>
+					<Value >250000</Value>
+					<Value >500000</Value>
+					<Value >1000000</Value>
 				</Values>
 			</Element>
 		</Category>

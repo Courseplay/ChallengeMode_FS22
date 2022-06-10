@@ -65,17 +65,20 @@ function VictoryPointManager:readStream(streamId, connection)
 end
 
 function VictoryPointManager:addStorageFactors(category, factorData, farmId, farm)
-	local fillLevels = VictoryPointsUtil.getStorageAmount(farmId)
+	local maxFillLevel = g_ruleManager:getGeneralRuleValue("maxFillLevel")
+	local fillLevels = VictoryPointsUtil.getStorageAmount(farmId, maxFillLevel)
 	VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
 end
 
 function VictoryPointManager:addBaleFactors(category, factorData, farmId, farm)
-	local fillLevels = VictoryPointsUtil.getBaleAmount(farmId)
+	local maxFillLevel = g_ruleManager:getGeneralRuleValue("maxFillLevel")
+	local fillLevels = VictoryPointsUtil.getBaleAmount(farmId, maxFillLevel)
 	VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
 end
 
 function VictoryPointManager:addPalletFactors(category, factorData, farmId, farm)
-	local fillLevels = VictoryPointsUtil.getPalletAmount(farmId)
+	local maxFillLevel = g_ruleManager:getGeneralRuleValue("maxFillLevel")
+	local fillLevels = VictoryPointsUtil.getPalletAmount(farmId, maxFillLevel)
 	VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
 end
 
