@@ -54,10 +54,12 @@
 		<text name="CM_Rules_general_leaseVehicle_allowed"				text="Allowed"/>
 		<text name="CM_Rules_general_maxFillLevel_title"				text="Filllevel cap: "/>
 		<text name="CM_Rules_general_maxFillLevel_deactivated"			text="Deactivated"/>			
-
-
 		<text name="CM_Rules_general_creditLimit_title"					text="Credit limit:"/>
 		<text name="CM_Rules_general_creditLimit_deactivated"			text="Deactivated"/>
+
+		<text name="CM_Rules_visibleFarms_title"						text="Farms:"/>
+		<text name="CM_Rules_visibleFarms_visible"						text="Visible"/>
+		<text name="CM_Rules_visibleFarms_invisible"					text="Invisible"/>
 
 		<text name="CM_Rules_missions_title"							text="Missions"/>
 		<text name="CM_Rules_missions_activated"						text="Activated"/>

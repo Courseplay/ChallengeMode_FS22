@@ -65,6 +65,10 @@ function ScoreBoardCategory:getNumberOfElements()
 	return #self.elements
 end
 
+function ScoreBoardCategory:clear()
+	self.elements = {}
+end
+
 function ScoreBoardCategory:onTextInput(value)
 		
 end

@@ -88,6 +88,14 @@
 				</Values>
 			</Element>
 		</Category>
+		<Category name="visibleFarms">
+			<Element genericFunc="addFarms" default="1">
+				<Values>
+					<Value name="FARM_INVISIBLE" text="invisible">0</Value>
+					<Value name="FARM_VISIBLE" text="visible">1</Value>
+				</Values>
+			</Element>
+		</Category>
 		<Category name="animalHusbandryLimits">
 			<Element genericFunc="addAnimalHusbandryLimitRules" default="1">
 				<Values>
@@ -116,17 +124,3 @@
 		</Category>
 	</Rules>
 </ChallengeMod>
-
-<!--
-<ChallengeMod>
-	<VictoryPoints>
-		<Category name="general" title="">
-			<Element name="money">default</Element>
-			<Element name="area">default</Element>
-		</Category>
-	</VictoryPoints>
-	<Rules>
-
-	</Rules>
-</ChallengeMod>
-	-->

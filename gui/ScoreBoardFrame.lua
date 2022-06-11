@@ -145,7 +145,6 @@ function ScoreBoardFrame:onGuiSetupFinished()
 end
 
 function ScoreBoardFrame:onFrameOpen()
-	self.victoryPointManager:update()
 	self:updateLists()
 	self:updateMenuButtons()
 	self:updateTitles()
@@ -160,6 +159,8 @@ function ScoreBoardFrame:onFrameClose()
 end
 
 function ScoreBoardFrame:updateLists()
+	self.ruleManager:updateFarms()
+	self.victoryPointManager:update()
 	self.farms = self:getValidFarms()
 	self.leftList:reloadData()
 	self.rightList:reloadData()
@@ -266,7 +267,7 @@ end
 function ScoreBoardFrame:getValidFarms()
 	local farms, farmsById = {}, {}
 	for i, farm in pairs(self.farmManager:getFarms()) do 
-		if CmUtil.isValidFarm(farm.farmId, farm) then 
+		if CmUtil.isValidFarm(farm.farmId, farm) and g_ruleManager:getIsFarmVisible(farm) then 
 			table.insert(farms, farm)
 			farmsById[farm.farmId] = farm
 		end
@@ -389,7 +390,6 @@ function ScoreBoardFrame:onTextInputChangeValue(text, clickOk, element)
 	if clickOk then 
 		if text ~= nil and element ~= nil then
 			element:onTextInput(text)
-			self.victoryPointManager:update()
 			self:updateLists()
 		end
 	end

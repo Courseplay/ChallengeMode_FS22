@@ -77,6 +77,14 @@ function ScoreBoardList:getElementByName(name, ...)
 	end
 end
 
+function ScoreBoardList:setElementByName(name, newCategory)
+	for ix, element in pairs(self.elements) do 
+		if element:getName() == name then 
+			self.elements[ix] = newCategory
+		end
+	end
+end
+
 function ScoreBoardList:getElements()
 	return self.elements
 end

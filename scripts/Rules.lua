@@ -76,6 +76,13 @@ function Rule.readStream(streamId, connection)
 	g_ruleManager:getList():getElement(categoryId, id):onClick()
 end
 
+function Rule:applyValues(staticCategory)
+	local element = staticCategory:getElementByName(self.name)
+	if element then 
+		self:setSavedValue(element:getValueToSave())
+	end
+end
+
 ----------------------------------------------------
 --- Rule implementations
 ----------------------------------------------------
