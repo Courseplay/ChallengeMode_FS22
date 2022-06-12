@@ -94,11 +94,29 @@ end
 ShopConfigScreen.updateButtons = Utils.appendedFunction(ShopConfigScreen.updateButtons, updateVehicleLeaseRule)
 
 local function updateVehicleLeaseMissionRule(screen, superFunc, state, canLease)
+	local function updateButtons()
+		local acceptButtonIx =  table.findListElementFirstIndex(screen.menuButtonInfo, screen.acceptButtonInfo)
+		local leaseButtonIx =  table.findListElementFirstIndex(screen.menuButtonInfo, screen.leaseButtonInfo)
+		local farmId = g_currentMission:getFarmId()
+		if acceptButtonIx ~= nil and farmId ~= nil then 
+			local maxReached = g_missionManager:hasFarmReachedMissionLimit(farmId)
+			if maxReached then 
+				screen.menuButtonInfo[acceptButtonIx].disabled = true
+				if leaseButtonIx ~= nil then 
+					screen.menuButtonInfo[leaseButtonIx].disabled = true
+				end
+			end
+		end
+		screen:setMenuButtonInfoDirty()
+	end
+
 	if g_ruleManager:getGeneralRuleValue("leaseVehicle") ~= Rule.LEASE_VEHICLE_ALLOWED then
 		superFunc(screen, state, false)
+		updateButtons()
 		return
 	end
 	superFunc(screen, state, canLease)
+	updateButtons()
 end
 InGameMenuContractsFrame.setButtonsForState = Utils.overwrittenFunction(InGameMenuContractsFrame.setButtonsForState, updateVehicleLeaseMissionRule)
 
@@ -106,37 +124,30 @@ local function updateMissionRules(mission, superFunc, ...)
 	if not g_ruleManager:isMissionAllowed(mission) then 
 		return false
 	end
-	if #g_missionManager.missions >= g_ruleManager:getGeneralRuleValue("maxMissions") then 
-		CmUtil.debug("Max mission amount reached.")
-		return false
-	end
 	return superFunc(mission, ...)
 end
 AbstractMission.init = Utils.overwrittenFunction(AbstractMission.init, updateMissionRules)
 
 local function updateMissionRules2(manager, dt, ...)
-	local maxMissions = g_ruleManager:getGeneralRuleValue("maxMissions")
 	for _, mission in ipairs(manager.missions) do
-		if not g_ruleManager:isMissionAllowed(mission) or #manager.missions > maxMissions then
+		if not g_ruleManager:isMissionAllowed(mission) then
 			mission:delete()
 		end
-	end
-	--- Only for debugging.
-	if CmUtil.debugActive and #manager.missions < maxMissions then 
-		manager:generateMissions(dt)
 	end
 end
 MissionManager.updateMissions = Utils.appendedFunction(MissionManager.updateMissions, updateMissionRules2)
 
-local function generateMissions(manager, superFunc, ...)
-	if #manager.missions >= g_ruleManager:getGeneralRuleValue("maxMissions") then 
-		CmUtil.debug("Max mission amount reached.")
-		return false
+local function hasFarmReachedMissionLimit(manager, superFunc, farmId, ...) 
+	local maxMissions = g_ruleManager:getGeneralRuleValue("maxMissions")
+	local total = 0
+	for _, mission in ipairs(manager.missions) do
+		if mission.farmId == farmId and (mission.status == AbstractMission.STATUS_RUNNING or mission.status == AbstractMission.STATUS_FINISHED) then
+			total = total + 1
+		end
 	end
-	superFunc(manager, ...)
+	return maxMissions <= total
 end
-MissionManager.generateMissions = Utils.overwrittenFunction(MissionManager.generateMissions, generateMissions)
-
+MissionManager.hasFarmReachedMissionLimit = Utils.overwrittenFunction(MissionManager.hasFarmReachedMissionLimit, hasFarmReachedMissionLimit)
 
 function Rule.getCanStartHelper(currentMission, superFunc, permission, ...)
 	if permission == "hireAssistant" and g_ruleManager:getGeneralRuleValue("maxHelpers") <= #currentMission.aiSystem.activeJobVehicles  then 

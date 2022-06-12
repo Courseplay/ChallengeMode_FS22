@@ -18,13 +18,13 @@ function ChallengeMod.new(custom_mt)
 	local self = setmetatable({}, custom_mt or ChallengeMod_mt)
 	self.isServer = g_server
 
-	addConsoleCommand('CmGenerateContracts', 'Generates new contracts', 'generateContracts', self)
+	addConsoleCommand('CmGenerateContracts', 'Generates new contracts', 'consoleGenerateFieldMission', g_missionManager)
 
 	return self
 end
 
 function ChallengeMod:generateContracts()
-	g_missionManager:consoleGenerateFieldMission()
+	g_missionManager:generateMissions()
 end
 
 function ChallengeMod:changeAdminPassword(newPassword)
