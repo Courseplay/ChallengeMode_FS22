@@ -24,7 +24,45 @@
 
 		<IgnoredFillTypes>
 			<IgnoredFillType>AIR</IgnoredFillType>
-			<IgnoredFillType>UNKNOWN</IgnoredFillType>
+			<IgnoredFillType>PROTEIN</IgnoredFillType>
+			<IgnoredFillType>DEF</IgnoredFillType>
+			<IgnoredFillType>DEF_SHORT</IgnoredFillType>
+			<IgnoredFillType>DIESEL</IgnoredFillType>
+			<IgnoredFillType>ELECTRICCHARGE</IgnoredFillType>
+			<IgnoredFillType>FORAGE_MIXING</IgnoredFillType>
+			<IgnoredFillType>METHANE</IgnoredFillType>
+			<IgnoredFillType>PIGFOODBASE</IgnoredFillType>
+			<IgnoredFillType>PIGFOODEARTH</IgnoredFillType>
+			<IgnoredFillType>PIGFOODGRAIN</IgnoredFillType>
+			<IgnoredFillType>PIGFOODPROTEIN</IgnoredFillType>
+			<IgnoredFillType>ROADSALT</IgnoredFillType>
+			<IgnoredFillType>SILAGEADDITIVE</IgnoredFillType>
+			<IgnoredFillType>SNOW</IgnoredFillType>
+			<IgnoredFillType>TARP</IgnoredFillType>
+			<IgnoredFillType>TREESAPLINGS</IgnoredFillType>
+			<IgnoredFillType>WEED</IgnoredFillType>
+			<IgnoredFillType>COW_SWISS_BROWN</IgnoredFillType>
+			<IgnoredFillType>COW_HOLSTEIN</IgnoredFillType>
+			<IgnoredFillType>COW_ANGUS</IgnoredFillType>
+			<IgnoredFillType>COW_LIMOUSIN</IgnoredFillType>
+			<IgnoredFillType>PIG_LANDRACE</IgnoredFillType>
+			<IgnoredFillType>PIG_BLACK_PIED</IgnoredFillType>
+			<IgnoredFillType>PIG_BERKSHIRE</IgnoredFillType>
+			<IgnoredFillType>SHEEP_LANDRACE</IgnoredFillType>
+			<IgnoredFillType>SHEEP_STEINSCHAF</IgnoredFillType>
+			<IgnoredFillType>SHEEP_SWISS_MOUNTAIN</IgnoredFillType>
+			<IgnoredFillType>SHEEP_BLACK_WELSH</IgnoredFillType>
+			<IgnoredFillType>HORSE_GRAY</IgnoredFillType>
+			<IgnoredFillType>HORSE_PINTO</IgnoredFillType>
+			<IgnoredFillType>HORSE_PALOMINO</IgnoredFillType>
+			<IgnoredFillType>HORSE_CHESTNUT</IgnoredFillType>
+			<IgnoredFillType>HORSE_BAY</IgnoredFillType>
+			<IgnoredFillType>HORSE_BLACK</IgnoredFillType>
+			<IgnoredFillType>HORSE_SEAL_BROWN</IgnoredFillType>
+			<IgnoredFillType>HORSE_DUN</IgnoredFillType>
+			<IgnoredFillType>CHICKEN</IgnoredFillType>
+			<IgnoredFillType>CHICKEN_ROOSTER</IgnoredFillType>
+
 		</IgnoredFillTypes>
 
 	</VictoryPoints>
