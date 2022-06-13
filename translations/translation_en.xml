@@ -6,7 +6,7 @@
 		<text name="CM_leftList_rightTitle" 							text="Total points" />
 		<text name="CM_leftList_section_two" 							text="Settings" />
 		<text name="CM_leftList_ruleTitle" 								text="Rules" />
-		<text name="CM_leftList_adminPointsTitle" 						text="Admin Points" />
+		<text name="CM_leftList_adminPointsTitle" 						text="Admin Pointsettings" />
 
 		<text name="CM_rightList_leftTitle" 							text="Goal: %d" />
 
