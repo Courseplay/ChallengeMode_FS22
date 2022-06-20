@@ -104,25 +104,6 @@ function RuleManager:addAnimalHusbandryLimitRules(category, ruleData)
 	end
 end
 
-function RuleManager:addFarms(category, ruleData)
-	if self.farmsRuleData == nil then 
-		self.farmsRuleData = ruleData
-	else
-		ruleData = self.farmsRuleData
-	end
-	local farms = table.copy(g_farmManager:getFarms(), 2)
-	table.sort(farms, function (a, b)
-		return a.name < b.name		
-	end)
-	for i, farm in pairs(farms) do 
-		if CmUtil.isValidFarm(farm.farmId, farm) then
-			ruleData.name = farm.farmId
-			ruleData.title = farm.name
-			category:addElement(Rule.createFromXml(ruleData))
-		end
-	end
-end
-
 function RuleManager:isMissionAllowed(mission)
 	for _,missionRule in pairs(self:getMissionRules()) do 
 		if missionRule:getValue() == Rule.MISSION_DEACTIVATED then 
@@ -153,22 +134,6 @@ end
 
 function RuleManager:getAnimalHusbandryLimitByName(name)
 	return self.ruleList:getElementByName("animalHusbandryLimits"):getElementByName(name)
-end
-
-function RuleManager:getIsFarmVisible(farm)
-	return self.ruleList:getElementByName("visibleFarms", farm.farmId):getValue() == Rule.FARM_VISIBLE
-end
-
-function RuleManager:updateFarms()
-	local oldCategory = self.ruleList:getElementByName("visibleFarms")
-	local category = ScoreBoardCategory.new(oldCategory:getName(), oldCategory:getTitle())
-	self:addFarms(category)
-	category:applyValues(self.ruleList)
-	if next(oldCategory.elements) ~=nil then
-		CmUtil.debug("Old name: %s, Value %d", oldCategory.elements[1].name, oldCategory.elements[1].currentIx)
-		CmUtil.debug("New name: %s, Value %d", category.elements[1].name, category.elements[1].currentIx)
-	end
-	self.ruleList:setElementByName(oldCategory:getName(), category)
 end
 
 g_ruleManager = RuleManager.new()

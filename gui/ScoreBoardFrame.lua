@@ -35,9 +35,11 @@ ScoreBoardFrame.translations = {
 	ruleTitle = g_i18n:getText("CM_leftList_ruleTitle"),
 	adminPointsTitle = g_i18n:getText("CM_leftList_adminPointsTitle"),
 	menuButtons = {
-		admin = g_i18n:getText("CM_menuBtn_admin"),
+		adminLogin = g_i18n:getText("CM_menuBtn_admin_login"),
+		adminLogout = g_i18n:getText("CM_menuBtn_admin_logout"),
 		adminChangePassword = g_i18n:getText("CM_menuBtn_admin_changePassword"),
 		change = g_i18n:getText("CM_menuBtn_change"),
+		changeFarmVisibility = g_i18n:getText("CM_menuBtn_changeFarmVisibility")
 	},
 	dialogs = {
 		admin = g_i18n:getText("CM_dialog_adminTitle"),
@@ -83,18 +85,31 @@ function ScoreBoardFrame:onGuiSetupFinished()
 		--- Login as admin button.
 		{
 			profile = "buttonActivate",
-			inputAction = InputAction.MENU_ACTIVATE,
-			text = self.translations.menuButtons.admin,
+			inputAction = InputAction.MENU_ACCEPT,
+			text = self.translations.menuButtons.adminLogin,
 			callback = function ()
-				self:onClickAdmin()
+				self:onClickAdminLogin()
 				self:updateMenuButtons()
+				self:updateLists()
 			end,
-			callbackDisabled = self.isAdminButtonDisabled,
+			callbackDisabled = self.isAdminLoginButtonDisabled,
+		},
+		--- Logout admin button.
+		{
+			profile = "buttonSelect",
+			inputAction = InputAction.MENU_ACCEPT,
+			text = self.translations.menuButtons.adminLogout,
+			callback = function ()
+				self:onClickAdminLogout()
+				self:updateMenuButtons()
+				self:updateLists()
+			end,
+			callbackDisabled = self.isAdminLogoutButtonDisabled,
 		},
 		--- Change admin password.
 		{
 			profile = "buttonActivate",
-			inputAction = InputAction.MENU_ACTIVATE,
+			inputAction = InputAction.MENU_EXTRA_2,
 			text = self.translations.menuButtons.adminChangePassword,
 			callback = function ()
 				self:onClickAdminChangePassword()
@@ -105,7 +120,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 		--- Changes a value button.
 		{
 			profile = "buttonSelect",
-			inputAction = InputAction.MENU_EXTRA_1,
+			inputAction = InputAction.MENU_ACTIVATE,
 			text = self.translations.menuButtons.change,
 			callback = function ()
 				self:onClickChange()
@@ -113,7 +128,18 @@ function ScoreBoardFrame:onGuiSetupFinished()
 				self:updateLists()
 			end,
 			callbackDisabled = self.isChangeButtonDisabled,
-		}
+		},
+		--- Changes farm visibility.
+		{
+			profile = "buttonActivate",
+			inputAction = InputAction.MENU_EXTRA_1,
+			text = self.translations.menuButtons.changeFarmVisibility,
+			callback = function ()
+				self:onClickChangeFarmVisibility()
+				self:updateMenuButtons()
+			end,
+			callbackDisabled = self.isAdminLogoutButtonDisabled,
+		},
 	}
 	self.managers = {
 		function (...)
@@ -157,9 +183,7 @@ end
 function ScoreBoardFrame:onFrameClose()
 	ScoreBoardFrame:superClass().onFrameClose(self)
 end
-
 function ScoreBoardFrame:updateLists()
-	self.ruleManager:updateFarms()
 	self.victoryPointManager:update()
 	self.farms = self:getValidFarms()
 	self.leftList:reloadData()
@@ -267,9 +291,11 @@ end
 function ScoreBoardFrame:getValidFarms()
 	local farms, farmsById = {}, {}
 	for i, farm in pairs(self.farmManager:getFarms()) do 
-		if CmUtil.isValidFarm(farm.farmId, farm) and g_ruleManager:getIsFarmVisible(farm) then 
-			table.insert(farms, farm)
-			farmsById[farm.farmId] = farm
+		if CmUtil.isValidFarm(farm.farmId, farm) then 
+			if self.isAdminModeActive or self.challengeMod:getIsFarmVisible(farm.farmId) then
+				table.insert(farms, farm)
+				farmsById[farm.farmId] = farm
+			end
 		end
 	end
 	table.sort(farms, function(a, b)
@@ -312,14 +338,25 @@ end
 --- Button callbacks
 ----------------------------------------------------
 
-function ScoreBoardFrame:onClickAdmin()
+function ScoreBoardFrame:onClickAdminLogin()
 	self:openTextInputDialog(self.onTextInputAdminPassword, nil, self.translations.dialogs.admin, self.challengeMod:getDefaultAdminPassword())
 end
 
+function ScoreBoardFrame:onClickAdminLogout()
+	self.isAdminModeActive = false
+end
 function ScoreBoardFrame:onClickAdminChangePassword()
 	self:openTextInputDialog(self.onTextInputChangeAdminPassword, nil, self.translations.dialogs.adminChangePassword, self.challengeMod:getAdminPassword())
 end
 
+function ScoreBoardFrame:onClickChangeFarmVisibility()
+	local farmId = self:getCurrentFarmId()
+	if farmId == nil then 
+		CmUtil.debug("No farm is selected!")
+		return
+	end
+	self.challengeMod:changeFarmVisibility(farmId)
+end
 
 function ScoreBoardFrame:onClickChange()
 	local sec,ix = self.rightList:getSelectedPath()
@@ -333,10 +370,13 @@ function ScoreBoardFrame:onClickChange()
 	end
 end
 
-function ScoreBoardFrame:isAdminButtonDisabled()
+function ScoreBoardFrame:isAdminLoginButtonDisabled()
 	return self.isAdminModeActive
 end
 
+function ScoreBoardFrame:isAdminLogoutButtonDisabled()
+	return not self.isAdminModeActive
+end
 function ScoreBoardFrame:isAdminChangePasswordButtonDisabled()
 	return not self.isAdminModeActive
 end

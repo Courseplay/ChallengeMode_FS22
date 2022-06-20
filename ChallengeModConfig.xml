@@ -126,14 +126,6 @@
 				</Values>
 			</Element>
 		</Category>
-		<Category name="visibleFarms">
-			<Element genericFunc="addFarms" default="1">
-				<Values>
-					<Value name="FARM_INVISIBLE" text="invisible">0</Value>
-					<Value name="FARM_VISIBLE" text="visible">1</Value>
-				</Values>
-			</Element>
-		</Category>
 		<Category name="animalHusbandryLimits">
 			<Element genericFunc="addAnimalHusbandryLimitRules" default="1">
 				<Values>

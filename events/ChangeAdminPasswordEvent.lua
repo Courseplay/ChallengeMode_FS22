@@ -27,6 +27,7 @@ function ChangeAdminPasswordEvent:run(connection)
 	if not connection:getIsServer() then
 		g_server:broadcastEvent(ChangeAdminPasswordEvent.new(self.password))
 	end
+	g_challengeMod:changeAdminPassword(self.password, true)
 end
 
 function ChangeAdminPasswordEvent.sendEvent(...)

@@ -67,13 +67,16 @@ end
 
 function Rule:writeStream(streamId, connection)
 	streamWriteUInt8(streamId, self:getParent().id)
-	streamWriteUInt8(streamId, self.id)
+	streamWriteString(streamId, self.name)
+	streamWriteUInt8(streamId, self.currentIx)
 end
 
 function Rule.readStream(streamId, connection)
 	local categoryId = streamReadUInt8(streamId)
-	local id = streamReadUInt8(streamId)
-	g_ruleManager:getList():getElement(categoryId, id):onClick()
+	local name = streamReadString(streamId)
+	local ix = streamReadUInt8(streamId)
+	local category = g_ruleManager:getList():getElement(categoryId)
+	category:getElementByName(name):setSavedValue(ix)
 end
 
 function Rule:applyValues(staticCategory)

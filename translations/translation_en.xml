@@ -10,9 +10,11 @@
 
 		<text name="CM_rightList_leftTitle" 							text="Goal: %d" />
 
-		<text name="CM_menuBtn_admin" 									text="Login" />
+		<text name="CM_menuBtn_admin_login" 							text="Login" />
+		<text name="CM_menuBtn_admin_logout" 							text="Logout" />
 		<text name="CM_menuBtn_admin_changePassword"					text="Change password" />
 		<text name="CM_menuBtn_change" 									text="Change value" />
+		<text name="CM_menuBtn_changeFarmVisibility" 					text="Changes farm visibility" />
 
 		<text name="CM_dialog_changeTitle" 								text="Change value" />
 		<text name="CM_dialog_adminTitle" 								text="Login(default: %s)" />

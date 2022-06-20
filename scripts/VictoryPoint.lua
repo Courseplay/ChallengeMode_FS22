@@ -120,13 +120,14 @@ end
 
 function VictoryPoint:writeStream(streamId, connection)
 	streamWriteUInt8(streamId, self:getParent().id)
-	streamWriteUInt8(streamId, self.id)
+	streamWriteString(streamId, self.name)
 	streamWriteFloat32(streamId, self:getFactor())
 end
 
 function VictoryPoint.readStream(streamId, connection)
 	local categoryId = streamReadUInt8(streamId)
-	local id = streamReadUInt8(streamId)
+	local name = streamReadString(streamId)
 	local value = streamReadFloat32(streamId)
-	g_victoryPointManager:getList():getElement(categoryId, id):setFactor(value)
+	local category = g_ruleManager:getList():getElement(categoryId)
+	category:getElementByName(name):setFactor(value)
 end
