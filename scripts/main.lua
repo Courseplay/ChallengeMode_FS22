@@ -97,13 +97,13 @@ end
 function ChallengeMod:registerXmlSchema()
     self.xmlSchema = XMLSchema.new("ChallengeMod")
 	self.xmlSchema:register(XMLValueType.STRING, self.baseXmlKey .. "#password", "Admin password")
+	self.xmlSchema:register(XMLValueType.INT, self.baseXmlKey .. ".Farms.Farm(?)#id", "Farm id")
+	self.xmlSchema:register(XMLValueType.BOOL, self.baseXmlKey .. ".Farms.Farm(?)#visible", "Farm visible", true)
 	g_victoryPointManager:registerXmlSchema(self.xmlSchema, self.baseXmlKey)
 	g_ruleManager:registerXmlSchema(self.xmlSchema, self.baseXmlKey)
 
     self.xmlConfigSchema = XMLSchema.new("ChallengeModConfig")
 	self.xmlConfigSchema:register(XMLValueType.STRING, self.baseXmlKey .. "#defaultPassword", "Admin password", "")
-	self.xmlConfigSchema:register(XMLValueType.INT, self.baseXmlKey .. ".Farms.Farm(?)#id", "Disabled farm ids")
-	self.xmlConfigSchema:register(XMLValueType.BOOL, self.baseXmlKey .. ".Farms.Farm(?)#visible", "Admin password", true)
 
 	g_victoryPointManager:registerConfigXmlSchema(self.xmlConfigSchema, self.baseXmlKey)
 	g_ruleManager:registerConfigXmlSchema(self.xmlConfigSchema, self.baseXmlKey)
