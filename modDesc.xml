@@ -9,8 +9,36 @@
 
 	<description>
         <en><![CDATA[Challenge.
+
+Settings:
+- Points for win.
+- Points per Money on Bank.
+- Points per fruit in storage.
+- Points per area (HA).
+- Storagelimit, with a certain amount in storage, no more points will be gained.
+- Helper limit 0-6.
+- Rent Vehicles on/off/Shop only.
+- Turn off specific mission types.
+- Set a Missionlimit from 0-8 per farm.
+- Credit on/off/limited.
+
+Ingame UI with own extra password to set the rules.
 ]]></en>
 		<de><![CDATA[Herausvorderung.
+
+Einstellungen:
+- Punkte zum Sieg.
+- Punkte für Geld auf dem Konto.
+- Punkte für Früchte im Lager.
+- Punkte für Fläche (HA).
+- Lagerlimit, ab welchem Lagerstand, gibt es keine Punkte mehr dazu.
+- Helferlimit von 0-6.
+- Fahrzeuge mieten an/aus/nur Shop.
+- Einzelne Missionstypen ein und ausschalten.
+- Missionslimit pro Farm 0-8.
+- Kredit an/aus/ limitiert.
+
+Ingame UI mit eigenem Passwort zum Einstellen der Spielregeln.
 ]]></de>
     </description>
 
