@@ -116,11 +116,13 @@
 			<Element name="maxFillLevel" default="1">
 				<Values>
 					<Value name="MAX_FILL_LEVEL_DISABLED" text="deactivated">0</Value>
-					<Value >10000</Value>
-					<Value >25000</Value>
 					<Value >50000</Value>
+					<Value >75000</Value>
 					<Value >100000</Value>
+					<Value >150000</Value>
+					<Value >200000</Value>
 					<Value >250000</Value>
+					<Value >300000</Value>
 					<Value >500000</Value>
 					<Value >1000000</Value>
 				</Values>
