@@ -87,7 +87,7 @@ end
 
 function VictoryPointsUtil.getTotalBuildingSellValue(farmId)
 	local value = 0
-	for _, placeable in pairs(g_currentMission.placeables) do
+	for _, placeable in pairs(g_currentMission.placeableSystem.placeables) do
 		if placeable:getOwnerFarmId() == farmId then
 			value = value + placeable:getSellPrice()
 		end
