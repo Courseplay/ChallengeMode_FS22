@@ -119,15 +119,14 @@ function VictoryPoint:applyValues(staticCategory)
 end
 
 function VictoryPoint:writeStream(streamId, connection)
-	streamWriteUInt8(streamId, self:getParent().id)
+	streamWriteString(streamId, self:getParent():getName())
 	streamWriteString(streamId, self.name)
 	streamWriteFloat32(streamId, self:getFactor())
 end
 
 function VictoryPoint.readStream(streamId, connection)
-	local categoryId = streamReadUInt8(streamId)
+	local categoryName = streamReadString(streamId)
 	local name = streamReadString(streamId)
 	local value = streamReadFloat32(streamId)
-	local category = g_ruleManager:getList():getElement(categoryId)
-	category:getElementByName(name):setFactor(value)
+	g_victoryPointManager:getList():getElementByName(categoryName, name):setFactor(value)
 end

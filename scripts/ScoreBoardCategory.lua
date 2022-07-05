@@ -136,14 +136,18 @@ function ScoreBoardCategory:applyValues(staticList)
 	end
 end
 
-function ScoreBoardCategory:writeStream(...)
+function ScoreBoardCategory:writeStream(streamId, ...)
+	streamWriteUInt8(streamId, #self.elements)
 	for i, element in ipairs(self.elements) do 
-		element:writeJoinStream(...)
+		streamWriteString(streamId, element:getName())
+		element:writeJoinStream(streamId, ...)
 	end
 end
 
-function ScoreBoardCategory:readStream(...)
-	for i, element in ipairs(self.elements) do 
-		element:readJoinStream(...)
+function ScoreBoardCategory:readStream(streamId, ...)
+	for i= 1, streamReadUInt8(streamId) do 
+		local elementName = streamReadString(streamId)
+		local e = self:getElementByName(elementName)
+		e:readJoinStream(streamId, ...)
 	end
 end

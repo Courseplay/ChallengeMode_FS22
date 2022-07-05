@@ -15,6 +15,22 @@ function CmUtil.debugSparse(...)
 	end
 end
 
+--- Executes a function and throws a callstack, when an error appeared.
+--- Additionally the first return value is a status, if the function was executed correctly.
+---@param func function function to be executed.
+---@param ... any parameters for the function, for class function the first parameter needs to be self.
+---@return boolean was the code execution successfully and no error appeared.
+---@return any if the code was successfully run, then all return values will be normally returned, else only a error message is returned.
+function CmUtil.try(func, ...)
+	local data = {xpcall(func, function(err) printCallstack(); return err end, ...)}
+	local status = data[1]
+	if not status then 
+		CmUtil.debug(data[2])
+		return status, tostring(data[2])
+	end
+	return unpack(data)
+end
+
 function CmUtil.getUniqueUserByConnection(connection)
 	return g_currentMission.userManager:getUserByConnection(connection), g_currentMission.userManager:getUniqueUserIdByConnection(connection)
 end

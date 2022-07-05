@@ -28,7 +28,7 @@ end
 
 function ChangeFarmVisibilityEvent:run(connection)
 	if not connection:getIsServer() then
-		g_server:broadcastEvent(ChangeFarmVisibilityEvent.new(self.farmId, self.visible))
+		g_server:broadcastEvent(ChangeFarmVisibilityEvent.new(self.farmId, self.visible), nil, connection)
 	end
 	g_challengeMod:changeFarmVisibility(self.farmId, self.visible, true)
 end

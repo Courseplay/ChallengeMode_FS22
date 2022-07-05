@@ -123,7 +123,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 			inputAction = InputAction.MENU_ACTIVATE,
 			text = self.translations.menuButtons.change,
 			callback = function ()
-				self:onClickChange()
+				CmUtil.try(self.onClickChange, self)
 				self:updateMenuButtons()
 				self:updateLists()
 			end,
@@ -361,6 +361,7 @@ end
 function ScoreBoardFrame:onClickChange()
 	local sec,ix = self.rightList:getSelectedPath()
 	local element = self:getElement(sec,ix)
+	CmUtil.debug("ScoreBoardFrame onClickChange")
 	if element then 
 		if element:isTextInputAllowed() then
 			self:openTextInputDialog(self.onTextInputChangeValue, element, element:getTitle())

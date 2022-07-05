@@ -24,25 +24,31 @@ end
 
 function ChangeElementEvent:readStream(streamId, connection)
 	local type = streamReadUIntN(streamId, self.SEND_NUM_BITS)
-	local element = self.TYPES[type].readStream(streamId, connection)
+	CmUtil.debug("ChangeElementEvent readStream type: %s", type)
+	local function getElement()
+		local e = self.TYPES[type].readStream(streamId, connection)
+		return e
+	end
+	local element = CmUtil.try(getElement)
 	self:run(connection, element, type)
 end
 
 function ChangeElementEvent:writeStream(streamId, connection)
+	CmUtil.debug("ChangeElementEvent writeStream type: %s ", self.type)
 	streamWriteUIntN(streamId, self.type, self.SEND_NUM_BITS)
 	self.element:writeStream(streamId, connection)
 end
 
-function ChangeElementEvent:run(connection, ...)
+function ChangeElementEvent:run(connection, element, type)
 	if not connection:getIsServer() then
-		g_server:broadcastEvent(ChangeElementEvent.new(...))
+		g_server:broadcastEvent(ChangeElementEvent.new(element, type), nil, connection)
 	end
 end
 
-function ChangeElementEvent.sendEvent(...)
+function ChangeElementEvent.sendEvent(element, type)
 	if g_server ~= nil then
-		g_server:broadcastEvent(ChangeElementEvent.new(...))
+		g_server:broadcastEvent(ChangeElementEvent.new(element, type))
 	else
-		g_client:getServerConnection():sendEvent(ChangeElementEvent.new(...))
+		g_client:getServerConnection():sendEvent(ChangeElementEvent.new(element, type))
 	end
 end

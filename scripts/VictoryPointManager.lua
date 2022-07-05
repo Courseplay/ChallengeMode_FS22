@@ -57,10 +57,12 @@ function VictoryPointManager:loadFromXMLFile(xmlFile, baseXmlKey)
 end
 
 function VictoryPointManager:writeStream(streamId, connection)
+	CmUtil.debug("VictoryPointManager write stream.")
 	self.staticPointList:writeStream(streamId)
 end
 
 function VictoryPointManager:readStream(streamId, connection)
+	CmUtil.debug("VictoryPointManager read stream.")
 	self.staticPointList:readStream(streamId)
 end
 
