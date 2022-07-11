@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <l10n>
 	<texts>
-		<text name="CM_title" 											text="Herausforderungs Modus" />
+		<text name="CM_title" 											text="Herausforderungsmodus" />
 		<text name="CM_leftList_leftTitle" 								text="Farm" />
-		<text name="CM_leftList_rightTitle" 							text="Gesammtpunkte" />
-		<text name="CM_leftList_section_two" 							text="Einstellunge" />
+		<text name="CM_leftList_rightTitle" 							text="Gesamtpunkte" />
+		<text name="CM_leftList_section_two" 							text="Einstellungen" />
 		<text name="CM_leftList_ruleTitle" 								text="Regeln" />
 		<text name="CM_leftList_adminPointsTitle" 						text="Admin Punkteeinstellungen" />
 
@@ -19,7 +19,7 @@
 		<text name="CM_dialog_changeTitle" 								text="Wert ändern" />
 		<text name="CM_dialog_adminTitle" 								text="Login(default: %s)" />
 		<text name="CM_dialog_adminChangePasswordTitle"					text="Aktuelles Passwort: %s" />
-		<text name="CM_dialog_adminWrongPassword"						text="Falsches Passwort!(%s)"/>
+		<text name="CM_dialog_adminWrongPassword"						text="Falsches Passwort! (%s)"/>
 
 		<text name="CM_VictoryPoints_leftTitle"							text=""/>
 		<text name="CM_VictoryPoints_middleTitle"						text="Faktor"/>
@@ -32,15 +32,14 @@
 		<text name="CM_VictoryPoints_general_ownedVehicleValue_title"	text="Fahrzeuge Verkaufswert"/>
 		<text name="CM_VictoryPoints_general_productionValue_title"		text="Produktionswert"/>
 
-		<text name="CM_VictoryPoints_general_totalStorage_title"		text="Gesammt Lager"/>
-		<text name="CM_VictoryPoints_general_totalBales_title"			text="Gesammte Ballen"/>
-		<text name="CM_VictoryPoints_general_totalPallets_title"		text="Gesammte Paletten"/>
+		<text name="CM_VictoryPoints_general_totalStorage_title"		text="Gesamtes Lager"/>
+		<text name="CM_VictoryPoints_general_totalBales_title"			text="Gesamte Ballen"/>
+		<text name="CM_VictoryPoints_general_totalPallets_title"		text="Gesamte Paletten"/>
 		
 		<text name="CM_VictoryPoints_storage_title"						text="Lager"/>
 		<text name="CM_VictoryPoints_bales_title"						text="Ballenlager"/>
 		<text name="CM_VictoryPoints_pallets_title"						text="Palettenlager"/>
 
-		
 		<text name="CM_Rules_leftTitle"									text=""/>
 		<text name="CM_Rules_middleTitle"								text=""/>
 		<text name="CM_Rules_rightTitle"								text="Wert"/>
@@ -54,7 +53,7 @@
 		<text name="CM_Rules_general_leaseVehicle_deactivated"			text="Deaktiviert"/>
 		<text name="CM_Rules_general_leaseVehicle_shopOnly"				text="Nur im Shop"/>
 		<text name="CM_Rules_general_leaseVehicle_allowed"				text="Erlaubt"/>
-		<text name="CM_Rules_general_maxFillLevel_title"				text="Filllevel cap: "/>
+		<text name="CM_Rules_general_maxFillLevel_title"				text="Fülllstandslimit: "/>
 		<text name="CM_Rules_general_maxFillLevel_deactivated"			text="Deaktiviert"/>			
 		<text name="CM_Rules_general_creditLimit_title"					text="Kreditlimit:"/>
 		<text name="CM_Rules_general_creditLimit_deactivated"			text="Deaktiviert"/>
@@ -67,7 +66,7 @@
 		<text name="CM_Rules_missions_activated"						text="Aktiviert"/>
 		<text name="CM_Rules_missions_deactivated"						text="Deaktiviert"/>
 
-		<text name="CM_Rules_animalHusbandryLimits_title"				text="Tierfarm Limits"/>
+		<text name="CM_Rules_animalHusbandryLimits_title"				text="Tierstall Limits"/>
 		<text name="CM_Rules_animalHusbandryLimits_noLimit"				text="kein Limit"/>
 		<text name="CM_Rules_animalHusbandryLimits_deactivated"			text="Deaktiviert"/>
 

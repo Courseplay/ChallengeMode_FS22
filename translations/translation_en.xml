@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <l10n>
 	<texts>
-		<text name="CM_title" 											text="Challenge mod" />
+		<text name="CM_title" 											text="Challenge mode" />
 		<text name="CM_leftList_leftTitle" 								text="Farm" />
 		<text name="CM_leftList_rightTitle" 							text="Total points" />
 		<text name="CM_leftList_section_two" 							text="Settings" />
@@ -17,7 +17,7 @@
 		<text name="CM_menuBtn_changeFarmVisibility" 					text="Changes farm visibility" />
 
 		<text name="CM_dialog_changeTitle" 								text="Change value" />
-		<text name="CM_dialog_adminTitle" 								text="Login(default: %s)" />
+		<text name="CM_dialog_adminTitle" 								text="Login (default: %s)" />
 		<text name="CM_dialog_adminChangePasswordTitle"					text="Current password: %s" />
 		<text name="CM_dialog_adminWrongPassword"						text="Wrong password(%s)"/>
 
@@ -38,7 +38,7 @@
 		
 		<text name="CM_VictoryPoints_storage_title"						text="Storage"/>
 		<text name="CM_VictoryPoints_bales_title"						text="Bale storage"/>
-		<text name="CM_VictoryPoints_pallets_title"						text="Pallet storage"/>
+		<text name="CM_VictoryPoints_pallets_title"						text="Palet storage"/>
 
 		
 		<text name="CM_Rules_leftTitle"									text=""/>
@@ -54,7 +54,7 @@
 		<text name="CM_Rules_general_leaseVehicle_deactivated"			text="Deactivated"/>
 		<text name="CM_Rules_general_leaseVehicle_shopOnly"				text="Shop only"/>
 		<text name="CM_Rules_general_leaseVehicle_allowed"				text="Allowed"/>
-		<text name="CM_Rules_general_maxFillLevel_title"				text="Filllevel cap: "/>
+		<text name="CM_Rules_general_maxFillLevel_title"				text="Fill level cap: "/>
 		<text name="CM_Rules_general_maxFillLevel_deactivated"			text="Deactivated"/>			
 		<text name="CM_Rules_general_creditLimit_title"					text="Credit limit:"/>
 		<text name="CM_Rules_general_creditLimit_deactivated"			text="Deactivated"/>
