@@ -6,7 +6,7 @@ ScoreBoardFrame = {
 		RIGHT_COLUMN = "rightColumn",
 		LEFT_LIST = "leftList",
 		RIGHT_LIST = "rightList",
-		LEFT_COLUMN_HEADER ="leftColumnHeader",
+		LEFT_COLUMN_HEADER = "leftColumnHeader",
 		RIGHT_COLUMN_HEADER = "rightColumnHeader",
 		GOAL = "goal",
 		RIGHT_LIST_MIDDLE_TITLE = "rightList_middleTitle",
@@ -31,7 +31,7 @@ ScoreBoardFrame = {
 
 ScoreBoardFrame.translations = {
 	goal = function(goal) return string.format(g_i18n:getText("CM_rightList_leftTitle"), goal) end,
-	
+
 	ruleTitle = g_i18n:getText("CM_leftList_ruleTitle"),
 	adminPointsTitle = g_i18n:getText("CM_leftList_adminPointsTitle"),
 	menuButtons = {
@@ -51,7 +51,7 @@ ScoreBoardFrame.translations = {
 		"",
 		g_i18n:getText("CM_leftList_section_two"),
 	},
-	
+
 }
 
 local ScoreBoardFrame_mt = Class(ScoreBoardFrame, TabbedMenuFrameElement)
@@ -70,10 +70,8 @@ function ScoreBoardFrame.new(target, custom_mt)
 	return self
 end
 
-
 function ScoreBoardFrame:onGuiSetupFinished()
 	ScoreBoardFrame:superClass().onGuiSetupFinished(self)
-	
 
 	self.leftList:setDataSource(self)
 	self.rightList:setDataSource(self)
@@ -87,7 +85,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 			profile = "buttonActivate",
 			inputAction = InputAction.MENU_ACCEPT,
 			text = self.translations.menuButtons.adminLogin,
-			callback = function ()
+			callback = function()
 				self:onClickAdminLogin()
 				self:updateMenuButtons()
 				self:updateLists()
@@ -99,7 +97,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 			profile = "buttonSelect",
 			inputAction = InputAction.MENU_ACCEPT,
 			text = self.translations.menuButtons.adminLogout,
-			callback = function ()
+			callback = function()
 				self:onClickAdminLogout()
 				self:updateMenuButtons()
 				self:updateLists()
@@ -111,7 +109,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 			profile = "buttonActivate",
 			inputAction = InputAction.MENU_EXTRA_2,
 			text = self.translations.menuButtons.adminChangePassword,
-			callback = function ()
+			callback = function()
 				self:onClickAdminChangePassword()
 				self:updateMenuButtons()
 			end,
@@ -122,7 +120,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 			profile = "buttonSelect",
 			inputAction = InputAction.MENU_ACTIVATE,
 			text = self.translations.menuButtons.change,
-			callback = function ()
+			callback = function()
 				CmUtil.try(self.onClickChange, self)
 				self:updateMenuButtons()
 				self:updateLists()
@@ -134,7 +132,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 			profile = "buttonActivate",
 			inputAction = InputAction.MENU_EXTRA_1,
 			text = self.translations.menuButtons.changeFarmVisibility,
-			callback = function ()
+			callback = function()
 				self:onClickChangeFarmVisibility()
 				self:updateMenuButtons()
 			end,
@@ -142,10 +140,10 @@ function ScoreBoardFrame:onGuiSetupFinished()
 		},
 	}
 	self.managers = {
-		function (...)
+		function(...)
 			return self.victoryPointManager:getList(...)
 		end,
-		function (...)
+		function(...)
 			local sx, ix = self.leftList:getSelectedPath()
 			return ix == 1 and self.ruleManager:getList() or self.victoryPointManager:getList()
 		end,
@@ -154,19 +152,19 @@ function ScoreBoardFrame:onGuiSetupFinished()
 
 	self.numSections = {
 		[self.leftList] = function() return self.NUM_LEFT_SECTIONS end,
-		[self.rightList] = function() 
-								local sx, ix = self.leftList:getSelectedPath()
-								return self.managers[sx]():getNumberOfElements()
-							end 
+		[self.rightList] = function()
+			local sx, ix = self.leftList:getSelectedPath()
+			return self.managers[sx]():getNumberOfElements()
+		end
 	}
 	self.sectionTitles = {
-		[self.leftList] = function(sx) 
-			return self.translations.leftSections[sx] 
+		[self.leftList] = function(sx)
+			return self.translations.leftSections[sx]
 		end,
-		[self.rightList] = function(rsx) 
+		[self.rightList] = function(rsx)
 			local sx, ix = self.leftList:getSelectedPath()
 			return self.managers[sx]():getElement(rsx):getTitle()
-		end 
+		end
 	}
 end
 
@@ -179,10 +177,11 @@ function ScoreBoardFrame:onFrameOpen()
 	self:setSoundSuppressed(false)
 	ScoreBoardFrame:superClass().onFrameOpen(self)
 end
-	
+
 function ScoreBoardFrame:onFrameClose()
 	ScoreBoardFrame:superClass().onFrameClose(self)
 end
+
 function ScoreBoardFrame:updateLists()
 	self.victoryPointManager:update()
 	self.farms = self:getValidFarms()
@@ -200,7 +199,7 @@ end
 
 function ScoreBoardFrame:updateMenuButtons()
 	self.menuButtonInfo = {}
-	for i, btn in pairs(self.menuButtons) do 
+	for i, btn in pairs(self.menuButtons) do
 		if btn.callbackDisabled == nil or not btn.callbackDisabled(self) then
 			table.insert(self.menuButtonInfo, btn)
 		end
@@ -214,7 +213,7 @@ end
 
 function ScoreBoardFrame:getTitleForSectionHeader(list, s)
 	local text = self.sectionTitles[list](s)
-	if text == "" then 
+	if text == "" then
 		return nil
 	end
 	return text
@@ -222,7 +221,7 @@ end
 
 function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 	if list == self.leftList then
-		if section == self.LEFT_SECTIONS.POINTS then 
+		if section == self.LEFT_SECTIONS.POINTS then
 			return #self.farms
 		else
 			return self.isAdminModeActive and self.NUM_SETTINGS_ADMIN or self.NUM_SETTINGS
@@ -231,7 +230,7 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 		local sx, ix = self.leftList:getSelectedPath()
 		local farmId = self:getCurrentFarmId()
 		local l = self.managers[sx](farmId)
-		if l == nil then 
+		if l == nil then
 			CmUtil.debug("Categories for not found %d", section)
 			printCallstack()
 			return 0
@@ -240,12 +239,10 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 	end
 end
 
-
 function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell)
-	
 	if list == self.leftList then
-		if section == self.LEFT_SECTIONS.POINTS then 
-			if self.farms[index] then
+		if section == self.LEFT_SECTIONS.POINTS then
+			if self.farms[index] then -- and self.farms[index].farmId == g_currentMission.player.farmId then
 				if self.farms[index]:getIconUVs() ~= nil then
 					cell:getAttribute("icon"):setImageUVs(nil, unpack(GuiUtils.getUVs(self.farms[index]:getIconUVs())))
 				end
@@ -253,17 +250,18 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 					cell:getAttribute("icon"):setImageColor(nil, unpack(self.farms[index]:getColor()))
 				end
 				cell:getAttribute("title"):setText(self.farms[index].name)
-				cell:getAttribute("value"):setText(string.format("%.1f", self.victoryPointManager:getTotalPoints(self.farms[index].farmId)))
+				cell:getAttribute("value"):setText(string.format("%.1f",
+					self.victoryPointManager:getTotalPoints(self.farms[index].farmId)))
 				if self.victoryPointManager:isVictoryGoalReached(self.farms[index].farmId) then
 					cell:getAttribute("value"):setTextColor(unpack(self.COLOR.GREEN))
-				else 
+				else
 					cell:getAttribute("value"):setTextColor(unpack(self.COLOR.WHITE))
 				end
 			end
 		elseif index == 1 then
 			cell:getAttribute("title"):setText(self.translations.ruleTitle)
 			cell:getAttribute("icon"):setVisible(false)
-		else 
+		else
 			cell:getAttribute("title"):setText(self.translations.adminPointsTitle)
 			cell:getAttribute("icon"):setVisible(false)
 		end
@@ -280,7 +278,7 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 end
 
 function ScoreBoardFrame:onListSelectionChanged(list, section, index)
-	if list == self.leftList then 
+	if list == self.leftList then
 		--self.leftList:reloadData()
 		self.rightList:reloadData()
 	end
@@ -290,8 +288,8 @@ end
 
 function ScoreBoardFrame:getValidFarms()
 	local farms, farmsById = {}, {}
-	for i, farm in pairs(self.farmManager:getFarms()) do 
-		if CmUtil.isValidFarm(farm.farmId, farm) then 
+	for i, farm in pairs(self.farmManager:getFarms()) do
+		if CmUtil.isValidFarm(farm.farmId, farm) then
 			if self.isAdminModeActive or self.challengeMod:getIsFarmVisible(farm.farmId) then
 				table.insert(farms, farm)
 				farmsById[farm.farmId] = farm
@@ -299,26 +297,26 @@ function ScoreBoardFrame:getValidFarms()
 		end
 	end
 	table.sort(farms, function(a, b)
-		return  self.victoryPointManager:getTotalPoints(a.farmId) >  self.victoryPointManager:getTotalPoints(b.farmId)
+		return self.victoryPointManager:getTotalPoints(a.farmId) > self.victoryPointManager:getTotalPoints(b.farmId)
 	end)
 	return farms, farmsById
 end
 
 function ScoreBoardFrame:getCurrentFarmId()
-	local sx,ix = self.leftList:getSelectedPath()
-	if sx ~= self.LEFT_SECTIONS.POINTS then 
+	local sx, ix = self.leftList:getSelectedPath()
+	if sx ~= self.LEFT_SECTIONS.POINTS then
 		return
 	end
-	if sx == 1 and ix and self.farms[ix] then 
+	if sx == 1 and ix and self.farms[ix] then
 		return self.farms[ix].farmId
-	else 
+	else
 		CmUtil.debug("Current farm id not found for %s.", tostring(ix))
 		printCallstack()
 	end
 end
 
 function ScoreBoardFrame:getElement(section, index)
-	if section == nil or index == nil then 
+	if section == nil or index == nil then
 		CmUtil.debug("Index or section is nil (%s|%s).", tostring(section), tostring(index))
 		printCallstack()
 		return
@@ -326,12 +324,12 @@ function ScoreBoardFrame:getElement(section, index)
 	local sx, ix = self.leftList:getSelectedPath()
 	local farmId = self:getCurrentFarmId()
 	local list = self.managers[sx](farmId)
-	if list == nil then 
+	if list == nil then
 		CmUtil.debug("Element not found for (%s|%s).", tostring(section), tostring(index))
 		printCallstack()
 		return
 	end
-	return list:getElement(section,index)
+	return list:getElement(section, index)
 end
 
 ----------------------------------------------------
@@ -339,19 +337,22 @@ end
 ----------------------------------------------------
 
 function ScoreBoardFrame:onClickAdminLogin()
-	self:openTextInputDialog(self.onTextInputAdminPassword, nil, self.translations.dialogs.admin, self.challengeMod:getDefaultAdminPassword())
+	self:openTextInputDialog(self.onTextInputAdminPassword, nil, self.translations.dialogs.admin,
+		self.challengeMod:getDefaultAdminPassword())
 end
 
 function ScoreBoardFrame:onClickAdminLogout()
 	self.isAdminModeActive = false
 end
+
 function ScoreBoardFrame:onClickAdminChangePassword()
-	self:openTextInputDialog(self.onTextInputChangeAdminPassword, nil, self.translations.dialogs.adminChangePassword, self.challengeMod:getAdminPassword())
+	self:openTextInputDialog(self.onTextInputChangeAdminPassword, nil, self.translations.dialogs.adminChangePassword,
+		self.challengeMod:getAdminPassword())
 end
 
 function ScoreBoardFrame:onClickChangeFarmVisibility()
 	local farmId = self:getCurrentFarmId()
-	if farmId == nil then 
+	if farmId == nil then
 		CmUtil.debug("No farm is selected!")
 		return
 	end
@@ -359,10 +360,10 @@ function ScoreBoardFrame:onClickChangeFarmVisibility()
 end
 
 function ScoreBoardFrame:onClickChange()
-	local sec,ix = self.rightList:getSelectedPath()
-	local element = self:getElement(sec,ix)
+	local sec, ix = self.rightList:getSelectedPath()
+	local element = self:getElement(sec, ix)
 	CmUtil.debug("ScoreBoardFrame onClickChange")
-	if element then 
+	if element then
 		if element:isTextInputAllowed() then
 			self:openTextInputDialog(self.onTextInputChangeValue, element, element:getTitle())
 		end
@@ -378,6 +379,7 @@ end
 function ScoreBoardFrame:isAdminLogoutButtonDisabled()
 	return not self.isAdminModeActive
 end
+
 function ScoreBoardFrame:isAdminChangePasswordButtonDisabled()
 	return not self.isAdminModeActive
 end
@@ -391,7 +393,7 @@ end
 ----------------------------------------------------
 
 function ScoreBoardFrame:openTextInputDialog(callbackFunc, args, title, ...)
-	if ... ~= nil then 
+	if ... ~= nil then
 		title = string.format(title, ...)
 	end
 	g_gui:showTextInputDialog({
@@ -408,12 +410,12 @@ function ScoreBoardFrame:openTextInputDialog(callbackFunc, args, title, ...)
 end
 
 function ScoreBoardFrame:onTextInputAdminPassword(text, clickOk)
-	if clickOk then 
-		if text == self.challengeMod:getAdminPassword() then 
+	if clickOk then
+		if text == self.challengeMod:getAdminPassword() then
 			self.isAdminModeActive = true
 			self:updateMenuButtons()
 			self:updateLists()
-		else 
+		else
 			g_gui:showInfoDialog({
 				text = string.format(self.translations.dialogs.adminWrongPassword, text)
 			})
@@ -422,13 +424,13 @@ function ScoreBoardFrame:onTextInputAdminPassword(text, clickOk)
 end
 
 function ScoreBoardFrame:onTextInputChangeAdminPassword(text, clickOk)
-	if clickOk then 
+	if clickOk then
 		self.challengeMod:changeAdminPassword(text)
 	end
 end
 
 function ScoreBoardFrame:onTextInputChangeValue(text, clickOk, element)
-	if clickOk then 
+	if clickOk then
 		if text ~= nil and element ~= nil then
 			element:onTextInput(text)
 			self:updateLists()

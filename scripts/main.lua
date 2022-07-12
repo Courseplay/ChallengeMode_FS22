@@ -20,7 +20,7 @@ function ChallengeMod.new(custom_mt)
 	self.isServer = g_server
 	self.visibleFarms = {}
 
-	for i = 0, FarmManager.MAX_FARM_ID do 
+	for i = 0, FarmManager.MAX_FARM_ID do
 		self.visibleFarms[i] = true
 	end
 
@@ -32,16 +32,16 @@ function ChallengeMod.new(custom_mt)
 end
 
 function ChallengeMod:changeFarmVisibility(farmId, visible, noEvent)
-	if self.visibleFarms[farmId] ~= nil then 
+	if self.visibleFarms[farmId] ~= nil then
 		if visible == nil then
 			self.visibleFarms[farmId] = not self.visibleFarms[farmId]
-		else 
+		else
 			self.visibleFarms[farmId] = visible
 		end
-	else 
+	else
 		self.visibleFarms[farmId] = true
 	end
-	if noEvent == nil or noEvent == false then 
+	if noEvent == nil or noEvent == false then
 		ChangeFarmVisibilityEvent.sendEvent(farmId, self.visibleFarms[farmId])
 	end
 end
@@ -90,16 +90,15 @@ function ChallengeMod:setupGui()
 	CmUtil.fixInGameMenuPage(frame, "pageScoreBoard", self.image)
 end
 
-
 function ChallengeMod:registerXmlSchema()
-    self.xmlSchema = XMLSchema.new("ChallengeMod")
+	self.xmlSchema = XMLSchema.new("ChallengeMod")
 	self.xmlSchema:register(XMLValueType.STRING, self.baseXmlKey .. "#password", "Admin password")
 	self.xmlSchema:register(XMLValueType.INT, self.baseXmlKey .. ".Farms.Farm(?)#id", "Farm id")
 	self.xmlSchema:register(XMLValueType.BOOL, self.baseXmlKey .. ".Farms.Farm(?)#visible", "Farm visible", true)
 	g_victoryPointManager:registerXmlSchema(self.xmlSchema, self.baseXmlKey)
 	g_ruleManager:registerXmlSchema(self.xmlSchema, self.baseXmlKey)
 
-    self.xmlConfigSchema = XMLSchema.new("ChallengeModConfig")
+	self.xmlConfigSchema = XMLSchema.new("ChallengeModConfig")
 	self.xmlConfigSchema:register(XMLValueType.STRING, self.baseXmlKey .. "#defaultPassword", "Admin password", "")
 
 	g_victoryPointManager:registerConfigXmlSchema(self.xmlConfigSchema, self.baseXmlKey)
@@ -107,10 +106,10 @@ function ChallengeMod:registerXmlSchema()
 end
 
 function ChallengeMod:loadConfigData(filename)
-	local xmlFile = XMLFile.loadIfExists("xmlFile", filename,  self.xmlConfigSchema)
-	if xmlFile ~=nil then 
+	local xmlFile = XMLFile.loadIfExists("xmlFile", filename, self.xmlConfigSchema)
+	if xmlFile ~= nil then
 		CmUtil.debug("Challenge setup loaded from %s.", filename)
-		self.adminPassword = xmlFile:getValue(self.baseXmlKey.."#defaultPassword")
+		self.adminPassword = xmlFile:getValue(self.baseXmlKey .. "#defaultPassword")
 		self.defaultAdminPassword = self.adminPassword
 		g_ruleManager:loadConfigData(xmlFile, self.baseXmlKey)
 		g_victoryPointManager:loadConfigData(xmlFile, self.baseXmlKey)
@@ -123,11 +122,11 @@ end
 
 function ChallengeMod:saveToXMLFile(filename)
 	local xmlFile = XMLFile.create("xmlFile", filename, self.baseXmlKey, self.xmlSchema)
-	if xmlFile ~= nil then 
+	if xmlFile ~= nil then
 		CmUtil.debug("Challenge setup saved to %s.", filename)
 		xmlFile:setValue(self.baseXmlKey .. "#password", self.adminPassword)
 		local i = 0
-		for farmId, visible in pairs(self.visibleFarms) do 
+		for farmId, visible in pairs(self.visibleFarms) do
 			xmlFile:setValue(string.format("%s.Farms.Farm(%d)#id", self.baseXmlKey, i), farmId)
 			xmlFile:setValue(string.format("%s.Farms.Farm(%d)#visible", self.baseXmlKey, i), visible or true)
 			i = i + 1
@@ -143,15 +142,15 @@ end
 
 function ChallengeMod:loadFromXMLFile(filename)
 	local xmlFile = XMLFile.loadIfExists("xmlFile", filename, self.xmlSchema)
-	if xmlFile ~= nil then 
+	if xmlFile ~= nil then
 		CmUtil.debug("Challenge setup loaded from %s.", filename)
-		self.adminPassword = xmlFile:getValue(self.baseXmlKey .."#password", self.adminPassword) 
+		self.adminPassword = xmlFile:getValue(self.baseXmlKey .. "#password", self.adminPassword)
 		--maybe save password encrypted to increase user security. Many people use the same passwords everywhere so this could make them more attackable with a password saved in clear text
 
-		xmlFile:iterate(self.baseXmlKey .. ".Farms.Farm", function (ix, key)
+		xmlFile:iterate(self.baseXmlKey .. ".Farms.Farm", function(ix, key)
 			local id = xmlFile:getValue(key .. "#id")
 			local visible = xmlFile:getValue(key .. "#visible", true)
-			if id ~= nil then 
+			if id ~= nil then
 				self.visibleFarms[id] = visible
 			end
 		end)
@@ -168,7 +167,7 @@ end
 function ChallengeMod:writeStream(streamId, connection)
 	streamWriteString(streamId, self.adminPassword)
 
-	for farmId, visible in pairs(self.visibleFarms) do 
+	for farmId, visible in pairs(self.visibleFarms) do
 		streamWriteInt8(streamId, farmId)
 		streamWriteBool(streamId, visible)
 	end
@@ -181,9 +180,9 @@ end
 function ChallengeMod:readStream(streamId, connection)
 	self.adminPassword = streamReadString(streamId)
 
-	while true do 
+	while true do
 		local id = streamReadInt8(streamId)
-		if id < 0 then 
+		if id < 0 then
 			break
 		end
 		self.visibleFarms[id] = streamReadBool(streamId)
@@ -205,10 +204,11 @@ end
 
 function ChallengeMod:saveToSaveGame()
 	if g_modIsLoaded[ChallengeMod.MOD_NAME] then
-		local saveGamePath =  g_currentMission.missionInfo.savegameDirectory .."/" .. ChallengeMod.configFileName
+		local saveGamePath = g_currentMission.missionInfo.savegameDirectory .. "/" .. ChallengeMod.configFileName
 		g_challengeMod:saveToXMLFile(saveGamePath)
 	end
 end
+
 ItemSystem.save = Utils.prependedFunction(ItemSystem.save, ChallengeMod.saveToSaveGame)
 
 g_challengeMod = ChallengeMod.new()

@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ChallengeMod defaultPassword = "0000">
+<ChallengeMod defaultPassword="0000">
 	<VictoryPoints prefix="CM_VictoryPoints" goal="1000000">
 		<Category name="general">
-			<Element genericFunc="addMoneyFactor" unitTextFunc = "MONEY_TEXT" name="money" default="1"/>
-			<Element genericFunc="addAreaFactor" unitTextFunc = "AREA_TEXT" name="area" default="1"/>
-			<Element genericFunc="addBuildingsFactor" unitTextFunc = "MONEY_TEXT" name="ownedBuildingValue" default="1"/>
-			<Element genericFunc="addVehiclesFactor" unitTextFunc = "MONEY_TEXT" name="ownedVehicleValue" default="1"/>
-		<!--TODO	<Element genericFunc="addProductionsFactor" unitTextFunc = "VOLUME_TEXT" name="productionValue" default="1"/> -->
+			<Element genericFunc="addMoneyFactor" unitTextFunc="MONEY_TEXT" name="money" default="1" />
+			<Element genericFunc="addAreaFactor" unitTextFunc="AREA_TEXT" name="area" default="1" />
+			<Element genericFunc="addBuildingsFactor" unitTextFunc="MONEY_TEXT" name="ownedBuildingValue" default="1" />
+			<Element genericFunc="addVehiclesFactor" unitTextFunc="MONEY_TEXT" name="ownedVehicleValue" default="1" />
+			<!--TODO	<Element genericFunc="addProductionsFactor" unitTextFunc = "VOLUME_TEXT" name="productionValue" default="1"/> -->
 
-			<Element dependency="storage" genericFunc="addDependentPoint" unitTextFunc = "VOLUME_TEXT" name="totalStorage" default="1"/>
-			<Element dependency="bales" genericFunc="addDependentPoint" unitTextFunc = "VOLUME_TEXT" name="totalBales" default="1"/>
-			<Element dependency="pallets" genericFunc="addDependentPoint" unitTextFunc = "VOLUME_TEXT" name="totalPallets" default="1"/>
+			<Element dependency="storage" genericFunc="addDependentPoint" unitTextFunc="VOLUME_TEXT" name="totalStorage" default="1" />
+			<Element dependency="bales" genericFunc="addDependentPoint" unitTextFunc="VOLUME_TEXT" name="totalBales" default="1" />
+			<Element dependency="pallets" genericFunc="addDependentPoint" unitTextFunc="VOLUME_TEXT" name="totalPallets" default="1" />
 		</Category>
 		<Category name="storage">
-			<Element genericFunc="addStorageFactors" unitTextFunc = "VOLUME_TEXT" default="1"/>
+			<Element genericFunc="addStorageFactors" unitTextFunc="VOLUME_TEXT" default="1" />
 		</Category>
 		<Category name="bales">
-			<Element genericFunc="addBaleFactors" unitTextFunc = "VOLUME_TEXT" default="1"/>
+			<Element genericFunc="addBaleFactors" unitTextFunc="VOLUME_TEXT" default="1" />
 		</Category>
 		<Category name="pallets">
-			<Element genericFunc="addPalletFactors" unitTextFunc = "VOLUME_TEXT" default="1"/>
+			<Element genericFunc="addPalletFactors" unitTextFunc="VOLUME_TEXT" default="1" />
 		</Category>
 
 		<IgnoredFillTypes>
@@ -62,13 +62,11 @@
 			<IgnoredFillType>HORSE_DUN</IgnoredFillType>
 			<IgnoredFillType>CHICKEN</IgnoredFillType>
 			<IgnoredFillType>CHICKEN_ROOSTER</IgnoredFillType>
-
 		</IgnoredFillTypes>
-
 	</VictoryPoints>
 
 	<Rules prefix="CM_Rules">
-		<Category name="general" >
+		<Category name="general">
 			<Element name="maxHelpers" default="5">
 				<Values>
 					<Value name="HELPER_DEACTIVATED" text="deactivated">0</Value>
@@ -83,14 +81,14 @@
 			<Element name="maxMissions" default="3">
 				<Values>
 					<Value name="MISSIONS_DISABLED" text="deactivated">0</Value>
-					<Value >1</Value>
-					<Value >2</Value>
-					<Value >3</Value>
-					<Value >4</Value>
-					<Value >5</Value>
-					<Value >6</Value>
-					<Value >7</Value>
-					<Value >8</Value>
+					<Value>1</Value>
+					<Value>2</Value>
+					<Value>3</Value>
+					<Value>4</Value>
+					<Value>5</Value>
+					<Value>6</Value>
+					<Value>7</Value>
+					<Value>8</Value>
 				</Values>
 			</Element>
 			<Element name="leaseVehicle" default="3">
@@ -103,28 +101,28 @@
 			<Element name="creditLimit" default="2">
 				<Values>
 					<Value name="CREDIT_DISABLED" text="deactivated">0</Value>
-					<Value >250000</Value>
-					<Value >500000</Value>
-					<Value >1000000</Value>
-					<Value >2000000</Value>
-					<Value >3000000</Value>
-					<Value >4000000</Value>
-					<Value >5000000</Value>
-					<Value >10000000</Value>
+					<Value>250000</Value>
+					<Value>500000</Value>
+					<Value>1000000</Value>
+					<Value>2000000</Value>
+					<Value>3000000</Value>
+					<Value>4000000</Value>
+					<Value>5000000</Value>
+					<Value>10000000</Value>
 				</Values>
 			</Element>
 			<Element name="maxFillLevel" default="1">
 				<Values>
 					<Value name="MAX_FILL_LEVEL_DISABLED" text="deactivated">0</Value>
-					<Value >50000</Value>
-					<Value >75000</Value>
-					<Value >100000</Value>
-					<Value >150000</Value>
-					<Value >200000</Value>
-					<Value >250000</Value>
-					<Value >300000</Value>
-					<Value >500000</Value>
-					<Value >1000000</Value>
+					<Value>50000</Value>
+					<Value>75000</Value>
+					<Value>100000</Value>
+					<Value>150000</Value>
+					<Value>200000</Value>
+					<Value>250000</Value>
+					<Value>300000</Value>
+					<Value>500000</Value>
+					<Value>1000000</Value>
 				</Values>
 			</Element>
 		</Category>
@@ -132,16 +130,16 @@
 			<Element genericFunc="addAnimalHusbandryLimitRules" default="1">
 				<Values>
 					<Value name="ANIMAL_DEACTIVATED" text="deactivated">0</Value>
-					<Value >1</Value>
-					<Value >2</Value>
-					<Value >3</Value>
-					<Value >4</Value>
-					<Value >5</Value>
-					<Value >6</Value>
-					<Value >7</Value>
-					<Value >8</Value>
-					<Value >9</Value>
-					<Value >10</Value>
+					<Value>1</Value>
+					<Value>2</Value>
+					<Value>3</Value>
+					<Value>4</Value>
+					<Value>5</Value>
+					<Value>6</Value>
+					<Value>7</Value>
+					<Value>8</Value>
+					<Value>9</Value>
+					<Value>10</Value>
 					<Value name="ANIMAL_NO_LIMIT" text="noLimit">5000</Value>
 				</Values>
 			</Element>
