@@ -4,6 +4,7 @@ ChallengeMod = {
 	BASE_DIRECTORY = g_currentModDirectory,
 	baseXmlKey = "ChallengeMod",
 	configFileName = "ChallengeModConfig.xml",
+	isDevelopmentVersion = true
 }
 
 ChallengeMod.image = {
@@ -23,13 +24,11 @@ function ChallengeMod.new(custom_mt)
 		self.visibleFarms[i] = true
 	end
 
-	addConsoleCommand('CmGenerateContracts', 'Generates new contracts', 'consoleGenerateFieldMission', g_missionManager)
+	if ChallengeMod.isDevelopmentVersion then
+		addConsoleCommand('CmGenerateContracts', 'Generates new contracts', 'consoleGenerateFieldMission', g_missionManager)
+	end
 
 	return self
-end
-
-function ChallengeMod:generateContracts()
-	g_missionManager:generateMissions()
 end
 
 function ChallengeMod:changeFarmVisibility(farmId, visible, noEvent)
@@ -86,11 +85,9 @@ end
 
 function ChallengeMod:setupGui()
 	local frame = ScoreBoardFrame.new()
-	g_gui:loadGui(Utils.getFilename("gui/ScoreBoardFrame.xml", self.BASE_DIRECTORY),
-				 "ScoreBoardPage", frame, true)
+	g_gui:loadGui(Utils.getFilename("gui/ScoreBoardFrame.xml", self.BASE_DIRECTORY), "ScoreBoardPage", frame, true)
 
-	CmUtil.fixInGameMenuPage(frame, "pageScoreBoard", 
-			self.image)
+	CmUtil.fixInGameMenuPage(frame, "pageScoreBoard", self.image)
 end
 
 
@@ -148,7 +145,8 @@ function ChallengeMod:loadFromXMLFile(filename)
 	local xmlFile = XMLFile.loadIfExists("xmlFile", filename, self.xmlSchema)
 	if xmlFile ~= nil then 
 		CmUtil.debug("Challenge setup loaded from %s.", filename)
-		self.adminPassword = xmlFile:getValue(self.baseXmlKey .."#password", self.adminPassword)
+		self.adminPassword = xmlFile:getValue(self.baseXmlKey .."#password", self.adminPassword) 
+		--maybe save password encrypted to increase user security. Many people use the same passwords everywhere so this could make them more attackable with a password saved in clear text
 
 		xmlFile:iterate(self.baseXmlKey .. ".Farms.Farm", function (ix, key)
 			local id = xmlFile:getValue(key .. "#id")
