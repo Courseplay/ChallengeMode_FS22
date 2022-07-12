@@ -6,7 +6,7 @@
 		<text name="CM_leftList_rightTitle" 							text="Total points" />
 		<text name="CM_leftList_section_two" 							text="Settings" />
 		<text name="CM_leftList_ruleTitle" 								text="Rules" />
-		<text name="CM_leftList_adminPointsTitle" 						text="Admin Pointsettings" />
+		<text name="CM_leftList_adminPointsTitle" 						text="Admin Point Settings" />
 
 		<text name="CM_rightList_leftTitle" 							text="Goal: %d" />
 
@@ -38,8 +38,7 @@
 		
 		<text name="CM_VictoryPoints_storage_title"						text="Storage"/>
 		<text name="CM_VictoryPoints_bales_title"						text="Bale storage"/>
-		<text name="CM_VictoryPoints_pallets_title"						text="Palet storage"/>
-
+		<text name="CM_VictoryPoints_pallets_title"						text="Pallet storage"/>
 		
 		<text name="CM_Rules_leftTitle"									text=""/>
 		<text name="CM_Rules_middleTitle"								text=""/>
@@ -71,5 +70,6 @@
 		<text name="CM_Rules_animalHusbandryLimits_noLimit"				text="No limit"/>
 		<text name="CM_Rules_animalHusbandryLimits_deactivated"			text="Deactivated"/>
 
+		<text name="unit_pointsShort" text="Pt"/>
 	</texts>
 </l10n>

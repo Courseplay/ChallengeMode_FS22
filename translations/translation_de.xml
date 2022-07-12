@@ -70,5 +70,6 @@
 		<text name="CM_Rules_animalHusbandryLimits_noLimit"				text="kein Limit"/>
 		<text name="CM_Rules_animalHusbandryLimits_deactivated"			text="Deaktiviert"/>
 
+		<text name="unit_pointsShort" text="Pkt"/>
 	</texts>
 </l10n>

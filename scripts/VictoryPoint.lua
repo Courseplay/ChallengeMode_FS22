@@ -1,14 +1,14 @@
 VictoryPoint = {
 	MONEY_TEXT =
-		function (money)
-			return string.format("%f/%s", g_i18n:getCurrency(money), g_i18n:getCurrencySymbol(true))
-		end,
-	AREA_TEXT =	function (area)
-			return string.format("%f/%s", g_i18n:getArea(area), g_i18n:getAreaUnit())
-		end,
-	VOLUME_TEXT = function (liters)
-			return string.format("%f/%s", g_i18n:getFluid(liters), g_i18n:getText("unit_literShort"))
-		end
+	function(money)
+		return string.format("%f%s/%s", g_i18n:getCurrency(money), g_i18n:getCurrencySymbol(true), g_i18n:getText("unit_pointsShort"))
+	end,
+	AREA_TEXT = function(area)
+		return string.format("%f%s/%s", g_i18n:getArea(area), g_i18n:getAreaUnit(), g_i18n:getText("unit_pointsShort"))
+	end,
+	VOLUME_TEXT = function(liters)
+		return string.format("%f%s/%s", g_i18n:getFluid(liters), g_i18n:getText("unit_literShort"), g_i18n:getText("unit_pointsShort"))
+	end
 }
 local VictoryPoint_mt = Class(VictoryPoint, ScoreBoardElement)
 ---@class VictoryPoint : ScoreBoardElement
@@ -31,10 +31,10 @@ function VictoryPoint.createFromXml(data, value)
 end
 
 function VictoryPoint:getValue()
-	if self.staticElement == nil then 
+	if self.staticElement == nil then
 		return 0
 	end
-	if self.value == nil then 
+	if self.value == nil then
 		CmUtil.debug("Victory point value is nil: %s", self.name)
 		printCallstack()
 		return 0
@@ -43,7 +43,7 @@ function VictoryPoint:getValue()
 end
 
 function VictoryPoint:count()
-	if self.dependency then 
+	if self.dependency then
 		return 0
 	end
 	return self:getValue()
@@ -54,11 +54,11 @@ function VictoryPoint:getFactor()
 end
 
 function VictoryPoint:setFactor(newFactor)
-	self.factor = newFactor	
+	self.factor = newFactor
 end
 
 function VictoryPoint:getText()
-	if not self.staticElement and not self.dependency then 
+	if not self.staticElement and not self.dependency then
 		return ""
 	end
 	return string.format("%.1f", self:getValue())
@@ -70,10 +70,10 @@ end
 
 function VictoryPoint:getFactorText()
 	if not self.dependency then
-		if self.unitTextFunc then 
-			return self[self.unitTextFunc](self.factor)
+		if self.unitTextFunc then
+			return self[self.unitTextFunc](1/self.factor)
 		else
-			return self.factor
+			return 1/self.factor
 		end
 	end
 	return ""
@@ -93,7 +93,7 @@ function VictoryPoint:isTextInputAllowed()
 end
 
 function VictoryPoint:clone(farmId, farm)
-	
+
 end
 
 function VictoryPoint:__tostring()
@@ -101,7 +101,7 @@ function VictoryPoint:__tostring()
 end
 
 function VictoryPoint:setSavedValue(value)
-	if value ~= nil then 
+	if value ~= nil then
 		self.factor = value
 	end
 end
@@ -112,7 +112,7 @@ end
 
 function VictoryPoint:applyValues(staticCategory)
 	local element = staticCategory:getElementByName(self.name)
-	if element then 
+	if element then
 		self:setFactor(element:getFactor())
 		self.staticElement = element
 	end
