@@ -1,13 +1,13 @@
 VictoryPoint = {
 	MONEY_TEXT =
 	function(money)
-		return string.format("%f%s/%s", g_i18n:getCurrency(money), g_i18n:getCurrencySymbol(true), g_i18n:getText("unit_pointsShort"))
+		return string.format("%.2f%s/%s", g_i18n:getCurrency(money), g_i18n:getCurrencySymbol(true), g_i18n:getText("unit_pointsShort"))
 	end,
 	AREA_TEXT = function(area)
-		return string.format("%f%s/%s", g_i18n:getArea(area), g_i18n:getAreaUnit(), g_i18n:getText("unit_pointsShort"))
+		return string.format("%.2f%s/%s", g_i18n:getArea(area), g_i18n:getAreaUnit(), g_i18n:getText("unit_pointsShort"))
 	end,
 	VOLUME_TEXT = function(liters)
-		return string.format("%f%s/%s", g_i18n:getFluid(liters), g_i18n:getText("unit_literShort"), g_i18n:getText("unit_pointsShort"))
+		return string.format("%.2f%s/%s", g_i18n:getFluid(liters), g_i18n:getText("unit_literShort"), g_i18n:getText("unit_pointsShort"))
 	end
 }
 local VictoryPoint_mt = Class(VictoryPoint, ScoreBoardElement)
@@ -39,7 +39,7 @@ function VictoryPoint:getValue()
 		printCallstack()
 		return 0
 	end
-	return self.value * self.factor
+	return self.value / self.factor
 end
 
 function VictoryPoint:count()
@@ -71,9 +71,9 @@ end
 function VictoryPoint:getFactorText()
 	if not self.dependency then
 		if self.unitTextFunc then
-			return self[self.unitTextFunc](1/self.factor)
+			return self[self.unitTextFunc](self.factor)
 		else
-			return 1/self.factor
+			return self.factor
 		end
 	end
 	return ""
@@ -97,7 +97,7 @@ function VictoryPoint:clone(farmId, farm)
 end
 
 function VictoryPoint:__tostring()
-	return string.format("title: %s, value*factor: %.1f", self.title, self.value * self.factor)
+	return string.format("title: %s, value/factor: %.1f", self.title, self.value / self.factor)
 end
 
 function VictoryPoint:setSavedValue(value)
