@@ -69,7 +69,7 @@ function VictoryPoint:getTitle()
 end
 
 function VictoryPoint:getInputText()
-	return string.format(g_i18n:getText(""), self.title)
+	return self.inputTitle
 end
 
 function VictoryPoint:getFactorText()
