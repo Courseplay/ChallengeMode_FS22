@@ -68,6 +68,10 @@ function VictoryPoint:getTitle()
 	return self.title
 end
 
+function VictoryPoint:getInputText()
+	return string.format(g_i18n:getText(""), self.title)
+end
+
 function VictoryPoint:getFactorText()
 	if not self.dependency then
 		if self.unitTextFunc then

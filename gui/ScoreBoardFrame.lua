@@ -402,7 +402,6 @@ function ScoreBoardFrame:openTextInputDialog(callbackFunc, args, title, ...)
 		target = self,
 		defaultText = "",
 		dialogPrompt = title,
-		imePrompt = title,
 		maxCharacters = 50,
 		confirmText = g_i18n:getText("button_ok"),
 		args = args
