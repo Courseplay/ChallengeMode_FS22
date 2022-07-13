@@ -12,11 +12,12 @@ VictoryPoint = {
 }
 local VictoryPoint_mt = Class(VictoryPoint, ScoreBoardElement)
 ---@class VictoryPoint : ScoreBoardElement
-function VictoryPoint.new(name, value, factor, title, unitTextFunc, dependency, custom_mt)
+function VictoryPoint.new(name, value, factor, title, inputText, unitTextFunc, dependency, custom_mt)
 	local self = ScoreBoardElement.new(name, title, custom_mt or VictoryPoint_mt)
 	self.value = value
 	self.factor = factor
 	self.title = title
+	self.inputText = inputText
 	self.dependency = dependency
 	self.unitTextFunc = unitTextFunc
 	if unitTextFunc then
@@ -27,7 +28,7 @@ function VictoryPoint.new(name, value, factor, title, unitTextFunc, dependency, 
 end
 
 function VictoryPoint.createFromXml(data, value)
-	return VictoryPoint.new(data.name, value, data.default, data.title, data.unitTextFunc, data.dependency)
+	return VictoryPoint.new(data.name, value, data.default, data.title, data.inputText, data.unitTextFunc, data.dependency)
 end
 
 function VictoryPoint:getValue()
@@ -69,7 +70,7 @@ function VictoryPoint:getTitle()
 end
 
 function VictoryPoint:getInputText()
-	return self.inputTitle
+	return self.inputText
 end
 
 function VictoryPoint:getFactorText()

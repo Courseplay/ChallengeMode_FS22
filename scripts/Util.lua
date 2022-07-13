@@ -94,7 +94,7 @@ function CmUtil.loadConfigCategories(xmlFile, baseXmlKey)
 				name = elementName,
 				default = xmlFile:getValue(elementKey .. "#default"),
 				title = elementName and getText("%s_%s_%s_title", textPrefix, categoryName, elementName),
-				inputTitle = elementName and getText("%s_%s_%s_input_title", textPrefix, categoryName, elementName),
+				inputText = elementName and getText("%s_%s_%s_input_text", textPrefix, categoryName, elementName),
 				genericFunc = xmlFile:getValue(elementKey .. "#genericFunc"),
 				unitTextFunc = xmlFile:getValue(elementKey .. "#unitTextFunc"),
 				dependency = xmlFile:getValue(elementKey .. "#dependency")

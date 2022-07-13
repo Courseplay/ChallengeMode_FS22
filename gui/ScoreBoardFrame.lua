@@ -365,7 +365,7 @@ function ScoreBoardFrame:onClickChange()
 	CmUtil.debug("ScoreBoardFrame onClickChange")
 	if element then
 		if element:isTextInputAllowed() then
-			self:openTextInputDialog(self.onTextInputChangeValue, element, element:getTitle())
+			self:openTextInputDialog(self.onTextInputChangeValue, element, element:getInputText())
 		end
 		element:onClick()
 		self:updateLists()
@@ -402,6 +402,7 @@ function ScoreBoardFrame:openTextInputDialog(callbackFunc, args, title, ...)
 		target = self,
 		defaultText = "",
 		dialogPrompt = title,
+		imePrompt = title,
 		maxCharacters = 50,
 		confirmText = g_i18n:getText("button_ok"),
 		args = args
