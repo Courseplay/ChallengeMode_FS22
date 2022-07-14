@@ -23,6 +23,10 @@ function ScoreBoardElement:getTitle()
 	return self.title
 end
 
+function ScoreBoardElement:getInputText()
+	return ""
+end
+
 function ScoreBoardElement:getFactorText()
 	return ""
 end

@@ -1,4 +1,3 @@
-
 RuleManager = {
 	MISSION_TITLES = {
 		cultivate = "fieldJob_jobType_cultivating",
@@ -19,17 +18,16 @@ local RuleManager_mt = Class(RuleManager)
 function RuleManager.new(custom_mt)
 	local self = setmetatable({}, custom_mt or RuleManager_mt)
 	self.isServer = g_server
-		
+
 	self.ruleList = {}
 
 	self.missionTypes = {}
-	for i, missionType in pairs(g_missionManager.missionTypes) do 
+	for _, missionType in pairs(g_missionManager.missionTypes) do
 		self.missionTypes[missionType.name] = missionType
 	end
 
 	return self
 end
-
 
 function RuleManager:registerXmlSchema(xmlSchema, baseXmlKey)
 	ScoreBoardList.registerXmlSchema(xmlSchema, baseXmlKey .. ".Rules")
@@ -40,23 +38,23 @@ function RuleManager:registerConfigXmlSchema(xmlSchema, baseXmlKey)
 end
 
 function RuleManager:loadConfigData(xmlFile, baseXmlKey)
-		
 	self.configData, self.titles = CmUtil.loadConfigCategories(xmlFile, baseXmlKey .. ".Rules")
 
 	self.ruleList = ScoreBoardList.new("rules", self.titles)
-	for _, categoryData in pairs(self.configData) do 
+	for _, categoryData in pairs(self.configData) do
 		local category = ScoreBoardCategory.new(categoryData.name, categoryData.title)
-		for _, rule in pairs(categoryData.elements) do 
+		for _, rule in pairs(categoryData.elements) do
 			if rule.genericFunc == nil then
 				category:addElement(Rule.createFromXml(rule))
-			else 
+			else
 				self[rule.genericFunc](self, category, rule)
 			end
 		end
 		self.ruleList:addElement(category)
 	end
 
-	g_currentMission.getHasPlayerPermission = Utils.overwrittenFunction(g_currentMission.getHasPlayerPermission, Rule.getCanStartHelper)
+	g_currentMission.getHasPlayerPermission = Utils.overwrittenFunction(g_currentMission.getHasPlayerPermission,
+		Rule.getCanStartHelper)
 
 	g_currentMission.maxNumHirables = 1000
 end
@@ -80,7 +78,7 @@ end
 function RuleManager:addMissionRules(category, ruleData)
 	local missionNames = table.toList(self.missionTypes)
 	table.sort(missionNames)
-	for _, name in ipairs(missionNames) do 
+	for _, name in ipairs(missionNames) do
 		ruleData.name = name
 		ruleData.title = g_i18n:getText(self.MISSION_TITLES[name])
 		category:addElement(Rule.createFromXml(ruleData))
@@ -89,26 +87,26 @@ end
 
 function RuleManager:addAnimalHusbandryLimitRules(category, ruleData)
 	local types = {}
-	for i, type in pairs(g_currentMission.animalSystem:getTypes()) do 
+	for i, type in pairs(g_currentMission.animalSystem:getTypes()) do
 		table.insert(types, type)
 	end
-	table.sort(types, function (a, b)
-		local aName = "fillType_"..string.lower(a.name)
-		local bName = "fillType_"..string.lower(b.name)
+	table.sort(types, function(a, b)
+		local aName = "fillType_" .. string.lower(a.name)
+		local bName = "fillType_" .. string.lower(b.name)
 		return g_i18n:getText(aName) < g_i18n:getText(bName)
 	end)
-	for _, type in ipairs(types) do 
+	for _, type in ipairs(types) do
 		ruleData.name = type.name
-		ruleData.title = g_i18n:getText("fillType_"..string.lower(type.name))
+		ruleData.title = g_i18n:getText("fillType_" .. string.lower(type.name))
 		category:addElement(Rule.createFromXml(ruleData))
 	end
 end
 
 function RuleManager:isMissionAllowed(mission)
-	for _,missionRule in pairs(self:getMissionRules()) do 
-		if missionRule:getValue() == Rule.MISSION_DEACTIVATED then 
+	for _, missionRule in pairs(self:getMissionRules()) do
+		if missionRule:getValue() == Rule.MISSION_DEACTIVATED then
 			local missionType = self.missionTypes[missionRule:getName()]
-			if mission.type == missionType then 
+			if mission.type == missionType then
 				return false
 			end
 		end

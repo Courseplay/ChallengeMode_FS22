@@ -1,13 +1,12 @@
-
 VictoryPointManager = {
-	
+
 }
 local VictoryPointManager_mt = Class(VictoryPointManager)
 ---@class VictoryPointManager
 function VictoryPointManager.new(custom_mt)
 	local self = setmetatable({}, custom_mt or VictoryPointManager_mt)
 	self.isServer = g_server
-		
+
 	self.totalPoints = {}
 	self.pointList = {}
 
@@ -18,25 +17,23 @@ function VictoryPointManager:registerXmlSchema(xmlSchema, baseXmlKey)
 	ScoreBoardList.registerXmlSchema(xmlSchema, baseXmlKey .. ".VictoryPoints")
 end
 
-
 function VictoryPointManager:registerConfigXmlSchema(xmlSchema, baseXmlKey)
 	CmUtil.registerConfigXmlSchema(xmlSchema, baseXmlKey .. ".VictoryPoints")
 	xmlSchema:register(XMLValueType.INT, baseXmlKey .. ".VictoryPoints#goal", "Victory point goal")
 
-	xmlSchema:register(XMLValueType.STRING, baseXmlKey .. ".VictoryPoints.IgnoredFillTypes.IgnoredFillType(?)", "Ignored fill type")
+	xmlSchema:register(XMLValueType.STRING, baseXmlKey .. ".VictoryPoints.IgnoredFillTypes.IgnoredFillType(?)",
+		"Ignored fill type")
 
 end
 
 function VictoryPointManager:loadConfigData(xmlFile, baseXmlKey)
-	
 	self.configData, self.titles = CmUtil.loadConfigCategories(xmlFile, baseXmlKey .. ".VictoryPoints")
 	self.victoryGoal = xmlFile:getValue(baseXmlKey .. ".VictoryPoints#goal", 100000)
 
-
 	VictoryPointManager.ignoredFillTypes = {}
-	xmlFile:iterate(baseXmlKey .. ".VictoryPoints.IgnoredFillTypes.IgnoredFillType", function (ix, key)
+	xmlFile:iterate(baseXmlKey .. ".VictoryPoints.IgnoredFillTypes.IgnoredFillType", function(ix, key)
 		local name = xmlFile:getValue(key)
-		if name then 
+		if name then
 			CmUtil.debug("Ignored fill type: %s", name)
 			local fillType = g_fillTypeManager:getFillTypeIndexByName(name)
 			if fillType then
@@ -110,22 +107,22 @@ function VictoryPointManager:addVehiclesFactor(category, factorData, farmId, far
 end
 
 function VictoryPointManager:addDependentPoint(category, factorData, farmId, farm, dependency)
-	category:addElement(VictoryPoint.createFromXml(factorData, farmId ~=nil and dependency:count() or 0))
+	category:addElement(VictoryPoint.createFromXml(factorData, farmId ~= nil and dependency:count() or 0))
 end
 
 function VictoryPointManager:getNewPointList(farmId, farm)
 	local dependedPoints = {}
 	local pointList = ScoreBoardList.new("victoryPoints", self.titles)
-	for _, categoryData in ipairs(self.configData) do 
+	for _, categoryData in ipairs(self.configData) do
 		local category = ScoreBoardCategory.new(categoryData.name, categoryData.title)
-		for pIx, pointData in ipairs(categoryData.elements) do 
-			if pointData.dependency == nil then 
+		for pIx, pointData in ipairs(categoryData.elements) do
+			if pointData.dependency == nil then
 				if pointData.genericFunc == nil then
 					category:addElement(VictoryPoint.createFromXml(pointData))
-				else 
+				else
 					self[pointData.genericFunc](self, category, pointData, farmId, farm)
 				end
-			else 
+			else
 				table.insert(dependedPoints, {
 					data = pointData,
 					cName = categoryData.name,
@@ -137,11 +134,11 @@ function VictoryPointManager:getNewPointList(farmId, farm)
 	end
 	if self.staticPointList then
 		pointList:applyValues(self.staticPointList)
-		for i, point in ipairs(dependedPoints) do 
+		for i, point in ipairs(dependedPoints) do
 			local category = pointList:getElementByName(point.cName)
 			if point.data.genericFunc == nil then
 				category:addElement(VictoryPoint.createFromXml(point.data), point.pIx)
-			else 
+			else
 				local dependency = pointList:getElementByName(point.data.dependency)
 				self[point.data.genericFunc](self, category, point.data, farmId, farm, dependency)
 			end
@@ -159,7 +156,7 @@ function VictoryPointManager:update()
 	self.pointList = {}
 	self.totalPoints = {}
 	local farms = g_farmManager:getFarms()
-	for _, farm in pairs(farms) do 
+	for _, farm in pairs(farms) do
 		local farmId = farm.farmId
 		if CmUtil.isValidFarm(farmId, farm) then
 			CmUtil.debug("Calculating points for farm id: %d", farmId)
@@ -169,7 +166,7 @@ function VictoryPointManager:update()
 end
 
 function VictoryPointManager:getList(farmId)
-	return farmId~=nil and self.pointList[farmId] or self.staticPointList
+	return farmId ~= nil and self.pointList[farmId] or self.staticPointList
 end
 
 function VictoryPointManager:getListByName()
@@ -181,11 +178,11 @@ function VictoryPointManager:getTotalPoints(farmId)
 end
 
 function VictoryPointManager:isVictoryGoalReached(farmId)
-	return self.totalPoints[farmId] > self.victoryGoal	
+	return self.totalPoints[farmId] > self.victoryGoal
 end
 
 function VictoryPointManager:getGoal()
-	return self.victoryGoal	
+	return self.victoryGoal
 end
 
 g_victoryPointManager = VictoryPointManager.new()
