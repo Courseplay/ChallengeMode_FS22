@@ -141,7 +141,7 @@ function ChallengeMod:saveToXMLFile(filename)
 end
 
 function ChallengeMod:saveStartVehicleAttributeToXMLFile(xmlFile, key, usedModNames)
-	xmlFile:setValue(key .. "#isStartVehicle", self.isStartVehicle)
+	xmlFile:setBool(key .. "#isStartVehicle", self.isStartVehicle)
 end
 
 Vehicle.saveToXMLFile = Utils.appendedFunction(Vehicle.saveToXMLFile, ChallengeMod.saveStartVehicleAttributeToXMLFile)
@@ -174,7 +174,7 @@ function ChallengeMod:loadStartVehicleAttribute(i3dNode, failedReason, arguments
 	local _, _, _, _, _, _, savegame, _, _, _, _ = unpack(arguments)
 
 	if savegame ~= nil then
-		self.isStartVehicle = savegame.xmlFile:getValue(savegame.key .. "#isStartVehicle", false)
+		self.isStartVehicle = savegame.xmlFile:getBool(savegame.key .. "#isStartVehicle", false)
 	end
 end
 
