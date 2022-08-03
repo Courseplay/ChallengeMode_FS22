@@ -140,6 +140,12 @@ function ChallengeMod:saveToXMLFile(filename)
 	end
 end
 
+function ChallengeMod:saveStartVehicleAttributeToXMLFile(xmlFile, key, usedModNames)
+	xmlFile:setValue(key .. "#isStartVehicle", self.isStartVehicle)
+end
+
+Vehicle.saveToXMLFile = Utils.appendedFunction(Vehicle.saveToXMLFile, ChallengeMod.saveStartVehicleAttributeToXMLFile)
+
 function ChallengeMod:loadFromXMLFile(filename)
 	local xmlFile = XMLFile.loadIfExists("xmlFile", filename, self.xmlSchema)
 	if xmlFile ~= nil then
@@ -163,6 +169,16 @@ function ChallengeMod:loadFromXMLFile(filename)
 		CmUtil.debug("Challenge setup xml could not be loaded.")
 	end
 end
+
+function ChallengeMod:loadStartVehicleAttribute(i3dNode, failedReason, arguments, i3dLoadingId)
+	local _, _, _, _, _, _, savegame, _, _, _, _ = unpack(arguments)
+
+	if savegame ~= nil then
+		self.isStartVehicle = savegame.xmlFile:getValue(savegame.key .. "#isStartVehicle", false)
+	end
+end
+
+Vehicle.loadFinished = Utils.appendedFunction(Vehicle.loadFinished, ChallengeMod.loadStartVehicleAttribute)
 
 function ChallengeMod:writeStream(streamId, connection)
 	streamWriteString(streamId, self.adminPassword)
