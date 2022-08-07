@@ -171,7 +171,7 @@ function ChallengeMod:loadFromXMLFile(filename)
 end
 
 function ChallengeMod:loadStartVehicleAttribute(i3dNode, failedReason, arguments, i3dLoadingId)
-	local _, _, _, _, _, _, savegame, _, _, _, _ = unpack(arguments)
+	local savegame = arguments["savegame"]
 
 	if savegame ~= nil then
 		self.isStartVehicle = savegame.xmlFile:getBool(savegame.key .. "#isStartVehicle", false)
