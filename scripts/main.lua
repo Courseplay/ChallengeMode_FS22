@@ -90,6 +90,9 @@ function ChallengeMod:setup()
 			local vehicle = g_currentMission.shopMenu.selectedDisplayElement.concreteItem
 
 			vehicle.isStartVehicle = not vehicle.isStartVehicle
+			ChallengeMod.setButtonText(vehicle)
+
+			g_currentMission.shopMenu:updateButtonsPanel(g_currentMission.shopMenu.pageShopItemDetails)
 		end
 	}
 end
@@ -102,14 +105,18 @@ function ChallengeMod:addStartVehicleButton(isOwned, numItems, hasCombinations)
 
 		local vehicle = g_currentMission.shopMenu.selectedDisplayElement.concreteItem
 
-		if vehicle.isStartVehicle then
-			ChallengeMod.startVehicleButtonInfo.text = g_i18n:getText("CM_buttonText_unmarkStartVehicle")
-		else
-			ChallengeMod.startVehicleButtonInfo.text = g_i18n:getText("CM_buttonText_markStartVehicle")
-		end
+		ChallengeMod.setButtonText(vehicle)
 	end
 
 	self:updateButtonsPanel(g_currentMission.shopMenu.pageShopItemDetails)
+end
+
+function ChallengeMod.setButtonText(vehicle)
+	if vehicle.isStartVehicle then
+		ChallengeMod.startVehicleButtonInfo.text = g_i18n:getText("CM_buttonText_unmarkStartVehicle")
+	else
+		ChallengeMod.startVehicleButtonInfo.text = g_i18n:getText("CM_buttonText_markStartVehicle")
+	end
 end
 
 ShopMenu.updateGarageButtonInfo = Utils.appendedFunction(ShopMenu.updateGarageButtonInfo, ChallengeMod.addStartVehicleButton)
