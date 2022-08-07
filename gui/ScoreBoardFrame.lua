@@ -224,7 +224,7 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 		if section == self.LEFT_SECTIONS.POINTS then
 			return #self.farms
 		else
-			return self.challengeMode.isAdminModeActive and self.NUM_SETTINGS_ADMIN or self.NUM_SETTINGS
+			return g_challengeMod.isAdminModeActive and self.NUM_SETTINGS_ADMIN or self.NUM_SETTINGS
 		end
 	else
 		local sx, ix = self.leftList:getSelectedPath()
@@ -290,7 +290,7 @@ function ScoreBoardFrame:getValidFarms()
 	local farms, farmsById = {}, {}
 	for i, farm in pairs(self.farmManager:getFarms()) do
 		if CmUtil.isValidFarm(farm.farmId, farm) then
-			if self.challengeMode.isAdminModeActive or self.challengeMod:getIsFarmVisible(farm.farmId) then
+			if g_challengeMod.isAdminModeActive or self.challengeMod:getIsFarmVisible(farm.farmId) then
 				table.insert(farms, farm)
 				farmsById[farm.farmId] = farm
 			end
@@ -342,7 +342,7 @@ function ScoreBoardFrame:onClickAdminLogin()
 end
 
 function ScoreBoardFrame:onClickAdminLogout()
-	self.challengeMode.isAdminModeActive = false
+	g_challengeMod.isAdminModeActive = false
 end
 
 function ScoreBoardFrame:onClickAdminChangePassword()
@@ -373,19 +373,19 @@ function ScoreBoardFrame:onClickChange()
 end
 
 function ScoreBoardFrame:isAdminLoginButtonDisabled()
-	return self.challengeMode.isAdminModeActive
+	return g_challengeMod.isAdminModeActive
 end
 
 function ScoreBoardFrame:isAdminLogoutButtonDisabled()
-	return not self.challengeMode.isAdminModeActive
+	return not g_challengeMod.isAdminModeActive
 end
 
 function ScoreBoardFrame:isAdminChangePasswordButtonDisabled()
-	return not self.challengeMode.isAdminModeActive
+	return not g_challengeMod.isAdminModeActive
 end
 
 function ScoreBoardFrame:isChangeButtonDisabled()
-	return not self.challengeMode.isAdminModeActive
+	return not g_challengeMod.isAdminModeActive
 end
 
 ----------------------------------------------------
@@ -412,7 +412,7 @@ end
 function ScoreBoardFrame:onTextInputAdminPassword(text, clickOk)
 	if clickOk then
 		if text == self.challengeMod:getAdminPassword() then
-			self.challengeMode.isAdminModeActive = true
+			g_challengeMod.isAdminModeActive = true
 			self:updateMenuButtons()
 			self:updateLists()
 		else
