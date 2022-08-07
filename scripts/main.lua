@@ -81,7 +81,38 @@ function ChallengeMod:setup()
 	self:loadFromSaveGame()
 
 	self:setupGui()
+
+	ChallengeMod.startVehicleButtonInfo = {
+		text = g_i18n:getText(),
+		inputAction = InputAction.MENU_EXTRA_1,
+		callback = function ()
+			print("clicked start vehicle button")
+			--TODO: invert isStartVehicle variable if user is admin
+		end
+	}
 end
+
+function ChallengeMod:addStartVehicleButton(isOwned, numItems, hasCombinations)
+	local buttons = self:getPageButtonInfo(g_currentMission.shopMenu.pageShopItemDetails)
+
+	if numItems > 0 then --TODO: and if user is CM admin
+		table.insert(buttons, ChallengeMod.startVehicleButtonInfo)
+
+		local vehicle = g_currentMission.shopMenu.selectedDisplayElement.concreteItem
+
+		--[[
+			if vehicle.isStartVehicle then
+				ChallengeMod.startVehicleButtonInfo.text = g_i18n:getText(mark as start vehicle)
+			else
+				ChallengeMod.startVehicleButtonInfo.text = g_i18n:getText(undo mark as start vehicle)
+			end
+		]]
+	end
+
+	self:updateButtonsPanel(g_currentMission.shopMenu.pageShopItemDetails)
+end
+
+ShopMenu.updateGarageButtonInfo = Utils.appendedFunction(ShopMenu.updateGarageButtonInfo, ChallengeMod.addStartVehicleButton)
 
 function ChallengeMod:setupGui()
 	local frame = ScoreBoardFrame.new()
