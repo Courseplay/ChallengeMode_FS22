@@ -66,7 +66,7 @@ function ScoreBoardFrame.new(target, custom_mt)
 	self.victoryPointManager = g_victoryPointManager
 	self.ruleManager = g_ruleManager
 	self.farms = {}
-	self.isAdminModeActive = false
+
 	return self
 end
 
@@ -224,7 +224,7 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 		if section == self.LEFT_SECTIONS.POINTS then
 			return #self.farms
 		else
-			return self.isAdminModeActive and self.NUM_SETTINGS_ADMIN or self.NUM_SETTINGS
+			return self.challengeMode.isAdminModeActive and self.NUM_SETTINGS_ADMIN or self.NUM_SETTINGS
 		end
 	else
 		local sx, ix = self.leftList:getSelectedPath()
@@ -290,7 +290,7 @@ function ScoreBoardFrame:getValidFarms()
 	local farms, farmsById = {}, {}
 	for i, farm in pairs(self.farmManager:getFarms()) do
 		if CmUtil.isValidFarm(farm.farmId, farm) then
-			if self.isAdminModeActive or self.challengeMod:getIsFarmVisible(farm.farmId) then
+			if self.challengeMode.isAdminModeActive or self.challengeMod:getIsFarmVisible(farm.farmId) then
 				table.insert(farms, farm)
 				farmsById[farm.farmId] = farm
 			end
@@ -342,7 +342,7 @@ function ScoreBoardFrame:onClickAdminLogin()
 end
 
 function ScoreBoardFrame:onClickAdminLogout()
-	self.isAdminModeActive = false
+	self.challengeMode.isAdminModeActive = false
 end
 
 function ScoreBoardFrame:onClickAdminChangePassword()
@@ -373,19 +373,19 @@ function ScoreBoardFrame:onClickChange()
 end
 
 function ScoreBoardFrame:isAdminLoginButtonDisabled()
-	return self.isAdminModeActive
+	return self.challengeMode.isAdminModeActive
 end
 
 function ScoreBoardFrame:isAdminLogoutButtonDisabled()
-	return not self.isAdminModeActive
+	return not self.challengeMode.isAdminModeActive
 end
 
 function ScoreBoardFrame:isAdminChangePasswordButtonDisabled()
-	return not self.isAdminModeActive
+	return not self.challengeMode.isAdminModeActive
 end
 
 function ScoreBoardFrame:isChangeButtonDisabled()
-	return not self.isAdminModeActive
+	return not self.challengeMode.isAdminModeActive
 end
 
 ----------------------------------------------------
@@ -412,7 +412,7 @@ end
 function ScoreBoardFrame:onTextInputAdminPassword(text, clickOk)
 	if clickOk then
 		if text == self.challengeMod:getAdminPassword() then
-			self.isAdminModeActive = true
+			self.challengeMode.isAdminModeActive = true
 			self:updateMenuButtons()
 			self:updateLists()
 		else
