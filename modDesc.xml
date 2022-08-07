@@ -4,7 +4,7 @@
 	<author><![CDATA[Courseplay.devTeam]]>,tn4799</author>
 	<title>
 		<en>Challenge Mode</en>
-		<de>Herausvorderungs Modus</de>
+		<de>Herausforderungsmodus</de>
 	</title>
 
 	<description>
@@ -24,7 +24,7 @@ Settings:
 
 Ingame UI with own extra password to set the rules.
 ]]></en>
-		<de><![CDATA[Herausvorderung.
+		<de><![CDATA[HerausForderung.
 
 Einstellungen:
 - Punkte zum Sieg.
@@ -34,7 +34,7 @@ Einstellungen:
 - Lagerlimit, ab welchem Lagerstand, gibt es keine Punkte mehr dazu.
 - Helferlimit von 0-6.
 - Fahrzeuge mieten an/aus/nur Shop.
-- Einzelne Missionstypen ein und ausschalten.
+- Einzelne Missionstypen ein- und ausschalten.
 - Missionslimit pro Farm 0-8.
 - Kredit an/aus/ limitiert.
 
