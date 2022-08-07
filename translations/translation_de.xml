@@ -16,6 +16,9 @@
 		<text name="CM_menuBtn_change" 											text="Wert ändern" />
 		<text name="CM_menuBtn_changeFarmVisibility" 							text="Ändert Hof Sichtbarkeit" />
 
+		<text name="CM_buttonText_markStartVehicle" 							text="Startfahrzeug" />
+		<text name="CM_buttonText_unmarkStartVehicle" 							text="Kein Startfahrzeug" />
+
 		<text name="CM_dialog_changeTitle" 										text="Wert ändern" />
 		<text name="CM_dialog_adminTitle" 										text="Login(default: %s)" />
 		<text name="CM_dialog_adminChangePasswordTitle" 						text="Aktuelles Passwort: %s" />
