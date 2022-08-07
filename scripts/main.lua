@@ -19,6 +19,7 @@ function ChallengeMod.new(custom_mt)
 	local self = setmetatable({}, custom_mt or ChallengeMod_mt)
 	self.isServer = g_server
 	self.visibleFarms = {}
+	self.isAdminModeActive = false
 
 	for i = 0, FarmManager.MAX_FARM_ID do
 		self.visibleFarms[i] = true
@@ -83,11 +84,12 @@ function ChallengeMod:setup()
 	self:setupGui()
 
 	ChallengeMod.startVehicleButtonInfo = {
-		text = g_i18n:getText(),
+		text = g_i18n:getText("CM_buttonText_markStartVehicle"),
 		inputAction = InputAction.MENU_EXTRA_1,
 		callback = function ()
-			print("clicked start vehicle button")
-			--TODO: invert isStartVehicle variable if user is admin
+			local vehicle = g_currentMission.shopMenu.selectedDisplayElement.concreteItem
+
+			vehicle.isStartVehicle = not vehicle.isStartVehicle
 		end
 	}
 end
@@ -95,18 +97,16 @@ end
 function ChallengeMod:addStartVehicleButton(isOwned, numItems, hasCombinations)
 	local buttons = self:getPageButtonInfo(g_currentMission.shopMenu.pageShopItemDetails)
 
-	if numItems > 0 then --TODO: and if user is CM admin
+	if numItems > 0 and g_challengeMod.isAdminModeActive then
 		table.insert(buttons, ChallengeMod.startVehicleButtonInfo)
 
 		local vehicle = g_currentMission.shopMenu.selectedDisplayElement.concreteItem
 
-		--[[
-			if vehicle.isStartVehicle then
-				ChallengeMod.startVehicleButtonInfo.text = g_i18n:getText(mark as start vehicle)
-			else
-				ChallengeMod.startVehicleButtonInfo.text = g_i18n:getText(undo mark as start vehicle)
-			end
-		]]
+		if vehicle.isStartVehicle then
+			ChallengeMod.startVehicleButtonInfo.text = g_i18n:getText("CM_buttonText_unmarkStartVehicle")
+		else
+			ChallengeMod.startVehicleButtonInfo.text = g_i18n:getText("CM_buttonText_markStartVehicle")
+		end
 	end
 
 	self:updateButtonsPanel(g_currentMission.shopMenu.pageShopItemDetails)
