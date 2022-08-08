@@ -185,4 +185,8 @@ function VictoryPointManager:getGoal()
 	return self.victoryGoal
 end
 
+function VictoryPointManager:setGoal(goal)
+	self.victoryGoal = goal
+end
+
 g_victoryPointManager = VictoryPointManager.new()
