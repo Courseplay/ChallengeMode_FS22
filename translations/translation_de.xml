@@ -7,6 +7,7 @@
 		<text name="CM_leftList_section_two" 									text="Einstellungen" />
 		<text name="CM_leftList_ruleTitle" 										text="Regeln" />
 		<text name="CM_leftList_adminPointsTitle" 								text="Admin Punkteeinstellungen" />
+		<text name="CM_leftList_goalSettings" 									text="Ziel" />
 
 		<text name="CM_rightList_leftTitle" 									text="Ziel: %d" />
 
