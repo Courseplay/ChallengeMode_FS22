@@ -56,7 +56,7 @@ function VictoryPointsUtil.getPalletAmount(farmId, maxFillLevel)
 	maxFillLevel = maxFillLevel == Rule.MAX_FILL_LEVEL_DISABLED and math.huge or maxFillLevel
 	local palletFillLevels = {}
 	for _, object in pairs(g_currentMission.vehicles) do
-		if object.spec_pallet and object:getOwnerFarmId(farmId) == farmId then 
+		if object.spec_pallet and object:getOwnerFarmId(farmId) == farmId then
 			local fillUnitIndex = object.spec_pallet.fillUnitIndex
 			local fillLevel = object:getFillUnitFillLevel(fillUnitIndex)
 			local fillType = object:getFillUnitFillType(fillUnitIndex)
@@ -102,8 +102,9 @@ function VictoryPointsUtil.getVehicleSellValue(farmId)
 			local hasAccess = vehicle:getOwnerFarmId() == farmId
 			local isProperty = vehicle.propertyState == Vehicle.PROPERTY_STATE_OWNED
 			local isPallet = vehicle.typeName == "pallet"
+			local isStartVehicle = vehicle.isStartVehicle
 
-			if hasAccess and vehicle.getSellPrice ~= nil and vehicle.price ~= nil and isProperty and not isPallet and not SpecializationUtil.hasSpecialization(Rideable, vehicle.specializations) then
+			if not isStartVehicle and hasAccess and vehicle.getSellPrice ~= nil and vehicle.price ~= nil and isProperty and not isPallet and not SpecializationUtil.hasSpecialization(Rideable, vehicle.specializations) then
 				value = value + vehicle:getSellPrice()
 			end
 		end
@@ -122,7 +123,7 @@ end
 
 function VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
 	local orderedFillLevels = table.toList(fillLevels)
-	
+
 	table.sort(orderedFillLevels, function (a, b)
 		return g_fillTypeManager:getFillTypeTitleByIndex(a) < g_fillTypeManager:getFillTypeTitleByIndex(b)
 	end)

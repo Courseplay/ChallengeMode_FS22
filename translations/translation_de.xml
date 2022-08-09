@@ -7,6 +7,7 @@
 		<text name="CM_leftList_section_two" 									text="Einstellungen" />
 		<text name="CM_leftList_ruleTitle" 										text="Regeln" />
 		<text name="CM_leftList_adminPointsTitle" 								text="Admin Punkteeinstellungen" />
+		<text name="CM_leftList_goalSettings" 									text="Ziel" />
 
 		<text name="CM_rightList_leftTitle" 									text="Ziel: %d" />
 
@@ -15,6 +16,9 @@
 		<text name="CM_menuBtn_admin_changePassword" 							text="Passwort ändern" />
 		<text name="CM_menuBtn_change" 											text="Wert ändern" />
 		<text name="CM_menuBtn_changeFarmVisibility" 							text="Ändert Hof Sichtbarkeit" />
+
+		<text name="CM_buttonText_markStartVehicle" 							text="Startfahrzeug" />
+		<text name="CM_buttonText_unmarkStartVehicle" 							text="Kein Startfahrzeug" />
 
 		<text name="CM_dialog_changeTitle" 										text="Wert ändern" />
 		<text name="CM_dialog_adminTitle" 										text="Login(default: %s)" />

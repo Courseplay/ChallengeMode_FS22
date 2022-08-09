@@ -25,7 +25,7 @@ ScoreBoardFrame = {
 		SETTINGS = 2
 	},
 	NUM_SETTINGS = 1,
-	NUM_SETTINGS_ADMIN = 2,
+	NUM_SETTINGS_ADMIN = 3,
 	NUM_LEFT_SECTIONS = 2
 }
 
@@ -34,6 +34,7 @@ ScoreBoardFrame.translations = {
 
 	ruleTitle = g_i18n:getText("CM_leftList_ruleTitle"),
 	adminPointsTitle = g_i18n:getText("CM_leftList_adminPointsTitle"),
+	goalTitle = g_i18n:getText("CM_leftList_goalSettings"),
 	menuButtons = {
 		adminLogin = g_i18n:getText("CM_menuBtn_admin_login"),
 		adminLogout = g_i18n:getText("CM_menuBtn_admin_logout"),
@@ -67,7 +68,7 @@ function ScoreBoardFrame.new(target, custom_mt)
 	self.victoryPointManager = g_victoryPointManager
 	self.ruleManager = g_ruleManager
 	self.farms = {}
-	self.isAdminModeActive = false
+
 	return self
 end
 
@@ -155,7 +156,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 		[self.leftList] = function() return self.NUM_LEFT_SECTIONS end,
 		[self.rightList] = function()
 			local sx, ix = self.leftList:getSelectedPath()
-			return self.managers[sx]():getNumberOfElements()
+			return ix <= 2 and self.managers[sx]():getNumberOfElements() or 1
 		end
 	}
 	self.sectionTitles = {
@@ -231,18 +232,23 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 		if section == self.LEFT_SECTIONS.POINTS then
 			return #self.farms
 		else
-			return self.isAdminModeActive and self.NUM_SETTINGS_ADMIN or self.NUM_SETTINGS
+			return g_challengeMod.isAdminModeActive and self.NUM_SETTINGS_ADMIN or self.NUM_SETTINGS
 		end
 	else
 		local sx, ix = self.leftList:getSelectedPath()
-		local farmId = self:getCurrentFarmId()
-		local l = self.managers[sx](farmId)
-		if l == nil then
-			CmUtil.debug("Categories for not found %d", section)
-			printCallstack()
-			return 0
+
+		if ix <= 2 then
+			local farmId = self:getCurrentFarmId()
+			local l = self.managers[sx](farmId)
+			if l == nil then
+				CmUtil.debug("Categories for not found %d", section)
+				printCallstack()
+				return 0
+			end
+			return l:getNumberOfElements(section)
+		else
+			return 1
 		end
-		return l:getNumberOfElements(section)
 	end
 end
 
@@ -268,17 +274,23 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 		elseif index == 1 then
 			cell:getAttribute("title"):setText(self.translations.ruleTitle)
 			cell:getAttribute("icon"):setVisible(false)
-		else
+		elseif index == 2 then
 			cell:getAttribute("title"):setText(self.translations.adminPointsTitle)
+			cell:getAttribute("icon"):setVisible(false)
+		else
+			cell:getAttribute("title"):setText(self.translations.goalTitle)
 			cell:getAttribute("icon"):setVisible(false)
 		end
 	else
 		local element = self:getElement(section, index)
 		if element then
+			print("className: " .. tostring(element.className))
 			cell:getAttribute("title"):setText(element:getTitle())
 
+			print("value: " .. tostring(element:getText()))
 			cell:getAttribute("value"):setText(element:getText())
 
+			print("conversionValue: " .. tostring(element:getFactorText()))
 			cell:getAttribute("conversionValue"):setText(element:getFactorText())
 		end
 	end
@@ -301,7 +313,7 @@ function ScoreBoardFrame:getValidFarms()
 	local farms, farmsById = {}, {}
 	for i, farm in pairs(self.farmManager:getFarms()) do
 		if CmUtil.isValidFarm(farm.farmId, farm) then
-			if self.isAdminModeActive or self.challengeMod:getIsFarmVisible(farm.farmId) then
+			if g_challengeMod.isAdminModeActive or self.challengeMod:getIsFarmVisible(farm.farmId) then
 				table.insert(farms, farm)
 				farmsById[farm.farmId] = farm
 			end
@@ -334,13 +346,18 @@ function ScoreBoardFrame:getElement(section, index)
 	end
 	local sx, ix = self.leftList:getSelectedPath()
 	local farmId = self:getCurrentFarmId()
-	local list = self.managers[sx](farmId)
-	if list == nil then
-		CmUtil.debug("Element not found for (%s|%s).", tostring(section), tostring(index))
-		printCallstack()
-		return
+	if ix <= 2 then
+		local list = self.managers[sx](farmId)
+		if list == nil then
+			CmUtil.debug("Element not found for (%s|%s).", tostring(section), tostring(index))
+			printCallstack()
+			return
+		end
+
+		return list:getElement(section, index)
+	else
+		return GoalElement.new(g_i18n:getText(self.translations.goalTitle), self.translations.goalTitle, self.victoryPointManager:getGoal())
 	end
-	return list:getElement(section, index)
 end
 
 ----------------------------------------------------
@@ -353,7 +370,7 @@ function ScoreBoardFrame:onClickAdminLogin()
 end
 
 function ScoreBoardFrame:onClickAdminLogout()
-	self.isAdminModeActive = false
+	g_challengeMod.isAdminModeActive = false
 end
 
 function ScoreBoardFrame:onClickAdminChangePassword()
@@ -388,19 +405,19 @@ function ScoreBoardFrame:onClickSetGoal()
 end
 
 function ScoreBoardFrame:isAdminLoginButtonDisabled()
-	return self.isAdminModeActive
+	return g_challengeMod.isAdminModeActive
 end
 
 function ScoreBoardFrame:isAdminLogoutButtonDisabled()
-	return not self.isAdminModeActive
+	return not g_challengeMod.isAdminModeActive
 end
 
 function ScoreBoardFrame:isAdminChangePasswordButtonDisabled()
-	return not self.isAdminModeActive
+	return not g_challengeMod.isAdminModeActive
 end
 
 function ScoreBoardFrame:isChangeButtonDisabled()
-	return not self.isAdminModeActive
+	return not g_challengeMod.isAdminModeActive
 end
 
 ----------------------------------------------------
@@ -427,7 +444,7 @@ end
 function ScoreBoardFrame:onTextInputAdminPassword(text, clickOk)
 	if clickOk then
 		if text == self.challengeMod:getAdminPassword() then
-			self.isAdminModeActive = true
+			g_challengeMod.isAdminModeActive = true
 			self:updateMenuButtons()
 			self:updateLists()
 		else

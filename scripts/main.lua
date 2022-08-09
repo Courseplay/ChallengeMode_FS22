@@ -19,6 +19,7 @@ function ChallengeMod.new(custom_mt)
 	local self = setmetatable({}, custom_mt or ChallengeMod_mt)
 	self.isServer = g_server
 	self.visibleFarms = {}
+	self.isAdminModeActive = false
 
 	for i = 0, FarmManager.MAX_FARM_ID do
 		self.visibleFarms[i] = true
@@ -81,7 +82,44 @@ function ChallengeMod:setup()
 	self:loadFromSaveGame()
 
 	self:setupGui()
+
+	ChallengeMod.startVehicleButtonInfo = {
+		text = g_i18n:getText("CM_buttonText_markStartVehicle"),
+		inputAction = InputAction.MENU_EXTRA_1,
+		callback = function ()
+			local vehicle = g_currentMission.shopMenu.selectedDisplayElement.concreteItem
+
+			vehicle.isStartVehicle = not vehicle.isStartVehicle
+			ChallengeMod.setButtonText(vehicle)
+
+			g_currentMission.shopMenu:updateButtonsPanel(g_currentMission.shopMenu.pageShopItemDetails)
+		end
+	}
 end
+
+function ChallengeMod:addStartVehicleButton(isOwned, numItems, hasCombinations)
+	local buttons = self:getPageButtonInfo(g_currentMission.shopMenu.pageShopItemDetails)
+
+	if numItems > 0 and g_challengeMod.isAdminModeActive then
+		table.insert(buttons, ChallengeMod.startVehicleButtonInfo)
+
+		local vehicle = g_currentMission.shopMenu.selectedDisplayElement.concreteItem
+
+		ChallengeMod.setButtonText(vehicle)
+	end
+
+	self:updateButtonsPanel(g_currentMission.shopMenu.pageShopItemDetails)
+end
+
+function ChallengeMod.setButtonText(vehicle)
+	if vehicle.isStartVehicle then
+		ChallengeMod.startVehicleButtonInfo.text = g_i18n:getText("CM_buttonText_unmarkStartVehicle")
+	else
+		ChallengeMod.startVehicleButtonInfo.text = g_i18n:getText("CM_buttonText_markStartVehicle")
+	end
+end
+
+ShopMenu.updateGarageButtonInfo = Utils.appendedFunction(ShopMenu.updateGarageButtonInfo, ChallengeMod.addStartVehicleButton)
 
 function ChallengeMod:setupGui()
 	local frame = ScoreBoardFrame.new()
@@ -140,6 +178,12 @@ function ChallengeMod:saveToXMLFile(filename)
 	end
 end
 
+function ChallengeMod:saveStartVehicleAttributeToXMLFile(xmlFile, key, usedModNames)
+	xmlFile:setBool(key .. "#isStartVehicle", self.isStartVehicle)
+end
+
+Vehicle.saveToXMLFile = Utils.appendedFunction(Vehicle.saveToXMLFile, ChallengeMod.saveStartVehicleAttributeToXMLFile)
+
 function ChallengeMod:loadFromXMLFile(filename)
 	local xmlFile = XMLFile.loadIfExists("xmlFile", filename, self.xmlSchema)
 	if xmlFile ~= nil then
@@ -163,6 +207,16 @@ function ChallengeMod:loadFromXMLFile(filename)
 		CmUtil.debug("Challenge setup xml could not be loaded.")
 	end
 end
+
+function ChallengeMod:loadStartVehicleAttribute(i3dNode, failedReason, arguments, i3dLoadingId)
+	local savegame = arguments["savegame"]
+
+	if savegame ~= nil then
+		self.isStartVehicle = savegame.xmlFile:getBool(savegame.key .. "#isStartVehicle", false)
+	end
+end
+
+Vehicle.loadFinished = Utils.appendedFunction(Vehicle.loadFinished, ChallengeMod.loadStartVehicleAttribute)
 
 function ChallengeMod:writeStream(streamId, connection)
 	streamWriteString(streamId, self.adminPassword)

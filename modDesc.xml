@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="64">
     <version>1.0.0.0</version>
-	<author><![CDATA[Courseplay.devTeam]]></author>
+	<author><![CDATA[Courseplay.devTeam]]>,tn4799</author>
 	<title>
 		<en>Challenge Mode</en>
 		<de>Wettkampfmodus</de>
@@ -34,7 +34,7 @@ Einstellungen:
 - Lagerlimit, ab welchem Lagerstand, gibt es keine Punkte mehr dazu.
 - Helferlimit von 0-6.
 - Fahrzeuge mieten an/aus/nur Shop.
-- Einzelne Missionstypen ein und ausschalten.
+- Einzelne Missionstypen ein- und ausschalten.
 - Missionslimit pro Farm 0-8.
 - Kredit an/aus/ limitiert.
 
@@ -57,6 +57,7 @@ Ingame UI mit eigenem Passwort zum Einstellen der Spielregeln.
 		<sourceFile filename="scripts/VictoryPointManager.lua"/>
 		<sourceFile filename="scripts/Rules.lua"/>
 		<sourceFile filename="scripts/RuleManger.lua"/>
+		<sourceFile filename="scripts/GoalElement.lua"/>
 		<sourceFile filename="events/ChangeElementEvent.lua"/>
 		<sourceFile filename="events/JoinEvent.lua"/>
 		<sourceFile filename="events/ChangeAdminPasswordEvent.lua"/>
