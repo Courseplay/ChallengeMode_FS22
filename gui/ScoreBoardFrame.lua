@@ -279,6 +279,10 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 end
 
 function ScoreBoardFrame:onListSelectionChanged(list, section, index)
+	--TODO: separate between left and right list. 
+	-- This has to be done to separate between editing the factors on the right side and setting points on the left side for the selected farm. 
+	-- Also the protocol of the point editing needs to be opened for the selected farm. My plan is to create a protocol for each farm to keep it relativly clean and easy to read.
+	-- Maybe just print the protocol as the right list if the button is pressed.
 	if list == self.leftList then
 		--self.leftList:reloadData()
 		self.rightList:reloadData()
