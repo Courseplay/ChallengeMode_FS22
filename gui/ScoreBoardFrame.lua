@@ -46,6 +46,7 @@ ScoreBoardFrame.translations = {
 		adminChangePassword = g_i18n:getText("CM_dialog_adminChangePasswordTitle"),
 		adminWrongPassword = g_i18n:getText("CM_dialog_adminWrongPassword"),
 		value = g_i18n:getText("CM_dialog_changeTitle"),
+		newGoal = g_i18n:getText("CM_dialog_newGoal")
 	},
 	leftSections = {
 		"",
@@ -372,6 +373,10 @@ function ScoreBoardFrame:onClickChange()
 	end
 end
 
+function ScoreBoardFrame:onClickSetGoal()
+	self:openTextInputDialog(self.victoryPointManager.onTextInputChangeGoal, nil, self.translations.dialogs.newGoal)
+end
+
 function ScoreBoardFrame:isAdminLoginButtonDisabled()
 	return self.isAdminModeActive
 end
@@ -435,5 +440,11 @@ function ScoreBoardFrame:onTextInputChangeValue(text, clickOk, element)
 			element:onTextInput(text)
 			self:updateLists()
 		end
+	end
+end
+
+function ScoreBoardFrame:onTextInputChangeGoal(text, clickOk)
+	if clickOk then
+		self.victoryPointManager:setGoal(tonumber(text))
 	end
 end

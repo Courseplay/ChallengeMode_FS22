@@ -20,6 +20,7 @@
 		<text name="CM_dialog_adminTitle" 										text="Login (default: %s)" />
 		<text name="CM_dialog_adminChangePasswordTitle"							text="Current password: %s" />
 		<text name="CM_dialog_adminWrongPassword"								text="Wrong password(%s)"/>
+		<text name="CM_dialog_newGoal" 											text="Enter the new goal."/>
 
 		<text name="CM_VictoryPoints_leftTitle"									text=""/>
 		<text name="CM_VictoryPoints_middleTitle"								text="Factor"/>

@@ -185,4 +185,8 @@ function VictoryPointManager:getGoal()
 	return self.victoryGoal
 end
 
+function VictoryPointManager:setGoal(newGoal)
+	self.victoryGoal = tonumber(newGoal)
+end
+
 g_victoryPointManager = VictoryPointManager.new()
