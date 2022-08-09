@@ -25,7 +25,7 @@ ScoreBoardFrame = {
 		SETTINGS = 2
 	},
 	NUM_SETTINGS = 1,
-	NUM_SETTINGS_ADMIN = 3,
+	NUM_SETTINGS_ADMIN = 2,
 	NUM_LEFT_SECTIONS = 2
 }
 
@@ -207,7 +207,7 @@ function ScoreBoardFrame:updateMenuButtons()
 	end
 	self:setMenuButtonInfoDirty()
 
-	self.goal:setDisabled(not self.isAdminModeActive, false)
+	self.goal:setDisabled(not g_challengeMod.isAdminModeActive, false)
 
 	self.goal.overlay.alpha = 0
 	self.goal.textDisabledColor = self.goal.textColor
@@ -462,5 +462,6 @@ function ScoreBoardFrame:onTextInputChangeGoal(text, clickOk)
 		self:updateTitles()
 		self:updateLists()
 		self:updateMenuButtons()
+		self.goal.overlayState = GuiOverlay.STATE_NORMAL
 	end
 end
