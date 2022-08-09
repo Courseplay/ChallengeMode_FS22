@@ -57,7 +57,6 @@ Ingame UI mit eigenem Passwort zum Einstellen der Spielregeln.
 		<sourceFile filename="scripts/VictoryPointManager.lua"/>
 		<sourceFile filename="scripts/Rules.lua"/>
 		<sourceFile filename="scripts/RuleManger.lua"/>
-		<sourceFile filename="scripts/GoalElement.lua"/>
 		<sourceFile filename="events/ChangeElementEvent.lua"/>
 		<sourceFile filename="events/JoinEvent.lua"/>
 		<sourceFile filename="events/ChangeAdminPasswordEvent.lua"/>
