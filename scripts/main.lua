@@ -91,6 +91,7 @@ function ChallengeMod:setup()
 
 			vehicle.isStartVehicle = not vehicle.isStartVehicle
 			ChallengeMod.setButtonText(vehicle)
+			MarkStartVehicleEvent.sendEvent(vehicle, vehicle.isStartVehicle)
 
 			g_currentMission.shopMenu:updateButtonsPanel(g_currentMission.shopMenu.pageShopItemDetails)
 		end
