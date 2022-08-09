@@ -194,6 +194,7 @@ end
 function ScoreBoardFrame:updateTitles()
 	local sx, ix = self.leftList:getSelectedPath()
 	local titles = self.managers[sx]():getTitles()
+	self.goal:setText(self.translations.goal(self.victoryPointManager:getGoal()))
 	self.rightList_middleTitle:setText(titles[2])
 	self.rightList_rightTitle:setText(titles[3])
 end
@@ -208,6 +209,9 @@ function ScoreBoardFrame:updateMenuButtons()
 	self:setMenuButtonInfoDirty()
 
 	self.goal:setDisabled(not self.isAdminModeActive, false)
+
+	self.goal.overlay.alpha = 0
+	self.goal.textDisabledColor = self.goal.textColor
 end
 
 function ScoreBoardFrame:getNumberOfSections(list)
@@ -380,7 +384,7 @@ function ScoreBoardFrame:onClickChange()
 end
 
 function ScoreBoardFrame:onClickSetGoal()
-	self:openTextInputDialog(self.victoryPointManager.onTextInputChangeGoal, nil, self.translations.dialogs.newGoal)
+	self:openTextInputDialog(self.onTextInputChangeGoal, nil, self.translations.dialogs.newGoal)
 end
 
 function ScoreBoardFrame:isAdminLoginButtonDisabled()
@@ -452,5 +456,8 @@ end
 function ScoreBoardFrame:onTextInputChangeGoal(text, clickOk)
 	if clickOk then
 		self.victoryPointManager:setGoal(tonumber(text))
+		self:updateTitles()
+		self:updateLists()
+		self:updateMenuButtons()
 	end
 end
