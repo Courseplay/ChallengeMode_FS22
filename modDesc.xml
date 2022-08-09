@@ -4,7 +4,7 @@
 	<author><![CDATA[Courseplay.devTeam]]></author>
 	<title>
 		<en>Challenge Mode</en>
-		<de>Herausvorderungs Modus</de>
+		<de>Wettkampfmodus</de>
 	</title>
 
 	<description>
@@ -24,7 +24,7 @@ Settings:
 
 Ingame UI with own extra password to set the rules.
 ]]></en>
-		<de><![CDATA[Herausvorderung.
+		<de><![CDATA[Wettkampfmodus.
 
 Einstellungen:
 - Punkte zum Sieg.
@@ -61,6 +61,7 @@ Ingame UI mit eigenem Passwort zum Einstellen der Spielregeln.
 		<sourceFile filename="events/JoinEvent.lua"/>
 		<sourceFile filename="events/ChangeAdminPasswordEvent.lua"/>
 		<sourceFile filename="events/ChangeFarmVisibilityEvent.lua"/>
+		<sourceFile filename="events/ChangeGoalEvent.lua"/>
 	</extraSourceFiles>
 	<l10n filenamePrefix="translations/translation" />
 	
