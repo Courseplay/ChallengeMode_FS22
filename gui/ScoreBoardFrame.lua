@@ -206,6 +206,8 @@ function ScoreBoardFrame:updateMenuButtons()
 		end
 	end
 	self:setMenuButtonInfoDirty()
+
+	self.goal:setDisabled(not self.isAdminModeActive, false)
 end
 
 function ScoreBoardFrame:getNumberOfSections(list)
