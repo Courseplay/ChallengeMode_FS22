@@ -154,7 +154,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 		[self.leftList] = function() return self.NUM_LEFT_SECTIONS end,
 		[self.rightList] = function()
 			local sx, ix = self.leftList:getSelectedPath()
-			return ix <= 2 and self.managers[sx]():getNumberOfElements()
+			return self.managers[sx]():getNumberOfElements()
 		end
 	}
 	self.sectionTitles = {
