@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <l10n>
 	<texts>
-		<text name="CM_title" 													text="Herausforderungsmodus" />
+		<text name="CM_title" 													text="Wettkampfmodus" />
 		<text name="CM_leftList_leftTitle" 										text="Farm" />
 		<text name="CM_leftList_rightTitle" 									text="Gesamtpunkte" />
 		<text name="CM_leftList_section_two" 									text="Einstellungen" />
 		<text name="CM_leftList_ruleTitle" 										text="Regeln" />
 		<text name="CM_leftList_adminPointsTitle" 								text="Admin Punkteeinstellungen" />
+		<text name="CM_leftList_goalSettings" 									text="Ziel" />
 
 		<text name="CM_rightList_leftTitle" 									text="Ziel: %d" />
 
@@ -16,10 +17,14 @@
 		<text name="CM_menuBtn_change" 											text="Wert ändern" />
 		<text name="CM_menuBtn_changeFarmVisibility" 							text="Ändert Hof Sichtbarkeit" />
 
+		<text name="CM_buttonText_markStartVehicle" 							text="Startfahrzeug" />
+		<text name="CM_buttonText_unmarkStartVehicle" 							text="Kein Startfahrzeug" />
+
 		<text name="CM_dialog_changeTitle" 										text="Wert ändern" />
 		<text name="CM_dialog_adminTitle" 										text="Login(default: %s)" />
 		<text name="CM_dialog_adminChangePasswordTitle" 						text="Aktuelles Passwort: %s" />
 		<text name="CM_dialog_adminWrongPassword" 								text="Falsches Passwort! (%s)"/>
+		<text name="CM_dialog_newGoal" 											text="Gib das neue Ziel ein."/>
 
 		<text name="CM_VictoryPoints_leftTitle" 								text=""/>
 		<text name="CM_VictoryPoints_middleTitle" 								text="Faktor"/>

@@ -7,6 +7,7 @@
 		<text name="CM_leftList_section_two" 									text="Settings" />
 		<text name="CM_leftList_ruleTitle" 										text="Rules" />
 		<text name="CM_leftList_adminPointsTitle" 								text="Admin Point Settings" />
+		<text name="CM_leftList_goalSettings" 									text="Goal" />
 
 		<text name="CM_rightList_leftTitle" 									text="Goal: %d" />
 
@@ -16,10 +17,14 @@
 		<text name="CM_menuBtn_change" 											text="Change value" />
 		<text name="CM_menuBtn_changeFarmVisibility" 							text="Changes farm visibility" />
 
+		<text name="CM_buttonText_markStartVehicle" 							text="starting vehicle" />
+		<text name="CM_buttonText_unmarkStartVehicle" 							text="no starting vehicle" />
+
 		<text name="CM_dialog_changeTitle" 										text="Change value" />
 		<text name="CM_dialog_adminTitle" 										text="Login (default: %s)" />
 		<text name="CM_dialog_adminChangePasswordTitle"							text="Current password: %s" />
 		<text name="CM_dialog_adminWrongPassword"								text="Wrong password(%s)"/>
+		<text name="CM_dialog_newGoal" 											text="Enter the new goal."/>
 
 		<text name="CM_VictoryPoints_leftTitle"									text=""/>
 		<text name="CM_VictoryPoints_middleTitle"								text="Factor"/>

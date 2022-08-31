@@ -46,6 +46,7 @@ ScoreBoardFrame.translations = {
 		adminChangePassword = g_i18n:getText("CM_dialog_adminChangePasswordTitle"),
 		adminWrongPassword = g_i18n:getText("CM_dialog_adminWrongPassword"),
 		value = g_i18n:getText("CM_dialog_changeTitle"),
+		newGoal = g_i18n:getText("CM_dialog_newGoal")
 	},
 	leftSections = {
 		"",
@@ -66,7 +67,7 @@ function ScoreBoardFrame.new(target, custom_mt)
 	self.victoryPointManager = g_victoryPointManager
 	self.ruleManager = g_ruleManager
 	self.farms = {}
-	self.isAdminModeActive = false
+
 	return self
 end
 
@@ -149,7 +150,6 @@ function ScoreBoardFrame:onGuiSetupFinished()
 		end,
 	}
 
-
 	self.numSections = {
 		[self.leftList] = function() return self.NUM_LEFT_SECTIONS end,
 		[self.rightList] = function()
@@ -193,6 +193,7 @@ end
 function ScoreBoardFrame:updateTitles()
 	local sx, ix = self.leftList:getSelectedPath()
 	local titles = self.managers[sx]():getTitles()
+	self.goal:setText(self.translations.goal(self.victoryPointManager:getGoal()))
 	self.rightList_middleTitle:setText(titles[2])
 	self.rightList_rightTitle:setText(titles[3])
 end
@@ -205,6 +206,11 @@ function ScoreBoardFrame:updateMenuButtons()
 		end
 	end
 	self:setMenuButtonInfoDirty()
+
+	self.goal:setDisabled(not g_challengeMod.isAdminModeActive, false)
+
+	self.goal.overlay.alpha = 0
+	self.goal.textDisabledColor = self.goal.textColor
 end
 
 function ScoreBoardFrame:getNumberOfSections(list)
@@ -224,17 +230,20 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 		if section == self.LEFT_SECTIONS.POINTS then
 			return #self.farms
 		else
-			return self.isAdminModeActive and self.NUM_SETTINGS_ADMIN or self.NUM_SETTINGS
+			return g_challengeMod.isAdminModeActive and self.NUM_SETTINGS_ADMIN or self.NUM_SETTINGS
 		end
 	else
 		local sx, ix = self.leftList:getSelectedPath()
 		local farmId = self:getCurrentFarmId()
 		local l = self.managers[sx](farmId)
+
 		if l == nil then
 			CmUtil.debug("Categories for not found %d", section)
 			printCallstack()
+
 			return 0
 		end
+
 		return l:getNumberOfElements(section)
 	end
 end
@@ -278,6 +287,10 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 end
 
 function ScoreBoardFrame:onListSelectionChanged(list, section, index)
+	--TODO: separate between left and right list. 
+	-- This has to be done to separate between editing the factors on the right side and setting points on the left side for the selected farm. 
+	-- Also the protocol of the point editing needs to be opened for the selected farm. My plan is to create a protocol for each farm to keep it relativly clean and easy to read.
+	-- Maybe just print the protocol as the right list if the button is pressed.
 	if list == self.leftList then
 		--self.leftList:reloadData()
 		self.rightList:reloadData()
@@ -290,7 +303,7 @@ function ScoreBoardFrame:getValidFarms()
 	local farms, farmsById = {}, {}
 	for i, farm in pairs(self.farmManager:getFarms()) do
 		if CmUtil.isValidFarm(farm.farmId, farm) then
-			if self.isAdminModeActive or self.challengeMod:getIsFarmVisible(farm.farmId) then
+			if g_challengeMod.isAdminModeActive or self.challengeMod:getIsFarmVisible(farm.farmId) then
 				table.insert(farms, farm)
 				farmsById[farm.farmId] = farm
 			end
@@ -329,6 +342,7 @@ function ScoreBoardFrame:getElement(section, index)
 		printCallstack()
 		return
 	end
+
 	return list:getElement(section, index)
 end
 
@@ -342,7 +356,7 @@ function ScoreBoardFrame:onClickAdminLogin()
 end
 
 function ScoreBoardFrame:onClickAdminLogout()
-	self.isAdminModeActive = false
+	g_challengeMod.isAdminModeActive = false
 end
 
 function ScoreBoardFrame:onClickAdminChangePassword()
@@ -372,20 +386,24 @@ function ScoreBoardFrame:onClickChange()
 	end
 end
 
+function ScoreBoardFrame:onClickSetGoal()
+	self:openTextInputDialog(self.onTextInputChangeGoal, nil, self.translations.dialogs.newGoal)
+end
+
 function ScoreBoardFrame:isAdminLoginButtonDisabled()
-	return self.isAdminModeActive
+	return g_challengeMod.isAdminModeActive
 end
 
 function ScoreBoardFrame:isAdminLogoutButtonDisabled()
-	return not self.isAdminModeActive
+	return not g_challengeMod.isAdminModeActive
 end
 
 function ScoreBoardFrame:isAdminChangePasswordButtonDisabled()
-	return not self.isAdminModeActive
+	return not g_challengeMod.isAdminModeActive
 end
 
 function ScoreBoardFrame:isChangeButtonDisabled()
-	return not self.isAdminModeActive
+	return not g_challengeMod.isAdminModeActive
 end
 
 ----------------------------------------------------
@@ -412,7 +430,7 @@ end
 function ScoreBoardFrame:onTextInputAdminPassword(text, clickOk)
 	if clickOk then
 		if text == self.challengeMod:getAdminPassword() then
-			self.isAdminModeActive = true
+			g_challengeMod.isAdminModeActive = true
 			self:updateMenuButtons()
 			self:updateLists()
 		else
@@ -435,5 +453,15 @@ function ScoreBoardFrame:onTextInputChangeValue(text, clickOk, element)
 			element:onTextInput(text)
 			self:updateLists()
 		end
+	end
+end
+
+function ScoreBoardFrame:onTextInputChangeGoal(text, clickOk)
+	if clickOk then
+		self.victoryPointManager:setGoal(tonumber(text))
+		self:updateTitles()
+		self:updateLists()
+		self:updateMenuButtons()
+		self.goal.overlayState = GuiOverlay.STATE_NORMAL
 	end
 end

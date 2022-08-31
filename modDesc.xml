@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="64">
     <version>1.0.0.0</version>
-	<author><![CDATA[Courseplay.devTeam]]></author>
+	<author><![CDATA[Courseplay.devTeam]]>,tn4799</author>
 	<title>
 		<en>Challenge Mode</en>
-		<de>Herausvorderungs Modus</de>
+		<de>Wettkampfmodus</de>
 	</title>
 
 	<description>
@@ -24,7 +24,7 @@ Settings:
 
 Ingame UI with own extra password to set the rules.
 ]]></en>
-		<de><![CDATA[Herausvorderung.
+		<de><![CDATA[Wettkampfmodus.
 
 Einstellungen:
 - Punkte zum Sieg.
@@ -34,7 +34,7 @@ Einstellungen:
 - Lagerlimit, ab welchem Lagerstand, gibt es keine Punkte mehr dazu.
 - Helferlimit von 0-6.
 - Fahrzeuge mieten an/aus/nur Shop.
-- Einzelne Missionstypen ein und ausschalten.
+- Einzelne Missionstypen ein- und ausschalten.
 - Missionslimit pro Farm 0-8.
 - Kredit an/aus/ limitiert.
 
@@ -61,7 +61,9 @@ Ingame UI mit eigenem Passwort zum Einstellen der Spielregeln.
 		<sourceFile filename="events/JoinEvent.lua"/>
 		<sourceFile filename="events/ChangeAdminPasswordEvent.lua"/>
 		<sourceFile filename="events/ChangeFarmVisibilityEvent.lua"/>
+		<sourceFile filename="events/ChangeGoalEvent.lua"/>
+		<sourceFile filename="events/MarkStartVehicleEvent.lua"/>
 	</extraSourceFiles>
+
 	<l10n filenamePrefix="translations/translation" />
-	
 </modDesc>
