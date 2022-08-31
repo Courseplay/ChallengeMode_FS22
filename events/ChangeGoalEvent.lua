@@ -26,7 +26,7 @@ function ChangeGoalEvent:writeSteam(streamId, connection)
 end
 
 function ChangeGoalEvent:run(connection)
-    g_victoryPointManager:setGoal(self.goal)
+    g_victoryPointManager:setGoal(self.goal, true)
 end
 
 function ChangeGoalEvent.sendEvent(...)

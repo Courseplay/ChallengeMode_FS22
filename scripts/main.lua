@@ -232,6 +232,11 @@ function ChallengeMod:writeStream(streamId, connection)
 	g_victoryPointManager:writeStream(streamId, connection)
 end
 
+function ChallengeMod:writeStreamVehicleAttribute(streamId, connection)
+	streamWriteBool(streamId, self.isStartVehicle ~= nil)
+end
+Vehicle.writeStream = Utils.appendedFunction(Vehicle.writeStream, ChallengeMod.writeStreamVehicleAttribute)
+
 function ChallengeMod:readStream(streamId, connection)
 	self.adminPassword = streamReadString(streamId)
 
@@ -245,6 +250,11 @@ function ChallengeMod:readStream(streamId, connection)
 	g_ruleManager:readStream(streamId, connection)
 	g_victoryPointManager:readStream(streamId, connection)
 end
+
+function ChallengeMod:readStreamVehicleAttribute(streamId, connection)
+	self.isStartVehicle = streamReadBool(streamId)
+end
+Vehicle.readStream = Utils.appendedFunction(Vehicle.readStream, ChallengeMod.readStreamVehicleAttribute)
 
 function ChallengeMod:reloadConfigData()
 	--self:loadConfigData(self.configFilePath)

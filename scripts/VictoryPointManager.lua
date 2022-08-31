@@ -56,11 +56,15 @@ end
 function VictoryPointManager:writeStream(streamId, connection)
 	CmUtil.debug("VictoryPointManager write stream.")
 	self.staticPointList:writeStream(streamId)
+
+	streamWriteInt32(streamId, self.victoryGoal)
 end
 
 function VictoryPointManager:readStream(streamId, connection)
 	CmUtil.debug("VictoryPointManager read stream.")
 	self.staticPointList:readStream(streamId)
+
+	self.victoryGoal = streamReadInt32(streamId)
 end
 
 function VictoryPointManager:addStorageFactors(category, factorData, farmId, farm)
@@ -185,10 +189,11 @@ function VictoryPointManager:getGoal()
 	return self.victoryGoal
 end
 
-function VictoryPointManager:setGoal(newGoal)
+function VictoryPointManager:setGoal(newGoal, noEventSend)
 	self.victoryGoal = tonumber(newGoal)
-
-	ChangeGoalEvent.sendEvent(self.victoryGoal)
+	if noEventSend == nil or noEventSend == false then
+		ChangeGoalEvent.sendEvent(self.victoryGoal)
+	end
 end
 
 g_victoryPointManager = VictoryPointManager.new()
