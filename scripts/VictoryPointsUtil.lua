@@ -164,6 +164,20 @@ function VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
 	end
 end
 
+function VictoryPointsUtil.addAnimalTypeFactors(numberOfAnimals, category, factorData)
+	local orderedAnimalTypes = table.toList(numberOfAnimals)
+
+	table.sort(orderedAnimalTypes, function (a, b)
+		return a.name < b.name
+	end)
+
+	for _, animalType in pairs(orderedAnimalTypes) do
+		factorData.name = animalType.name
+		factorData.title = animalType.name
+		category:addElement(VictoryPoint.createFromXml(factorData, numberOfAnimals[animalType]))
+	end
+end
+
 function VictoryPointsUtil.getFillTypes()
 	local fillTypes = table.copy(g_fillTypeManager:getFillTypes())
 	for fillType, _ in pairs(VictoryPointManager.ignoredFillTypes) do
