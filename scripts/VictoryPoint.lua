@@ -8,6 +8,9 @@ VictoryPoint = {
 	end,
 	VOLUME_TEXT = function(liters)
 		return string.format("%.2f%s/%s", g_i18n:getFluid(liters), g_i18n:getText("unit_literShort"), g_i18n:getText("unit_pointsShort"))
+	end,
+	ANIMAL_TEXT = function (numberOfAnimals)
+		--TODO
 	end
 }
 local VictoryPoint_mt = Class(VictoryPoint, ScoreBoardElement)
