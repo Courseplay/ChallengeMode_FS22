@@ -12,10 +12,10 @@ function VictoryPointsUtil.getStorageAmount(farmId, maxFillLevel)
 		if usedStorages[storage] == nil and storage:getOwnerFarmId() == farmId and not storage.foreignSilo then
 			usedStorages[storage] = true
 			local fillLevels = storage:getFillLevels()
-			for fillType, v in pairs(fillLevels) do 
+			for fillType, v in pairs(fillLevels) do
 				CmUtil.debug("Storage fillType(%s) found.", g_fillTypeManager:getFillTypeNameByIndex(fillType))
 				totalFillLevel = totalFillLevel + v
-				if totalFillLevels[fillType] == nil then 
+				if totalFillLevels[fillType] == nil then
 					totalFillLevels[fillType] = 0
 				end
 				totalFillLevels[fillType] = totalFillLevels[fillType] + math.min(v, maxFillLevel)
@@ -69,6 +69,35 @@ function VictoryPointsUtil.getPalletAmount(farmId, maxFillLevel)
 	return palletFillLevels
 end
 
+function VictoryPointsUtil.getAnimalAmount(farmId, maxNumberOfAnimals)
+	if farmId == nil then
+		return VictoryPointsUtil.getAnimalTypes()
+	end
+
+	local numberOfAnimals = {}
+	for _, animalType in pairs(g_currentMission.animalSystem:getTypes()) do
+		local husbandries = g_currentMission.husbandrySystem:getPlaceablesByFarm(farmId, animalType)
+
+		for _, husbandry in pairs(husbandries) do
+			local clusters = husbandry:getClusters()
+
+			-- sums up each cluster that can reproduce itself. this is needed because each animal with a different age is stored in a different cluster.
+			for _, cluster in pairs(clusters) do
+				local animalSubType = g_currentMission.animalSystem:getSubTypeByIndex(cluster:getSubTypeIndex())
+				local numberOfAnimalsInHusbandary = 0
+
+				if cluster:getAge() >= animalSubType.reproductionMinAgeMonth then
+					numberOfAnimalsInHusbandary = numberOfAnimalsInHusbandary + cluster:getNumAnimals()
+				end
+			end
+
+			numberOfAnimals[animalType] = (numberOfAnimals[animalSubType] or 0) + math.min(numberOfAnimalsInHusbandary, maxNumberOfAnimals)
+		end
+	end
+
+	return numberOfAnimals
+end
+
 function VictoryPointsUtil.getTotalArea(farmId)
 	if farmId == nil then 
 		return 0
@@ -115,7 +144,7 @@ end
 function VictoryPointsUtil.getTotalProductionValue(farmId)
 	local value = 0
 	local productionPoints = g_currentMission.productionChainManager:getProductionPointsForFarmId(farmId)
-	for i, production in pairs(productionPoints) do 
+	for i, production in pairs(productionPoints) do
 
 	end
 	return value
@@ -137,8 +166,12 @@ end
 
 function VictoryPointsUtil.getFillTypes()
 	local fillTypes = table.copy(g_fillTypeManager:getFillTypes())
-	for fillType, _ in pairs(VictoryPointManager.ignoredFillTypes)	 do 
+	for fillType, _ in pairs(VictoryPointManager.ignoredFillTypes) do
 		fillTypes[fillType] = nil
 	end
 	return fillTypes
+end
+
+function VictoryPointsUtil.getAnimalTypes()
+	return table.copy(g_currentMission.animalSystem:getTypes())
 end
