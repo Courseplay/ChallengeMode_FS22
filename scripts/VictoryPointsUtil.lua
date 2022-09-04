@@ -92,7 +92,7 @@ function VictoryPointsUtil.getAnimalAmount(farmId, maxNumberOfAnimals)
 		--but until then the backup function will be used. 
 		--Ive coded it this way so that giants' function will be used if it works without having to update our code.
 		local husbandries = {xpcall(function ()
-			g_currentMission.husbandrySystem:getPlaceablesByFarm(farmId, animalType)
+			return g_currentMission.husbandrySystem:getPlaceablesByFarm(farmId, animalType)
 		end, backupFunction)}
 
 		for _, husbandry in pairs(husbandries[2]) do
