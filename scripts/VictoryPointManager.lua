@@ -85,7 +85,7 @@ function VictoryPointManager:addPalletFactors(category, factorData, farmId)
 	VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
 end
 
-function VictoryPointManager:addAnimalFactor(category, factorData, farmId)
+function VictoryPointManager:addAnimalFactors(category, factorData, farmId)
 	local maxNumberOfAnimals = g_ruleManager:getGeneralRuleValue("maxNumberOfAnimals")
 	local numberOfAnimals = VictoryPointsUtil.getAnimalAmount(farmId, maxNumberOfAnimals)
 	VictoryPointsUtil.addAnimalTypeFactors(numberOfAnimals, category, factorData)
