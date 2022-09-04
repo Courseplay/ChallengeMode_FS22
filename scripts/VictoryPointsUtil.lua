@@ -76,22 +76,39 @@ function VictoryPointsUtil.getAnimalAmount(farmId, maxNumberOfAnimals)
 
 	local numberOfAnimals = {}
 	for _, animalType in pairs(g_currentMission.animalSystem:getTypes()) do
-		local husbandries = g_currentMission.husbandrySystem:getPlaceablesByFarm(farmId, animalType)
+		local backupFunction = function ()
+			local animalTypeIndex = animalType.typeIndex
+			local husbandries = {}
 
-		for _, husbandry in pairs(husbandries) do
+			for _, placeable in pairs(g_currentMission.husbandrySystem:getPlaceablesByFarm(farmId)) do
+				if placeable:getAnimalTypeIndex() == animalTypeIndex then
+					table.insert(husbandries, placeable)
+				end
+			end
+
+			return husbandries
+		end
+		--needed because giants function is buggy. maybe after a patch it will work as intended 
+		--but until then the backup function will be used. 
+		--Ive coded it this way so that giants' function will be used if it works without having to update our code.
+		local husbandries = {xpcall(function ()
+			g_currentMission.husbandrySystem:getPlaceablesByFarm(farmId, animalType)
+		end, backupFunction)}
+
+		for _, husbandry in pairs(husbandries[2]) do
 			local clusters = husbandry:getClusters()
+			local numberOfAnimalsInHusbandary = 0
 
 			-- sums up each cluster that can reproduce itself. this is needed because each animal with a different age is stored in a different cluster.
 			for _, cluster in pairs(clusters) do
 				local animalSubType = g_currentMission.animalSystem:getSubTypeByIndex(cluster:getSubTypeIndex())
-				local numberOfAnimalsInHusbandary = 0
 
 				if cluster:getAge() >= animalSubType.reproductionMinAgeMonth then
 					numberOfAnimalsInHusbandary = numberOfAnimalsInHusbandary + cluster:getNumAnimals()
 				end
 			end
 
-			numberOfAnimals[animalType] = (numberOfAnimals[animalSubType] or 0) + math.min(numberOfAnimalsInHusbandary, maxNumberOfAnimals)
+			numberOfAnimals[animalType] = (numberOfAnimals[animalType] or 0) + math.min(numberOfAnimalsInHusbandary, maxNumberOfAnimals)
 		end
 	end
 
@@ -166,14 +183,27 @@ end
 
 function VictoryPointsUtil.addAnimalTypeFactors(numberOfAnimals, category, factorData)
 	local orderedAnimalTypes = table.toList(numberOfAnimals)
+	local animalSystem = g_currentMission.animalSystem
 
 	table.sort(orderedAnimalTypes, function (a, b)
-		return a.name < b.name
+		local typeA = animalSystem:getSubTypeByIndex(a)
+		local typeB = animalSystem:getSubTypeByIndex(b)
+
+		return typeA.name < typeB.name
 	end)
 
 	for _, animalType in pairs(orderedAnimalTypes) do
+		--while loading the savegame animalType is a number, but when im ingame and open the CM frame then animalType is a table.
+		--I don't know why but this is a workaround
+		if type(animalType) == "number" then
+			animalType = g_currentMission.animalSystem:getTypeByIndex(animalType)
+		end
+		--every animal type must have at least 1 sub type so this is always valid
+		local subTypeIndex = animalType.subTypes[1]
+		local subType = animalSystem:getSubTypeByIndex(subTypeIndex)
 		factorData.name = animalType.name
-		factorData.title = animalType.name
+		-- Assumption: All sub type fill types are named the same (like giants did)
+		factorData.title = g_fillTypeManager:getFillTypeNameByIndex(subType.fillTypeIndex)
 		category:addElement(VictoryPoint.createFromXml(factorData, numberOfAnimals[animalType]))
 	end
 end
