@@ -47,10 +47,12 @@
 		<text name="CM_VictoryPoints_general_totalStorage_title"				text="Total storage"/>
 		<text name="CM_VictoryPoints_general_totalBales_title"					text="Total bales"/>
 		<text name="CM_VictoryPoints_general_totalPallets_title"				text="Total pallets"/>
+		<text name="CM_VictoryPoints_general_totalAnimals_title" 				text="Total Animals"/>
 
 		<text name="CM_VictoryPoints_storage_title"								text="Storage"/>
 		<text name="CM_VictoryPoints_bales_title"								text="Bale storage"/>
 		<text name="CM_VictoryPoints_pallets_title"								text="Pallet storage"/>
+		<text name="CM_VictoryPoints_animals_title" 							text="Animals"/>
 
 		<text name="CM_Rules_leftTitle"											text=""/>
 		<text name="CM_Rules_middleTitle"										text=""/>
@@ -69,6 +71,7 @@
 		<text name="CM_Rules_general_maxFillLevel_deactivated"					text="Deactivated"/>			
 		<text name="CM_Rules_general_creditLimit_title"							text="Credit limit:"/>
 		<text name="CM_Rules_general_creditLimit_deactivated"					text="Deactivated"/>
+		<text name="CM_Rules_general_maxNumberOfAnimals_title" 					text="Max amount of counting Animals:"/>
 
 		<text name="CM_Rules_visibleFarms_title"								text="Farms:"/>
 		<text name="CM_Rules_visibleFarms_visible"								text="Visible"/>
@@ -83,5 +86,6 @@
 		<text name="CM_Rules_animalHusbandryLimits_deactivated"					text="Deactivated"/>
 
 		<text name="unit_pointsShort" 											text="Pt"/>
+		<text name="unit_piecesShort"											text="Pc."/>
 	</texts>
 </l10n>
