@@ -186,10 +186,14 @@ function VictoryPointsUtil.addAnimalTypeFactors(numberOfAnimals, category, facto
 	local animalSystem = g_currentMission.animalSystem
 
 	table.sort(orderedAnimalTypes, function (a, b)
-		local typeA = animalSystem:getSubTypeByIndex(a)
-		local typeB = animalSystem:getSubTypeByIndex(b)
+			if type(a) == "number" then
+			a = g_currentMission.animalSystem:getSubTypeByIndex(a)
+			end
+			if type(b) == "number" then
+			b = g_currentMission.animalSystem:getSubTypeByIndex(b)
+			end
 
-		return typeA.name < typeB.name
+		return a.name < b.name
 	end)
 
 	for _, animalType in pairs(orderedAnimalTypes) do
