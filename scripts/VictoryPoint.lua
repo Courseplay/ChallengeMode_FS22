@@ -35,7 +35,7 @@ function VictoryPoint.createFromXml(data, value)
 end
 
 function VictoryPoint:getValue()
-	if self.staticElement == nil then
+	if self.staticElement == nil and not self.dependency then
 		return 0
 	end
 	if self.value == nil then

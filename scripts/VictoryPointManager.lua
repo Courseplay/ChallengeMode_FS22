@@ -118,6 +118,7 @@ function VictoryPointManager:addVehiclesFactor(category, factorData, farmId)
 end
 
 function VictoryPointManager:addDependentPoint(category, factorData, farmId, dependency)
+	CmUtil.debug("Dependent: %s, points: %s", factorData.name, dependency:count() or 0)
 	category:addElement(VictoryPoint.createFromXml(factorData, farmId ~= nil and dependency:count() or 0))
 end
 
