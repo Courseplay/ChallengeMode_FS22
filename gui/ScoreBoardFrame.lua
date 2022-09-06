@@ -46,7 +46,8 @@ ScoreBoardFrame.translations = {
 		change = g_i18n:getText("CM_menuBtn_change"),
 		changeFarmVisibility = g_i18n:getText("CM_menuBtn_changeFarmVisibility"),
 		showChangelog = g_i18n:getText("CM_menuBtn_showChangelog"),
-		hideChangelog = g_i18n:getText("CM_menuBtn_hideChangelog")
+		hideChangelog = g_i18n:getText("CM_menuBtn_hideChangelog"),
+		addPoints = g_i18n:getText("CM_menuBtn_addPoints")
 	},
 	dialogs = {
 		admin = g_i18n:getText("CM_dialog_adminTitle"),
@@ -80,6 +81,7 @@ function ScoreBoardFrame.new(target, custom_mt)
 	self.ruleManager = g_ruleManager
 	self.farms = {}
 	self.showChangelog = false
+	self.selectedList = self.leftList
 
 	return self
 end
@@ -89,6 +91,27 @@ function ScoreBoardFrame:onGuiSetupFinished()
 
 	self.leftList:setDataSource(self)
 	self.rightList:setDataSource(self)
+
+	local orig = self.leftList.onFocusEnter
+	function self.leftList.onFocusEnter(...)
+		orig(...)
+
+		self:onFocusEnterList(self.leftList)
+	end
+
+	orig = self.rightList.onFocusEnter
+	function self.rightList.onFocusEnter(...)
+		orig(...)
+
+		self:onFocusEnterList(self.rightList)
+	end
+
+	orig = self.changelogList.onFocusEnter
+	function self.changelogList.onFocusEnter(...)
+		orig(...)
+
+		self:onFocusEnterList(self.changelogList)
+	end
 
 	self.menuButtons = {
 		{
@@ -145,13 +168,13 @@ function ScoreBoardFrame:onGuiSetupFinished()
 		{
 			profile = "buttonSelect",
 			inputAction = InputAction.MENU_ACTIVATE,
-			text = self.translations.menuButtons.change,
+			text = self.translations.menuButtons.addPoints,
 			callback = function()
 				CmUtil.try(self.onClickChange, self)
 				self:updateMenuButtons()
 				self:updateLists()
 			end,
-			callbackDisabled = self.isChangeButtonDisabled,
+			callbackDisabled = self.isAddPointsButtonDisabled,
 		},
 		--- Changes farm visibility.
 		{
@@ -173,7 +196,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 				self:onClickShowChangelog()
 				self:updateMenuButtons()
 			end,
-			callbackDisabled = self.isChangelogHidden
+			callbackDisabled = self.isShowChangelogButtonDisabled
 		},
 		--- Hide point changes for selected farm
 		{
@@ -184,7 +207,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 				self:onClickHideChangelog()
 				self:updateMenuButtons()
 			end,
-			callbackDisabled = self.isChangelogShown
+			callbackDisabled = self.isHideChangelogButtonDisabled
 		}
 	}
 	self.managers = {
@@ -351,6 +374,16 @@ function ScoreBoardFrame:onListSelectionChanged(list, section, index)
 	self:updateTitles()
 end
 
+function ScoreBoardFrame:onFocusEnterList(list)
+	self.selectedList = list
+
+	if list == self.leftList and list:getSelectedSection() ~= 1 then
+		self.showChangelog = false
+
+		self:updateMenuButtons()
+	end
+end
+
 function ScoreBoardFrame:getValidFarms()
 	local farms, farmsById = {}, {}
 	for i, farm in pairs(self.farmManager:getFarms()) do
@@ -474,15 +507,19 @@ function ScoreBoardFrame:isAdminChangePasswordButtonDisabled()
 end
 
 function ScoreBoardFrame:isChangeButtonDisabled()
-	return not g_challengeMod.isAdminModeActive
+	return not g_challengeMod.isAdminModeActive or self.selectedList ~= self.rightList
 end
 
-function ScoreBoardFrame:isChangelogHidden()
-	return not self.showChangelog
+function ScoreBoardFrame:isAddPointsButtonDisabled()
+	return not g_challengeMod.isAdminModeActive or self.selectedList ~= self.leftList or self.selectedList:getSelectedSection() ~= 1
 end
 
-function ScoreBoardFrame:isChangelogShown()
-	return self.showChangelog
+function ScoreBoardFrame:isShowChangelogButtonDisabled()
+	return self.showChangelog or self.selectedList ~= self.leftList or self.selectedList:getSelectedSection() ~= 1
+end
+
+function ScoreBoardFrame:isHideChangelogButtonDisabled()
+	return not self.showChangelog or self.selectedList ~= self.leftList or self.selectedList:getSelectedSection() ~= 1
 end
 
 ----------------------------------------------------
