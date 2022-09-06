@@ -161,8 +161,10 @@ end
 function VictoryPointManager:sumAdditionalPoints(farmId)
 	local sumPoints = 0
 
-	for _, point in pairs(self.additioalPoints[farmId]) do
-		sumPoints = sumPoints + point.points
+	if self.additionalPoints[farmId] ~= nil then
+		for _, point in pairs(self.additionalPoints[farmId]) do
+			sumPoints = sumPoints + point.points
+		end
 	end
 
 	return sumPoints
