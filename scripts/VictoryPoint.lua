@@ -47,7 +47,7 @@ function VictoryPoint:getValue()
 end
 
 function VictoryPoint:count()
-	if self.dependency then
+	if self.dependency or self.factor == 0 then
 		return 0
 	end
 	return self:getValue()
