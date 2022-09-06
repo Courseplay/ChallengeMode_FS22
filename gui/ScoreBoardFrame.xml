@@ -55,7 +55,29 @@
                 </GuiElement>
             </GuiElement>
 
+            <GuiElement type="empty" profile="ingameMenuPriceRightColumn" id="changelogColumn" visible="false">
+                <GuiElement type="boxLayout" profile="ingameCalendarHeaderBox" id="changelogColumnHeaderBox" size="680px 104px">
+                    <GuiElement type="text" profile="ingameMenuPriceHeader" size="330px 104px" text="" id="changelogList_leftTitle" /> 
+                    <GuiElement type="text" profile="ingameMenuPriceHeader" size="180px 104px" text="" id="changelogList_middleTitle" />
+                    <GuiElement type="text" profile="ingameMenuPriceHeader" size="160px 104px" text="" id="changelogList_rightTitle" textOffset="0 0" />
+                </GuiElement>
 
+                <GuiElement type="smoothList" profile="ingameMenuPriceList" id="changelogList" focusChangeTop="nil" focusChangeBottom="nil" listSectionHeader="section">
+                    <GuiElement type="listItem" profile="ingameMenuPriceListItem">
+                        <GuiElement type="text" name="userName" profile="ingameMenuPriceSellpointTitle" />
+						<GuiElement type="text" name="date" profile="ingameMenuPriceItemBuyPrice" />
+						<GuiElement type="text" name="addedPoints" profile="ingameMenuPriceItemPrice" textOffset="-30px 0" />
+                    </GuiElement>
+
+					<GuiElement type="listItem" profile="ingameMenuAnimalsListSectionHeader" name="section">
+                        <GuiElement type="text" profile="ingameMenuAnimalsListSectionHeaderText" name="title" />
+                    </GuiElement>
+                </GuiElement>
+
+                <GuiElement type="threePartBitmap" profile="verticalListSliderRightDocked" size="12px 652px" position="28px -104px">
+                    <GuiElement type="slider" profile="verticalListSliderBar" size="6px 644px" dataElementId="rightList" id="rightListSlider" />
+                </GuiElement>
+            </GuiElement>
         </GuiElement>
 	</GuiElement>
 </GUI>

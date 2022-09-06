@@ -4,13 +4,16 @@ ScoreBoardFrame = {
 		MAIN_BOC = "mainBox",
 		LEFT_COLUMN = "leftColumn",
 		RIGHT_COLUMN = "rightColumn",
+		CHANGELOG_COLUMN = "changelogColumn",
 		LEFT_LIST = "leftList",
 		RIGHT_LIST = "rightList",
+		CHANGELOG_LIST = "changelogList",
 		LEFT_COLUMN_HEADER = "leftColumnHeader",
 		RIGHT_COLUMN_HEADER = "rightColumnHeader",
 		GOAL = "goal",
 		RIGHT_LIST_MIDDLE_TITLE = "rightList_middleTitle",
-		RIGHT_LIST_RIGHT_TITLE = "rightList_rightTitle"
+		RIGHT_LIST_RIGHT_TITLE = "rightList_rightTitle",
+
 	},
 	COLOR = {
 		GREEN = {
@@ -414,6 +417,8 @@ end
 
 function ScoreBoardFrame:onClickSetGoal()
 	self:openTextInputDialog(self.onTextInputChangeGoal, nil, self.translations.dialogs.newGoal)
+	print("set header invisible")
+	self.leftColumn:setVisible(false)
 end
 
 function ScoreBoardFrame:onClickShowChangelog()
