@@ -375,6 +375,7 @@ function ScoreBoardFrame:onListSelectionChanged(list, section, index)
 end
 
 function ScoreBoardFrame:onFocusEnterList(list)
+	if self.selectedList ~= nil then self.selectedList:clearElementSelection() end
 	self.selectedList = list
 
 	if list == self.leftList and list:getSelectedSection() ~= 1 then
@@ -478,8 +479,6 @@ end
 
 function ScoreBoardFrame:onClickSetGoal()
 	self:openTextInputDialog(self.onTextInputChangeGoal, nil, self.translations.dialogs.newGoal)
-	print("set header invisible")
-	self.leftColumn:setVisible(false)
 end
 
 function ScoreBoardFrame:onClickShowChangelog()
