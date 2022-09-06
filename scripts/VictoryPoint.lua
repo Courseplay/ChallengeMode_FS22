@@ -43,11 +43,15 @@ function VictoryPoint:getValue()
 		printCallstack()
 		return 0
 	end
+	-- division by 0 is not allowed
+	if self.factor == 0 then
+		return 0
+	end
 	return self.value / self.factor
 end
 
 function VictoryPoint:count()
-	if self.dependency or self.factor == 0 then
+	if self.dependency then
 		return 0
 	end
 	return self:getValue()
