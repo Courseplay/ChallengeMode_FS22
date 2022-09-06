@@ -39,7 +39,9 @@ ScoreBoardFrame.translations = {
 		adminLogout = g_i18n:getText("CM_menuBtn_admin_logout"),
 		adminChangePassword = g_i18n:getText("CM_menuBtn_admin_changePassword"),
 		change = g_i18n:getText("CM_menuBtn_change"),
-		changeFarmVisibility = g_i18n:getText("CM_menuBtn_changeFarmVisibility")
+		changeFarmVisibility = g_i18n:getText("CM_menuBtn_changeFarmVisibility"),
+		showChangelog = g_i18n:getText("CM_menuBtn_showChangelog"),
+		hideChangelog = g_i18n:getText("CM_menuBtn_hideChangelog")
 	},
 	dialogs = {
 		admin = g_i18n:getText("CM_dialog_adminTitle"),
@@ -67,6 +69,7 @@ function ScoreBoardFrame.new(target, custom_mt)
 	self.victoryPointManager = g_victoryPointManager
 	self.ruleManager = g_ruleManager
 	self.farms = {}
+	self.showChangelog = false
 
 	return self
 end
@@ -139,6 +142,28 @@ function ScoreBoardFrame:onGuiSetupFinished()
 			end,
 			callbackDisabled = self.isAdminLogoutButtonDisabled,
 		},
+		--- Show all point changes for the selected farm.
+		{
+			profile = "buttonActivate",
+			inputAction = InoutAction.MENU_CANCEL,
+			text = self.translations.menuButtons.showChangelog,
+			callback = function ()
+				self:onClickShowChangelog()
+				self:updateMenuButtons()
+			end,
+			callbackDisabled = self.isChangelogHidden
+		},
+		--- Hide point changes for selected farm
+		{
+			profile = "buttonActivate",
+			inputAction = InoutAction.MENU_CANCEL,
+			text = self.translations.menuButtons.hideChangelog,
+			callback = function ()
+				self:onClickHideChangelog()
+				self:updateMenuButtons()
+			end,
+			callbackDisabled = self.isChangelogShown
+		}
 	}
 	self.managers = {
 		function(...)
@@ -294,6 +319,7 @@ function ScoreBoardFrame:onListSelectionChanged(list, section, index)
 	if list == self.leftList then
 		--self.leftList:reloadData()
 		self.rightList:reloadData()
+		self.showChangelog = false
 	end
 	self:updateMenuButtons()
 	self:updateTitles()
@@ -390,6 +416,14 @@ function ScoreBoardFrame:onClickSetGoal()
 	self:openTextInputDialog(self.onTextInputChangeGoal, nil, self.translations.dialogs.newGoal)
 end
 
+function ScoreBoardFrame:onClickShowChangelog()
+	self.showChangelog = true
+end
+
+function ScoreBoardFrame:onClickHideChangelog()
+	self.showChangelog = false
+end
+
 function ScoreBoardFrame:isAdminLoginButtonDisabled()
 	return g_challengeMod.isAdminModeActive
 end
@@ -404,6 +438,14 @@ end
 
 function ScoreBoardFrame:isChangeButtonDisabled()
 	return not g_challengeMod.isAdminModeActive
+end
+
+function ScoreBoardFrame:isChangelogHidden()
+	return not self.showChangelog
+end
+
+function ScoreBoardFrame:isChangelogShown()
+	return self.showChangelog
 end
 
 ----------------------------------------------------

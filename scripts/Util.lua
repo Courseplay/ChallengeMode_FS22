@@ -191,3 +191,12 @@ function CmUtil.fixInGameMenuPage(frame, pageName, image, position, predicateFun
 
 	inGameMenu:rebuildTabList()
 end
+
+function CmUtil.createAdditionalPoint(value, userName, reason)
+	return {
+		points = value,
+		addedBy = userName,
+		date = os.date("%d.%m.%Y %H:%M"),
+		reason = reason
+	}
+end

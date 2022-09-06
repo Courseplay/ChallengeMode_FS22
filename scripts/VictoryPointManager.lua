@@ -8,6 +8,7 @@ function VictoryPointManager.new(custom_mt)
 	self.isServer = g_server
 
 	self.totalPoints = {}
+	self.additionalPoints = {}
 	self.pointList = {}
 
 	return self
@@ -154,7 +155,17 @@ end
 
 function VictoryPointManager:calculatePoints(farmId, farm)
 	self.pointList[farmId] = self:getNewPointList(farmId, farm)
-	self.totalPoints[farmId] = self.pointList[farmId]:count()
+	self.totalPoints[farmId] = self.pointList[farmId]:count() + self:sumAdditionalPoints(farmId)
+end
+
+function VictoryPointManager:sumAdditionalPoints(farmId)
+	local sumPoints = 0
+
+	for _, point in pairs(self.additioalPoints[farmId]) do
+		sumPoints = sumPoints + point.points
+	end
+
+	return sumPoints
 end
 
 function VictoryPointManager:update()
@@ -182,6 +193,10 @@ function VictoryPointManager:getTotalPoints(farmId)
 	return self.totalPoints[farmId]
 end
 
+function victoryPointManager:getAdditionalPointsForFarm(farmId)
+	return self.additionalPoints[farmId]
+end
+
 function VictoryPointManager:isVictoryGoalReached(farmId)
 	return self.totalPoints[farmId] > self.victoryGoal
 end
@@ -195,6 +210,14 @@ function VictoryPointManager:setGoal(newGoal, noEventSend)
 	if noEventSend == nil or noEventSend == false then
 		ChangeGoalEvent.sendEvent(self.victoryGoal)
 	end
+end
+
+function VictoryPointManager:addAdditionalPoint(farmId, point)
+	if self.additionalPoints[farmId] == nil then
+		self.additionalPoints[farmId] = {}
+	end
+
+	table.insert(self.additionalPoints[farmId], point)
 end
 
 g_victoryPointManager = VictoryPointManager.new()

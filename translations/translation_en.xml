@@ -16,6 +16,8 @@
 		<text name="CM_menuBtn_admin_changePassword"							text="Change password" />
 		<text name="CM_menuBtn_change" 											text="Change value" />
 		<text name="CM_menuBtn_changeFarmVisibility" 							text="Changes farm visibility" />
+		<text name="CM_menuBtn_showChangelog" 									text="Show Changelog" />
+		<text name="CM_menuBtn_hideChangelog" 									text="Hide Changelog" />
 
 		<text name="CM_buttonText_markStartVehicle" 							text="starting vehicle" />
 		<text name="CM_buttonText_unmarkStartVehicle" 							text="no starting vehicle" />
