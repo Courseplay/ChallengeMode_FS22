@@ -13,7 +13,9 @@ ScoreBoardFrame = {
 		GOAL = "goal",
 		RIGHT_LIST_MIDDLE_TITLE = "rightList_middleTitle",
 		RIGHT_LIST_RIGHT_TITLE = "rightList_rightTitle",
-
+		CHANGELOG_LEFT_TITLE = "changelogList_leftTitle",
+		CHANGELOG_MIDDLE_TITLE = "changelogList_middleTitle",
+		CHANGELOG_RIGHT_TITLE = "changelogList_rightTitle"
 	},
 	COLOR = {
 		GREEN = {
@@ -57,6 +59,11 @@ ScoreBoardFrame.translations = {
 		"",
 		g_i18n:getText("CM_leftList_section_two"),
 	},
+	changelogSections = {
+		g_i18n:getText("CM_changelogList_userName"),
+		g_i18n:getText("CM_changelogList_date"),
+		g_i18n:getText("CM_changelogList_addedPoints")
+	}
 
 }
 
@@ -134,6 +141,18 @@ function ScoreBoardFrame:onGuiSetupFinished()
 			end,
 			callbackDisabled = self.isChangeButtonDisabled,
 		},
+		--- Shows dialog to add points to selected farm
+		{
+			profile = "buttonSelect",
+			inputAction = InputAction.MENU_ACTIVATE,
+			text = self.translations.menuButtons.change,
+			callback = function()
+				CmUtil.try(self.onClickChange, self)
+				self:updateMenuButtons()
+				self:updateLists()
+			end,
+			callbackDisabled = self.isChangeButtonDisabled,
+		},
 		--- Changes farm visibility.
 		{
 			profile = "buttonActivate",
@@ -183,6 +202,9 @@ function ScoreBoardFrame:onGuiSetupFinished()
 		[self.rightList] = function()
 			local sx, ix = self.leftList:getSelectedPath()
 			return self.managers[sx]():getNumberOfElements()
+		end,
+		[self.changelogList] = function ()
+			return 1
 		end
 	}
 	self.sectionTitles = {
@@ -192,6 +214,9 @@ function ScoreBoardFrame:onGuiSetupFinished()
 		[self.rightList] = function(rsx)
 			local sx, ix = self.leftList:getSelectedPath()
 			return self.managers[sx]():getElement(rsx):getTitle()
+		end,
+		[self.changelogList] = function (sx)
+			return self.translations.changelogSections[sx]
 		end
 	}
 end
@@ -315,14 +340,12 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 end
 
 function ScoreBoardFrame:onListSelectionChanged(list, section, index)
-	--TODO: separate between left and right list. 
-	-- This has to be done to separate between editing the factors on the right side and setting points on the left side for the selected farm. 
-	-- Also the protocol of the point editing needs to be opened for the selected farm. My plan is to create a protocol for each farm to keep it relativly clean and easy to read.
-	-- Maybe just print the protocol as the right list if the button is pressed.
 	if list == self.leftList then
-		--self.leftList:reloadData()
-		self.rightList:reloadData()
-		self.showChangelog = false
+		if not self.showChangelog then
+			self.rightList:reloadData()
+		else
+			self.changelogList:reloadData()
+		end
 	end
 	self:updateMenuButtons()
 	self:updateTitles()
@@ -375,6 +398,11 @@ function ScoreBoardFrame:getElement(section, index)
 	return list:getElement(section, index)
 end
 
+function ScoreBoardFrame:updateRightColumn()
+	self.rightColumn:setVisible(not self.showChangelog)
+	self.changelogColumn:setVisible(self.showChangelog)
+end
+
 ----------------------------------------------------
 --- Button callbacks
 ----------------------------------------------------
@@ -423,10 +451,14 @@ end
 
 function ScoreBoardFrame:onClickShowChangelog()
 	self.showChangelog = true
+
+	self:updateRightColumn()
 end
 
 function ScoreBoardFrame:onClickHideChangelog()
 	self.showChangelog = false
+
+	self:updateRightColumn()
 end
 
 function ScoreBoardFrame:isAdminLoginButtonDisabled()
