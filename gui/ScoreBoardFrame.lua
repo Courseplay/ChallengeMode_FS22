@@ -92,6 +92,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 	self.leftList:setDataSource(self)
 	self.rightList:setDataSource(self)
 
+	-- Save the current selected list to decide which buttons will be shown and which not
 	local orig = self.leftList.onFocusEnter
 	function self.leftList.onFocusEnter(...)
 		orig(...)
@@ -170,7 +171,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 			inputAction = InputAction.MENU_ACTIVATE,
 			text = self.translations.menuButtons.addPoints,
 			callback = function()
-				CmUtil.try(self.onClickChange, self)
+				CmUtil.try(self.onClickAddPoints, self)
 				self:updateMenuButtons()
 				self:updateLists()
 			end,
@@ -477,6 +478,16 @@ function ScoreBoardFrame:onClickChange()
 	end
 end
 
+function ScoreBoardFrame:onClickAddPoints()
+	if self.selectedList ~= self.leftList or self.selectedList:getSelectedSection() ~= self.LEFT_SECTIONS.POINTS then
+		print("Error: Can't change points of no farm")
+		return
+	end
+
+	local farmId = self:getCurrentFarmId()
+	self:showAddPointsDialog(farmId)
+end
+
 function ScoreBoardFrame:onClickSetGoal()
 	self:openTextInputDialog(self.onTextInputChangeGoal, nil, self.translations.dialogs.newGoal)
 end
@@ -510,15 +521,15 @@ function ScoreBoardFrame:isChangeButtonDisabled()
 end
 
 function ScoreBoardFrame:isAddPointsButtonDisabled()
-	return not g_challengeMod.isAdminModeActive or self.selectedList ~= self.leftList or self.selectedList:getSelectedSection() ~= 1
+	return not g_challengeMod.isAdminModeActive or self.selectedList ~= self.leftList or self.selectedList:getSelectedSection() ~= self.LEFT_SECTIONS.POINTS
 end
 
 function ScoreBoardFrame:isShowChangelogButtonDisabled()
-	return self.showChangelog or self.selectedList ~= self.leftList or self.selectedList:getSelectedSection() ~= 1
+	return self.showChangelog or self.selectedList ~= self.leftList or self.selectedList:getSelectedSection() ~= self.LEFT_SECTIONS.POINTS
 end
 
 function ScoreBoardFrame:isHideChangelogButtonDisabled()
-	return not self.showChangelog or self.selectedList ~= self.leftList or self.selectedList:getSelectedSection() ~= 1
+	return not self.showChangelog or self.selectedList ~= self.leftList or self.selectedList:getSelectedSection() ~= self.LEFT_SECTIONS.POINTS
 end
 
 ----------------------------------------------------
@@ -540,6 +551,12 @@ function ScoreBoardFrame:openTextInputDialog(callbackFunc, args, title, ...)
 		confirmText = g_i18n:getText("button_ok"),
 		args = args
 	})
+end
+
+function ScoreBoardFrame:showAddPointsDialog(farmId)
+	print("addPoints dialog has to be implemented")
+	--TODO: implement function to show addPoints dialog
+	-- 		create addPoints dialog via xml 
 end
 
 function ScoreBoardFrame:onTextInputAdminPassword(text, clickOk)
