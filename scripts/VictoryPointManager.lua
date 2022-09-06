@@ -193,7 +193,7 @@ function VictoryPointManager:getTotalPoints(farmId)
 	return self.totalPoints[farmId]
 end
 
-function victoryPointManager:getAdditionalPointsForFarm(farmId)
+function VictoryPointManager:getAdditionalPointsForFarm(farmId)
 	return self.additionalPoints[farmId]
 end
 
