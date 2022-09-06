@@ -167,7 +167,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 		--- Show all point changes for the selected farm.
 		{
 			profile = "buttonActivate",
-			inputAction = InoutAction.MENU_CANCEL,
+			inputAction = InputAction.MENU_CANCEL,
 			text = self.translations.menuButtons.showChangelog,
 			callback = function ()
 				self:onClickShowChangelog()
@@ -178,7 +178,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 		--- Hide point changes for selected farm
 		{
 			profile = "buttonActivate",
-			inputAction = InoutAction.MENU_CANCEL,
+			inputAction = InputAction.MENU_CANCEL,
 			text = self.translations.menuButtons.hideChangelog,
 			callback = function ()
 				self:onClickHideChangelog()
