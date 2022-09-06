@@ -11,6 +11,10 @@
 
 		<text name="CM_rightList_leftTitle" 									text="Ziel: %d" />
 
+		<text name="CM_changelogList_leftTitle"									text="Nutzer"/>
+		<text name="CM_changelogList_middleTitle"								text="Datum"/>
+		<text name="CM_changelogList_rightTitle"								text="Punkte"/>
+
 		<text name="CM_menuBtn_admin_login" 									text="Login" />
 		<text name="CM_menuBtn_admin_logout" 									text="Logout" />
 		<text name="CM_menuBtn_admin_changePassword" 							text="Passwort ändern" />
@@ -18,6 +22,7 @@
 		<text name="CM_menuBtn_changeFarmVisibility" 							text="Ändert Hof Sichtbarkeit" />
 		<text name="CM_menuBtn_showChangelog" 									text="Zeige Änderungsverlauf" />
 		<text name="CM_menuBtn_hideChangelog" 									text="Änderungsverlauf ausblenden" />
+		<text name="CM_menuBtn_addPoints" 										text="Punkte hinzufügen" />
 
 		<text name="CM_buttonText_markStartVehicle" 							text="Startfahrzeug" />
 		<text name="CM_buttonText_unmarkStartVehicle" 							text="Kein Startfahrzeug" />

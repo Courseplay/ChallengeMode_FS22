@@ -11,6 +11,10 @@
 
 		<text name="CM_rightList_leftTitle" 									text="Goal: %d" />
 
+		<text name="CM_changelogList_leftTitle"									text="User Name"/>
+		<text name="CM_changelogList_middleTitle"								text="Date"/>
+		<text name="CM_changelogList_rightTitle"								text="Points"/>
+
 		<text name="CM_menuBtn_admin_login" 									text="Login" />
 		<text name="CM_menuBtn_admin_logout" 									text="Logout" />
 		<text name="CM_menuBtn_admin_changePassword"							text="Change password" />
@@ -18,6 +22,7 @@
 		<text name="CM_menuBtn_changeFarmVisibility" 							text="Changes farm visibility" />
 		<text name="CM_menuBtn_showChangelog" 									text="Show Changelog" />
 		<text name="CM_menuBtn_hideChangelog" 									text="Hide Changelog" />
+		<text name="CM_menuBtn_addPoints" 										text="Add Points" />
 
 		<text name="CM_buttonText_markStartVehicle" 							text="starting vehicle" />
 		<text name="CM_buttonText_unmarkStartVehicle" 							text="no starting vehicle" />
