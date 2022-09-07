@@ -50,6 +50,7 @@ Ingame UI mit eigenem Passwort zum Einstellen der Spielregeln.
 		<sourceFile filename="scripts/main.lua"/>
 		<sourceFile filename="scripts/VictoryPointsUtil.lua"/>
 		<sourceFile filename="gui/ScoreBoardFrame.lua"/>
+		<sourceFile filename="gui/dialogs/addPointsDialog.lua"/>
 		<sourceFile filename="scripts/ScoreBoardElement.lua"/>
 		<sourceFile filename="scripts/ScoreBoardCategory.lua"/>
 		<sourceFile filename="scripts/ScoreBoardList.lua"/>
