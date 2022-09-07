@@ -10,17 +10,17 @@
 
         <GuiElement type="flowLayout" profile="addPointsInputBoxDialog" id="pointsGroup">
             <GuiElement type="text" profile="dialogText" text="$l10n_CM_dialogs_addPoints_points_text"/>
-            <GuiElement type="textInput" profile="dialogTextInput" id="pointsInput" onEnterPressed="onEnterPressed" onEscPressed="onEscPressed" onFocus="onInputFocus" onLeave="onInputLeave" imeKeyboardType="normal" imeTitle="" imeDescription="" imePlaceholder="" enterWhenClickOutside="false" />
+            <GuiElement type="textInput" profile="dialogTextInput" id="pointsInput" onEnterPressed="onPointsEnterPressed" onEscPressed="onEscPressed" onFocus="onInputFocus" onLeave="onInputLeave" imeKeyboardType="normal" imeTitle="" imeDescription="" imePlaceholder="" enterWhenClickOutside="false" />
         </GuiElement>
 
         <GuiElement type="flowLayout" profile="addPointsInputBoxDialog" id="reasonGroup">
             <GuiElement type="text" profile="dialogText" text="$l10n_CM_dialogs_addPoints_reason_text"/>
-            <GuiElement type="textInput" profile="dialogTextInput" id="reasonInput" onEnterPressed="onEnterPressed" onEscPressed="onEscPressed" onFocus="onInputFocus" onLeave="onInputLeave" imeKeyboardType="normal" imeTitle="" imeDescription="" imePlaceholder="" enterWhenClickOutside="false" />
+            <GuiElement type="textInput" profile="dialogTextInput" id="reasonInput" onEnterPressed="onReasonEnterPressed" onEscPressed="onEscPressed" onFocus="onInputFocus" onLeave="onInputLeave" imeKeyboardType="normal" imeTitle="" imeDescription="" imePlaceholder="" enterWhenClickOutside="false" />
         </GuiElement>
 
         <GuiElement type="flowLayout" profile="buttonBoxDialog" id="buttonsPC" >
-            <GuiElement type="button" profile="buttonOK" text="$l10n_button_start" onClick="onClickOk" id="yesButton" />
-            <GuiElement type="button" profile="buttonBack" text="$l10n_button_back"  onClick="onClickBack" id="noButton" />
+            <GuiElement type="button" profile="buttonBack"  text="$l10n_button_cancel"  onClick="onClickBack" id="noButton" />
+            <GuiElement type="button" profile="buttonOK"    text="$l10n_button_save"    onClick="onClickOk"   id="yesButton" />
         </GuiElement>
     </GuiElement>
 </GUI>
