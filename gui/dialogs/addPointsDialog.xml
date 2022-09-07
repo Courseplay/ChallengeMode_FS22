@@ -6,7 +6,7 @@
     <GuiElement type="bitmap" profile="bgGlowDialog" />
 
     <GuiElement type="bitmap" profile="passwordDialogBg" id="dialogElement">
-        <GuiElement type="text" profile="dialogTitle" text="$l10n_CM_dialogs_addPoints_title" id="dialogTextElement" />
+        <GuiElement type="text" profile="dialogTitle" text="$l10n_CM_dialogs_addPoints_title" id="dialogTitleElement"/>
 
         <GuiElement type="flowLayout" profile="addPointsInputBoxDialog" id="pointsGroup">
             <GuiElement type="text" profile="dialogText" text="$l10n_CM_dialogs_addPoints_points_text"/>
