@@ -186,7 +186,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 				self:onClickChangeFarmVisibility()
 				self:updateMenuButtons()
 			end,
-			callbackDisabled = self.isAdminLogoutButtonDisabled,
+			callbackDisabled = self.isAddPointsButtonDisabled,
 		},
 		--- Show all point changes for the selected farm.
 		{
@@ -554,9 +554,13 @@ function ScoreBoardFrame:openTextInputDialog(callbackFunc, args, title, ...)
 end
 
 function ScoreBoardFrame:showAddPointsDialog(farmId)
-	print("addPoints dialog has to be implemented")
-	--TODO: implement function to show addPoints dialog
-	-- 		create addPoints dialog via xml 
+	local dialog = g_gui:showDialog("AddPointsDialog")
+
+	if dialog ~= nil then
+		print("test")
+	else
+		print("dialog not found")
+	end
 end
 
 function ScoreBoardFrame:onTextInputAdminPassword(text, clickOk)
