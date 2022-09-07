@@ -127,6 +127,12 @@ function ChallengeMod:setupGui()
 	g_gui:loadGui(Utils.getFilename("gui/ScoreBoardFrame.xml", self.BASE_DIRECTORY), "ScoreBoardPage", frame, true)
 
 	CmUtil.fixInGameMenuPage(frame, "pageScoreBoard", self.image)
+
+	self:setupDialogs()
+end
+
+function ChallengeMod:setupDialogs()
+	
 end
 
 function ChallengeMod:registerXmlSchema()
