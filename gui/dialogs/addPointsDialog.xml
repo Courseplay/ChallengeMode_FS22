@@ -6,15 +6,15 @@
     <GuiElement type="bitmap" profile="bgGlowDialog" />
 
     <GuiElement type="bitmap" profile="passwordDialogBg" id="dialogElement">
-        <GuiElement type="text" profile="dialogTitle" text="$l10n_CM_dialogs_addPoints_title" id="dialogTitleElement"/>
+        <GuiElement type="text" profile="dialogTitle" text="$l10n_CM_dialog_addPoints_title" id="dialogTitleElement"/>
 
         <GuiElement type="flowLayout" profile="addPointsInputBoxDialog" id="pointsGroup">
-            <GuiElement type="text" profile="dialogText" text="$l10n_CM_dialogs_addPoints_points_text"/>
+            <GuiElement type="text" profile="dialogText" text="$l10n_CM_dialog_addPoints_pointsText"/>
             <GuiElement type="textInput" profile="dialogTextInput" id="pointsInput" onEnterPressed="onPointsEnterPressed" onEscPressed="onEscPressed" onFocus="onInputFocus" onLeave="onInputLeave" imeKeyboardType="normal" imeTitle="" imeDescription="" imePlaceholder="" enterWhenClickOutside="false" />
         </GuiElement>
 
         <GuiElement type="flowLayout" profile="addPointsInputBoxDialog" id="reasonGroup">
-            <GuiElement type="text" profile="dialogText" text="$l10n_CM_dialogs_addPoints_reason_text"/>
+            <GuiElement type="text" profile="dialogText" text="$l10n_CM_dialog_addPoints_reasonText"/>
             <GuiElement type="textInput" profile="dialogTextInput" id="reasonInput" onEnterPressed="onReasonEnterPressed" onEscPressed="onEscPressed" onFocus="onInputFocus" onLeave="onInputLeave" imeKeyboardType="normal" imeTitle="" imeDescription="" imePlaceholder="" enterWhenClickOutside="false" />
         </GuiElement>
 

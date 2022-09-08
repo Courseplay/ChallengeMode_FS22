@@ -26,7 +26,7 @@ function AddPointsDialog:onOpen()
     self.extraInputDisableTime = 100
     FocusManager:setFocus(self.pointsInput)
     self.pointsInput.blockTime = 0
-    self.pointsInput:onFocusActive()
+    --self.pointsInput:onFocusActive()
 
     if self.pointsInput.imeActive or self.reasonInput.imeActive then
         if self.yesButton ~= nil then
@@ -70,6 +70,10 @@ function AddPointsDialog:sendCallback(clickOk)
     self.onTextEntered(self.target, points, reason, clickOk, self.callbackArgs)
 end
 
+function AddPointsDialog:isInputDisabled()
+	return self.extraInputDisableTime > 0
+end
+
 function AddPointsDialog:updateButtonVisibility()
     local showButtons = not self.pointsInput.imeActive or not self.reasonInput.imeActive
 
@@ -105,8 +109,10 @@ function AddPointsDialog:onEscPressed()
 end
 
 function AddPointsDialog:onClickOk()
-    print("confirmed")
     if not self:isInputDisabled() then
+        print("confirmed")
+        self:sendCallback(true)
+
         return false
     else
         return true
