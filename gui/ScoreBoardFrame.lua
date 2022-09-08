@@ -91,6 +91,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 
 	self.leftList:setDataSource(self)
 	self.rightList:setDataSource(self)
+	self.changelogList:setDataSource(self)
 
 	-- Save the current selected list to decide which buttons will be shown and which not
 	local orig = self.leftList.onFocusEnter
@@ -264,6 +265,7 @@ function ScoreBoardFrame:updateLists()
 	self.farms = self:getValidFarms()
 	self.leftList:reloadData()
 	self.rightList:reloadData()
+	self.changelogList:reloadData()
 	self.goal:setText(self.translations.goal(self.victoryPointManager:getGoal()))
 end
 
@@ -309,10 +311,9 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 		else
 			return g_challengeMod.isAdminModeActive and self.NUM_SETTINGS_ADMIN or self.NUM_SETTINGS
 		end
-	else
-		local farmId = self:getCurrentFarmId()
-
-		if not self.showChangelog then
+	elseif list == self.rightList then
+		if list:getIsVisible() then
+			local farmId = self:getCurrentFarmId()
 			local sx, ix = self.leftList:getSelectedPath()
 			local l = self.managers[sx](farmId)
 
@@ -325,8 +326,18 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 
 			return l:getNumberOfElements(section)
 		else
+			print("right list is invisible")
+			return 0
+		end
+	else
+		if list:getIsVisible() then
+			local farmId = self:getCurrentFarmId()
 			local points = g_victoryPointManager:getAdditionalPointsForFarm(farmId)
-			return #points
+			print("number of items: " .. tostring(#points or nil))
+			return #points or 0
+		else
+			print("changelog is invisible")
+			return 0
 		end
 	end
 end
@@ -357,7 +368,7 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 			cell:getAttribute("title"):setText(self.translations.adminPointsTitle)
 			cell:getAttribute("icon"):setVisible(false)
 		end
-	else
+	elseif list == self.rightList then
 		if not self.showChangelog then
 			local element = self:getElement(section, index)
 			if element then
@@ -367,16 +378,20 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 
 				cell:getAttribute("conversionValue"):setText(element:getFactorText())
 			end
-		else
-			local farmId = self:getCurrentFarmId()
-			local points = g_victoryPointManager:getAdditionalPointsForFarm(farmId)
-			local point = points[index]
-
-			cell:getAttribute("userName"):setText(point.addedBy)
-			cell:getAttribute("date"):setText(point.data)
-			cell:getAttribute("addedPoints"):setText(point.points)
-			--TODO: implement that double click on reason shows info dialog with reason
 		end
+	else
+		local farmId = self:getCurrentFarmId()
+		local points = g_victoryPointManager:getAdditionalPointsForFarm(farmId)
+		local point = points[index]
+		print("cell: " .. tostring(cell.attributes))
+		for k, v in pairs(cell) do
+			print("k: " .. tostring(k) .. "    v: " .. tostring(v))
+		end
+
+		cell:getAttribute("userName"):setText(point.addedBy)
+		cell:getAttribute("date"):setText(point.data)
+		cell:getAttribute("addedPoints"):setText(point.points)
+		--TODO: implement that double click on reason shows info dialog with reason
 	end
 end
 
