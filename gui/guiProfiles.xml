@@ -241,4 +241,12 @@
         <Value name="alignmentX" value="middle"/>
         <Value name="imageColor" value="$preset_colorTransparent"/>
     </Profile>
+
+	<Profile name="CmDialogTextInput" extends="dialogTextInput" with="anchorMiddleCenter">
+		<Value name="textSize" value=""/> 
+    </Profile>
+	<Profile name="CmDialogText" extends="dialogText" with="anchorMiddleLeft">
+		<Value name="size" value="60px 40px"/>
+    </Profile>
+
 </GUIProfiles>
