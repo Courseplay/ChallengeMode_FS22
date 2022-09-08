@@ -16,6 +16,15 @@ end
 
 function VictoryPointManager:registerXmlSchema(xmlSchema, baseXmlKey)
 	ScoreBoardList.registerXmlSchema(xmlSchema, baseXmlKey .. ".VictoryPoints")
+
+	baseXmlKey = baseXmlKey .. ".AdditionalPoints"
+	xmlSchema:register(XMLValueType.INT, baseXmlKey .. ".Farm(?)#id", "Id of Farm with additional Points")
+	baseXmlKey = baseXmlKey .. ".Farm(?)"
+	xmlSchema:register(XMLValueType.STRING, baseXmlKey .. ".Point(?)", "The reason why the additonal Point was added.")
+	baseXmlKey = baseXmlKey .. ".Farm(?).Point(?)"
+	xmlSchema:register(XMLValueType.INT, baseXmlKey .. "#points", "Value of how many Points this point is worth.", 0)
+	xmlSchema:register(XMLValueType.STRING, baseXmlKey .. "#date", "Documents when the additional Point was added.")
+	xmlSchema:register(XMLValueType.STRING, baseXmlKey .. "#addedBy", "Documents which user has added the additional Point")
 end
 
 function VictoryPointManager:registerConfigXmlSchema(xmlSchema, baseXmlKey)
@@ -48,10 +57,44 @@ end
 
 function VictoryPointManager:saveToXMLFile(xmlFile, baseXmlKey)
 	self.staticPointList:saveToXMLFile(xmlFile, baseXmlKey .. ".VictoryPoints", 0)
+
+	-- Save additional points to xml file
+	local idx = 0
+	baseXmlKey = baseXmlKey .. ".AdditionalPoints"
+	for farmId, points in pairs(self.additionalPoints) do
+		xmlFile:setValue(string.format(baseXmlKey .. ".Farm(%d)#id", idx), farmId)
+
+		local idx_point = 0
+		local xmlKeyForFarm = string.format(baseXmlKey .. ".Farm(%d).Point(%d)", idx, idx_point)
+		for _, point in pairs(points) do
+			xmlFile:setValue(xmlKeyForFarm .. "#points", point.points)
+			xmlFile:setValue(xmlKeyForFarm .. "#addedBy", point.addedBy)
+			xmlFile:setValue(xmlKeyForFarm .. "#date", point.date)
+			xmlFile:setValue(xmlKeyForFarm, point.reason)
+
+			idx_point = idx_point + 1
+		end
+		idx = idx + 1
+	end
 end
 
 function VictoryPointManager:loadFromXMLFile(xmlFile, baseXmlKey)
 	ScoreBoardList.loadFromXMLFile(self, xmlFile, baseXmlKey .. ".VictoryPoints")
+
+	-- Load additional points from xml file
+	baseXmlKey = baseXmlKey .. ".AdditionalPoints.Farm(%d)"
+	xmlFile:iterate(baseXmlKey, function (ix, key)
+		local farmId = xmlFile:getValue(key)
+
+		xmlFile:iterate(key .. ".Point(%d)", function (idx, farmKey)
+			local reason = xmlFile:getValue(farmKey)
+			local points = xmlFile:getValue(farmKey .. "#points")
+			local addedBy = xmlFile:getValue(farmKey .. "#addedBy")
+			local date = xmlFile:getValue(farmKey .. "#date")
+
+			self:addAdditionalPoint(farmId, CmUtil.packPointData(points, addedBy, date, reason))
+		end)
+	end)
 end
 
 function VictoryPointManager:writeStream(streamId, connection)
