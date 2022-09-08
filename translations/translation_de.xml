@@ -19,7 +19,7 @@
 		<text name="CM_menuBtn_admin_logout" 									text="Logout" />
 		<text name="CM_menuBtn_admin_changePassword" 							text="Passwort ändern" />
 		<text name="CM_menuBtn_change" 											text="Wert ändern" />
-		<text name="CM_menuBtn_changeFarmVisibility" 							text="Ändert Hof Sichtbarkeit" />
+		<text name="CM_menuBtn_changeFarmVisibility" 							text="Ändert Hofsichtbarkeit" />
 		<text name="CM_menuBtn_showChangelog" 									text="Zeige Änderungsverlauf" />
 		<text name="CM_menuBtn_hideChangelog" 									text="Änderungsverlauf ausblenden" />
 		<text name="CM_menuBtn_addPoints" 										text="Punkte hinzufügen" />

@@ -128,7 +128,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 				self:updateMenuButtons()
 				self:updateLists()
 			end,
-			callbackDisabled = self.isAdminLoginButtonDisabled,
+			callbackEnabled = self.isAdminLogoutButtonDisabled,
 		},
 		--- Logout admin button.
 		{
@@ -140,7 +140,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 				self:updateMenuButtons()
 				self:updateLists()
 			end,
-			callbackDisabled = self.isAdminLogoutButtonDisabled,
+			callbackEnabled = self.isAdminLoginButtonDisabled,
 		},
 		--- Change admin password.
 		{
@@ -151,7 +151,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 				self:onClickAdminChangePassword()
 				self:updateMenuButtons()
 			end,
-			callbackDisabled = self.isAdminChangePasswordButtonDisabled,
+			callbackEnabled = self.isAdminLoginButtonDisabled,
 		},
 		--- Changes a value button.
 		{
@@ -163,7 +163,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 				self:updateMenuButtons()
 				self:updateLists()
 			end,
-			callbackDisabled = self.isChangeButtonDisabled,
+			callbackEnabled = self.isChangeButtonEnabled,
 		},
 		--- Shows dialog to add points to selected farm
 		{
@@ -175,7 +175,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 				self:updateMenuButtons()
 				self:updateLists()
 			end,
-			callbackDisabled = self.isAddPointsButtonDisabled,
+			callbackEnabled = self.isAddPointsButtonEnabled,
 		},
 		--- Changes farm visibility.
 		{
@@ -186,7 +186,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 				self:onClickChangeFarmVisibility()
 				self:updateMenuButtons()
 			end,
-			callbackDisabled = self.isAddPointsButtonDisabled,
+			callbackEnabled = self.isAddPointsButtonEnabled,
 		},
 		--- Show all point changes for the selected farm.
 		{
@@ -197,7 +197,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 				self:onClickShowChangelog()
 				self:updateMenuButtons()
 			end,
-			callbackDisabled = self.isShowChangelogButtonDisabled
+			callbackEnabled = self.isShowChangelogButtonEnabled
 		},
 		--- Hide point changes for selected farm
 		{
@@ -208,7 +208,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 				self:onClickHideChangelog()
 				self:updateMenuButtons()
 			end,
-			callbackDisabled = self.isHideChangelogButtonDisabled
+			callbackEnabled = self.isHideChangelogButtonEnabled
 		}
 	}
 	self.managers = {
@@ -278,7 +278,7 @@ end
 function ScoreBoardFrame:updateMenuButtons()
 	self.menuButtonInfo = {}
 	for i, btn in pairs(self.menuButtons) do
-		if btn.callbackDisabled == nil or not btn.callbackDisabled(self) then
+		if btn.callbackEnabled ~= nil and btn.callbackEnabled(self) then
 			table.insert(self.menuButtonInfo, btn)
 		end
 	end
@@ -376,7 +376,9 @@ function ScoreBoardFrame:onListSelectionChanged(list, section, index)
 end
 
 function ScoreBoardFrame:onFocusEnterList(list)
-	if self.selectedList ~= nil then self.selectedList:clearElementSelection() end
+	if self.selectedList ~= nil then 
+		self.selectedList:clearElementSelection()
+	end
 	self.selectedList = list
 
 	if list == self.leftList and list:getSelectedSection() ~= 1 then
@@ -384,6 +386,10 @@ function ScoreBoardFrame:onFocusEnterList(list)
 
 		self:updateMenuButtons()
 	end
+end
+
+function ScoreBoardFrame:onDoubleClickCallback(list, section, index, cell)
+	print("double clicked cell")
 end
 
 function ScoreBoardFrame:getValidFarms()
@@ -516,20 +522,20 @@ function ScoreBoardFrame:isAdminChangePasswordButtonDisabled()
 	return not g_challengeMod.isAdminModeActive
 end
 
-function ScoreBoardFrame:isChangeButtonDisabled()
-	return not g_challengeMod.isAdminModeActive or self.selectedList ~= self.rightList
+function ScoreBoardFrame:isChangeButtonEnabled()
+	return g_challengeMod.isAdminModeActive and self.selectedList == self.rightList
 end
 
-function ScoreBoardFrame:isAddPointsButtonDisabled()
-	return not g_challengeMod.isAdminModeActive or self.selectedList ~= self.leftList or self.selectedList:getSelectedSection() ~= self.LEFT_SECTIONS.POINTS
+function ScoreBoardFrame:isAddPointsButtonEnabled()
+	return g_challengeMod.isAdminModeActive and self.selectedList == self.leftList and self.selectedList:getSelectedSection() == self.LEFT_SECTIONS.POINTS
 end
 
-function ScoreBoardFrame:isShowChangelogButtonDisabled()
-	return self.showChangelog or self.selectedList ~= self.leftList or self.selectedList:getSelectedSection() ~= self.LEFT_SECTIONS.POINTS
+function ScoreBoardFrame:isShowChangelogButtonEnabled()
+	return not self.showChangelog and self.selectedList == self.leftList and self.selectedList:getSelectedSection() == self.LEFT_SECTIONS.POINTS
 end
 
-function ScoreBoardFrame:isHideChangelogButtonDisabled()
-	return not self.showChangelog or self.selectedList ~= self.leftList or self.selectedList:getSelectedSection() ~= self.LEFT_SECTIONS.POINTS
+function ScoreBoardFrame:isHideChangelogButtonEnabled()
+	return self.showChangelog
 end
 
 ----------------------------------------------------
