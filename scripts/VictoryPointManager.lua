@@ -214,12 +214,15 @@ function VictoryPointManager:setGoal(newGoal, noEventSend)
 	end
 end
 
-function VictoryPointManager:addAdditionalPoint(farmId, point)
+function VictoryPointManager:addAdditionalPoint(farmId, point, noEvent)
 	if self.additionalPoints[farmId] == nil then
 		self.additionalPoints[farmId] = {}
 	end
 
 	table.insert(self.additionalPoints[farmId], point)
+	if noEvent then
+		AddPointsEvent.sendEvent(farmId, point)
+	end
 end
 
 g_victoryPointManager = VictoryPointManager.new()
