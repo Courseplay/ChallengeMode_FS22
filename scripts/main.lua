@@ -135,8 +135,6 @@ end
 function ChallengeMod:setupDialogs()
 	local dialog = AddPointsDialog.new()
 	g_gui:loadGui(Utils.getFilename("gui/dialogs/AddPointsDialog.xml", self.BASE_DIRECTORY), "AddPointsDialog", dialog, false)
-
-	print("loaded AddPointsDialog")
 end
 
 function ChallengeMod:registerXmlSchema()
