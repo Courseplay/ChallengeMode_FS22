@@ -21,7 +21,7 @@ function VictoryPointManager:registerXmlSchema(xmlSchema, baseXmlKey)
 	xmlSchema:register(XMLValueType.INT, baseXmlKey .. ".Farm(?)#id", "Id of Farm with additional Points")
 	baseXmlKey = baseXmlKey .. ".Farm(?)"
 	xmlSchema:register(XMLValueType.STRING, baseXmlKey .. ".Point(?)", "The reason why the additonal Point was added.")
-	baseXmlKey = baseXmlKey .. ".Farm(?).Point(?)"
+	baseXmlKey = baseXmlKey .. ".Point(?)"
 	xmlSchema:register(XMLValueType.INT, baseXmlKey .. "#points", "Value of how many Points this point is worth.", 0)
 	xmlSchema:register(XMLValueType.STRING, baseXmlKey .. "#date", "Documents when the additional Point was added.")
 	xmlSchema:register(XMLValueType.STRING, baseXmlKey .. "#addedBy", "Documents which user has added the additional Point")
