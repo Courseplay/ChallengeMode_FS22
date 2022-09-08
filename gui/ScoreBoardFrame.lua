@@ -310,18 +310,23 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 			return g_challengeMod.isAdminModeActive and self.NUM_SETTINGS_ADMIN or self.NUM_SETTINGS
 		end
 	else
-		local sx, ix = self.leftList:getSelectedPath()
 		local farmId = self:getCurrentFarmId()
-		local l = self.managers[sx](farmId)
 
-		if l == nil then
-			CmUtil.debug("Categories for not found %d", section)
-			printCallstack()
+		if not self.showChangelog then
+			local sx, ix = self.leftList:getSelectedPath()
+			local l = self.managers[sx](farmId)
 
-			return 0
+			if l == nil then
+				CmUtil.debug("Categories for not found %d", section)
+				printCallstack()
+
+				return 0
+			end
+
+			return l:getNumberOfElements(section)
+		else
+			return #self.additionalPoints[farmId]
 		end
-
-		return l:getNumberOfElements(section)
 	end
 end
 
@@ -352,13 +357,23 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 			cell:getAttribute("icon"):setVisible(false)
 		end
 	else
-		local element = self:getElement(section, index)
-		if element then
-			cell:getAttribute("title"):setText(element:getTitle())
+		if not self.showChangelog then
+			local element = self:getElement(section, index)
+			if element then
+				cell:getAttribute("title"):setText(element:getTitle())
 
-			cell:getAttribute("value"):setText(element:getText())
+				cell:getAttribute("value"):setText(element:getText())
 
-			cell:getAttribute("conversionValue"):setText(element:getFactorText())
+				cell:getAttribute("conversionValue"):setText(element:getFactorText())
+			end
+		else
+			local farmId = self:getCurrentFarmId()
+			local point = self.additionalPoints[farmId][index]
+
+			cell:getAttribute("userName"):setText(point.addedBy)
+			cell:getAttribute("date"):setText(point.data)
+			cell:getAttribute("addedPoints"):setText(point.points)
+			--TODO: implement that double click on reason shows info dialog with reason
 		end
 	end
 end
