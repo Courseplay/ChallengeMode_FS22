@@ -325,7 +325,8 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 
 			return l:getNumberOfElements(section)
 		else
-			return #self.additionalPoints[farmId]
+			local points = g_victoryPointManager:getAdditionalPointsForFarm(farmId)
+			return #points
 		end
 	end
 end
@@ -368,7 +369,8 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 			end
 		else
 			local farmId = self:getCurrentFarmId()
-			local point = self.additionalPoints[farmId][index]
+			local points = g_victoryPointManager:getAdditionalPointsForFarm(farmId)
+			local point = points[index]
 
 			cell:getAttribute("userName"):setText(point.addedBy)
 			cell:getAttribute("date"):setText(point.data)
@@ -517,12 +519,14 @@ function ScoreBoardFrame:onClickShowChangelog()
 	self.showChangelog = true
 
 	self:updateRightColumn()
+	self:updateLists()
 end
 
 function ScoreBoardFrame:onClickHideChangelog()
 	self.showChangelog = false
 
 	self:updateRightColumn()
+	self:updateLists()
 end
 
 function ScoreBoardFrame:isAdminLoginButtonDisabled()
