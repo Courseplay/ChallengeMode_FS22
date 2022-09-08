@@ -54,7 +54,12 @@ ScoreBoardFrame.translations = {
 		adminChangePassword = g_i18n:getText("CM_dialog_adminChangePasswordTitle"),
 		adminWrongPassword = g_i18n:getText("CM_dialog_adminWrongPassword"),
 		value = g_i18n:getText("CM_dialog_changeTitle"),
-		newGoal = g_i18n:getText("CM_dialog_newGoal")
+		newGoal = g_i18n:getText("CM_dialog_newGoal"),
+		errors = {
+			missingReason = g_i18n:getText("CM_dialog_addPoints_error_missingReason"),
+			zeroPoints = g_i18n:getText("CM_dialog_addPoints_error_zeroPoints"),
+			notANumber = g_i18n:getText("CM_dialog_addPoints_error_notANumber")
+		}
 	},
 	leftSections = {
 		"",
