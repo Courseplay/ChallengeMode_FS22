@@ -278,7 +278,7 @@ end
 function ScoreBoardFrame:updateMenuButtons()
 	self.menuButtonInfo = {}
 	for i, btn in pairs(self.menuButtons) do
-		if btn.callbackEnabled == nil and btn.callbackEnabled(self) then
+		if btn.callbackEnabled == nil or btn.callbackEnabled(self) then
 			table.insert(self.menuButtonInfo, btn)
 		end
 	end
