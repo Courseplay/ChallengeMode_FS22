@@ -10,7 +10,7 @@
 
 	<!--	<GuiElement type="flowLayout" profile="addPointsInputBoxDialog" id="pointsGroup"> -->
             <GuiElement type="text" profile="CmDialogText" text="$l10n_CM_dialog_addPoints_pointsText" position="3px 19px"/>
-            <GuiElement type="textInput" profile="CmDialogTextInput" position="0px 28px" id="pointsInput" onEnterPressed="onPointsEnterPressed" onEscPressed="onEscPressed" onFocus="onInputFocus" onLeave="onInputLeave" imeKeyboardType="normal" imeTitle="" imeDescription="" imePlaceholder="" enterWhenClickOutside="false" />
+            <GuiElement type="textInput" profile="CmDialogTextInput" position="0px 28px" text="0" id="pointsInput" onEnterPressed="onPointsEnterPressed" onEscPressed="onEscPressed" onFocus="onInputFocus" onLeave="onInputLeave" imeKeyboardType="normal" imeTitle="" imeDescription="" imePlaceholder="" enterWhenClickOutside="false" />
      <!--   </GuiElement> 
 
         <GuiElement type="flowLayout" profile="addPointsInputBoxDialog" id="reasonGroup">  -->
