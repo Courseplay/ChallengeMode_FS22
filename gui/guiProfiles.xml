@@ -236,11 +236,9 @@
 		<Value name="textDisabledColor" value="$preset_colorRed"/>
     </Profile>
 
-    <Profile name="addPointsInputBoxDialog" extends="baseReference" with="anchorTopLeft">
-        <Value name="size" value="600px 60px"/>
-        <Value name="position" value="0px 0px"/>
+    <Profile name="addPointsInputBoxDialog" extends="inputTextBos">
+        <Value name="size" value="600px 70px"/>
         <Value name="alignmentX" value="middle"/>
-        <Value name="alignmentY" value="middle"/>
-        <Value name="imageColor" value="$preset_colorDialogBackground"/>
+        <Value name="imageColor" value="$preset_colorTransparent"/>
     </Profile>
 </GUIProfiles>
