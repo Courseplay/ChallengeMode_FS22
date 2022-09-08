@@ -86,19 +86,16 @@ function VictoryPointManager:loadFromXMLFile(xmlFile, baseXmlKey)
 	baseXmlKey = baseXmlKey .. ".AdditionalPoints.Farm"
 	xmlFile:iterate(baseXmlKey, function (ix, key)
 		local farmId = xmlFile:getValue(key .. "#id")
-		print("load points for farm " .. tostring(farmId))
 
 		xmlFile:iterate(key .. ".Point", function (idx, farmKey)
 			local reason = xmlFile:getValue(farmKey)
 			local points = xmlFile:getValue(farmKey .. "#points")
 			local addedBy = xmlFile:getValue(farmKey .. "#addedBy")
 			local date = xmlFile:getValue(farmKey .. "#date")
-			print("add additional point")
 
 			self:addAdditionalPoint(farmId, CmUtil.packPointData(points, addedBy, date, reason))
 		end)
 	end)
-	print("loaded additional Points")
 end
 
 function VictoryPointManager:writeStream(streamId, connection)
