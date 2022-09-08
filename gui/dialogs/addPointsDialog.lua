@@ -71,19 +71,23 @@ function AddPointsDialog:sendCallback(clickOk)
                 text = ScoreBoardFrame.translations.dialogs.errors.missingReason,
                 dialogType = DialogElement.TYPE_WARNING
             })
+            self:onPointsEnterPressed()
+            return
         elseif points == 0 then
             g_gui:showInfoDialog({
                 text = ScoreBoardFrame.translations.dialogs.errors.zeroPoints,
                 dialogType = DialogElement.TYPE_WARNING
             })
+            self:onPointsEnterPressed()
+            return
         elseif points == nil then
             g_gui:showInfoDialog({
                 text = ScoreBoardFrame.translations.dialogs.errors.notANumber,
                 dialogType = DialogElement.TYPE_WARNING
             })
+            self:onPointsEnterPressed()
+            return
         end
-
-        return
     end
 
     self:close()
@@ -119,6 +123,7 @@ end
 
 function AddPointsDialog:onPointsEnterPressed()
     FocusManager:setFocus(self.reasonInput)
+    self.reasonInput:setForcePressed(true)
 end
 
 function AddPointsDialog:onReasonEnterPressed()
