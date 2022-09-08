@@ -61,9 +61,7 @@ ScoreBoardFrame.translations = {
 		g_i18n:getText("CM_leftList_section_two"),
 	},
 	changelogSections = {
-		g_i18n:getText("CM_changelogList_userName"),
-		g_i18n:getText("CM_changelogList_date"),
-		g_i18n:getText("CM_changelogList_addedPoints")
+		""
 	}
 
 }
