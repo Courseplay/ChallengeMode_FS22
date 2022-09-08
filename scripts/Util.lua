@@ -196,7 +196,7 @@ function CmUtil.createAdditionalPoint(value, userName, reason)
 	return {
 		points = value,
 		addedBy = userName,
-		date = os.date("%d.%m.%Y %H:%M"),
+		date = g_i18n:getCurrentDate() .. " " .. getDate("%H:%M"),
 		reason = reason
 	}
 end
