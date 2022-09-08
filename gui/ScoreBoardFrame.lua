@@ -554,12 +554,12 @@ function ScoreBoardFrame:openTextInputDialog(callbackFunc, args, title, ...)
 end
 
 function ScoreBoardFrame:showAddPointsDialog(farmId)
-	local dialog = g_gui:showDialog("AddPointsDialog")
+	local dialog = g_gui.guis.AddPointsDialog
 
 	if dialog ~= nil then
-		print("test")
-	else
-		print("dialog not found")
+		dialog.target:setCallback(self.onTextInputAddPoints, self, farmId)
+
+		g_gui:showDialog("AddPointsDialog")
 	end
 end
 
@@ -589,6 +589,15 @@ function ScoreBoardFrame:onTextInputChangeValue(text, clickOk, element)
 			element:onTextInput(text)
 			self:updateLists()
 		end
+	end
+end
+
+function ScoreBoardFrame:onTextInputAddPoints(points, reason, clickOk, farmId)
+	if clickOk then
+		local point = CmUtil.createAdditionalPoint(points, g_currentMission.playerNickname, reason)
+
+		g_victoryPointManager:addAdditionalPoint(farmId, point)
+		self:updateLists()
 	end
 end
 
