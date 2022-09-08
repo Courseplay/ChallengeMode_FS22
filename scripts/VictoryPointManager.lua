@@ -65,8 +65,9 @@ function VictoryPointManager:saveToXMLFile(xmlFile, baseXmlKey)
 		xmlFile:setValue(string.format(baseXmlKey .. ".Farm(%d)#id", idx), farmId)
 
 		local idx_point = 0
-		local xmlKeyForFarm = string.format(baseXmlKey .. ".Farm(%d).Point(%d)", idx, idx_point)
 		for _, point in pairs(points) do
+			local xmlKeyForFarm = string.format(baseXmlKey .. ".Farm(%d).Point(%d)", idx, idx_point)
+
 			xmlFile:setValue(xmlKeyForFarm .. "#points", point.points)
 			xmlFile:setValue(xmlKeyForFarm .. "#addedBy", point.addedBy)
 			xmlFile:setValue(xmlKeyForFarm .. "#date", point.date)
