@@ -80,6 +80,11 @@ function ScoreBoardFrame.new(target, custom_mt)
 	self.victoryPointManager = g_victoryPointManager
 	self.ruleManager = g_ruleManager
 	self.farms = {}
+	self.lists = {
+		self.leftList,
+		self.rightList,
+		self.changelogList
+	}
 	self.showChangelog = false
 	self.selectedList = self.leftList
 
@@ -89,9 +94,9 @@ end
 function ScoreBoardFrame:onGuiSetupFinished()
 	ScoreBoardFrame:superClass().onGuiSetupFinished(self)
 
-	self.leftList:setDataSource(self)
-	self.rightList:setDataSource(self)
-	self.changelogList:setDataSource(self)
+	for _, list in pairs(self.lists) do
+		list:setDataSource(self)
+	end
 
 	-- Save the current selected list to decide which buttons will be shown and which not
 	local orig = self.leftList.onFocusEnter
@@ -263,9 +268,9 @@ end
 function ScoreBoardFrame:updateLists()
 	self.victoryPointManager:update()
 	self.farms = self:getValidFarms()
-	self.leftList:reloadData()
-	self.rightList:reloadData()
-	self.changelogList:reloadData()
+	for _, list in pairs(self.lists) do
+		list:reloadData()
+	end
 	self.goal:setText(self.translations.goal(self.victoryPointManager:getGoal()))
 end
 
