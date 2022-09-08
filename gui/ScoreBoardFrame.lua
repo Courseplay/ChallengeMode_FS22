@@ -324,17 +324,15 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 
 			return l:getNumberOfElements(section)
 		else
-			print("right list is invisible")
 			return 0
 		end
 	else
 		if list:getIsVisible() then
 			local farmId = self:getCurrentFarmId()
-			local points = g_victoryPointManager:getAdditionalPointsForFarm(farmId)
-			print("number of items: " .. tostring(#points or nil))
+			local points = g_victoryPointManager:getAdditionalPointsForFarm(farmId) or {}
+
 			return #points or 0
 		else
-			print("changelog is invisible")
 			return 0
 		end
 	end
@@ -381,10 +379,6 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 		local farmId = self:getCurrentFarmId()
 		local points = g_victoryPointManager:getAdditionalPointsForFarm(farmId)
 		local point = points[index]
-		print("cell: " .. tostring(cell.attributes))
-		for k, v in pairs(cell) do
-			print("k: " .. tostring(k) .. "    v: " .. tostring(v))
-		end
 
 		cell:getAttribute("userName"):setText(point.addedBy)
 		cell:getAttribute("date"):setText(point.data)
@@ -416,10 +410,6 @@ function ScoreBoardFrame:onFocusEnterList(list)
 
 		self:updateMenuButtons()
 	end
-end
-
-function ScoreBoardFrame:onDoubleClickCallback(list, section, index, cell)
-	print("double clicked cell")
 end
 
 function ScoreBoardFrame:getValidFarms()
@@ -542,7 +532,7 @@ function ScoreBoardFrame:onClickHideChangelog()
 	self:updateLists()
 end
 
-function ScoreBoardFrame:onDoubleClickPoint(section, index, cell)
+function ScoreBoardFrame:onDoubleClickPoint(list, section, index, cell)
 	if self.selectedList == self.changelogList then
 		local farmId = self:getCurrentFarmId()
 		local point = g_victoryPointManager:getAdditionalPointsForFarm(farmId)[index]
