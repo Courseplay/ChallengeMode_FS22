@@ -7,7 +7,6 @@
         </GuiElement>
 
         <GuiElement type="empty" profile="ingameMenuSettingsBox" id="mainBox">
-
             <GuiElement type="empty" profile="ingameMenuPriceLeftColumn" id="leftColumn">
                 <GuiElement type="boxLayout" profile="ingameCalendarHeaderBox" id="tableHeaderBox" size="680px 104px">
                     <GuiElement type="text" profile="ingameMenuPriceHeader" size="340px 104px" id="leftColumnHeader" text="$l10n_CM_leftList_leftTitle"/>
@@ -62,7 +61,7 @@
                     <GuiElement type="text" profile="ingameMenuPriceHeader" size="160px 104px" text="$l10n_CM_changelogList_rightTitle" id="changelogList_rightTitle" textOffset="0 0" />
                 </GuiElement>
 
-                <GuiElement type="smoothList" profile="ingameMenuPriceList" id="changelogList" focusChangeTop="nil" focusChangeBottom="nil" listSectionHeader="section">
+                <GuiElement type="smoothList" profile="ingameMenuPriceList" id="changelogList" focusChangeTop="nil" focusChangeBottom="nil" listSectionHeader="section" onDoubleClick="onDoubleClickPoint">
                     <GuiElement type="listItem" profile="ingameMenuPriceListItem">
                         <GuiElement type="text" name="userName" profile="ingameMenuPriceSellpointTitle" />
 						<GuiElement type="text" name="date" profile="ingameMenuPriceItemBuyPrice" />

@@ -547,6 +547,18 @@ function ScoreBoardFrame:onClickHideChangelog()
 	self:updateLists()
 end
 
+function ScoreBoardFrame:onDoubleClickPoint(section, index, cell)
+	if self.selectedList == self.changelogList then
+		local farmId = self:getCurrentFarmId()
+		local point = g_victoryPointManager:getAdditionalPointsForFarm(farmId)[index]
+
+		g_gui:showInfoDialog({
+			dialogType = DialogElement.TYPE_INFO,
+			text = point.reason
+		})
+	end
+end
+
 function ScoreBoardFrame:isAdminLoginButtonDisabled()
 	return g_challengeMod.isAdminModeActive
 end
