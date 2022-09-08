@@ -48,7 +48,7 @@ function AddPointsDialog:onClose()
     self:updateButtonVisibility()
 end
 
-function AddPointsDialog:setCallback(onTextEntered, target, defaultPointsText, defaultReasonText, dialogPrompt, callbackArgs)
+function AddPointsDialog:setCallback(onTextEntered, target, callbackArgs, defaultPointsText, defaultReasonText, dialogPrompt)
     self.onTextEntered = onTextEntered or NO_CALLBACK
     self.target = target
     self.callbackArgs = callbackArgs
@@ -67,7 +67,9 @@ function AddPointsDialog:sendCallback(clickOk)
 
     self:close()
 
-    self.onTextEntered(self.target, points, reason, clickOk, self.callbackArgs)
+    if self.target ~= nil then
+        self.onTextEntered(self.target, points, reason, clickOk, self.callbackArgs)
+    end
 end
 
 function AddPointsDialog:isInputDisabled()
@@ -95,12 +97,10 @@ function AddPointsDialog:update(dt)
 end
 
 function AddPointsDialog:onPointsEnterPressed()
-    print("enter pressed while entering points")
     FocusManager:setFocus(self.reasonInput)
 end
 
 function AddPointsDialog:onReasonEnterPressed()
-    print("enter pressed while entering reason")
     return self:onClickOk()
 end
 
@@ -110,7 +110,6 @@ end
 
 function AddPointsDialog:onClickOk()
     if not self:isInputDisabled() then
-        print("confirmed")
         self:sendCallback(true)
 
         return false
