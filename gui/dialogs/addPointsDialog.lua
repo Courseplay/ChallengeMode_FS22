@@ -65,6 +65,27 @@ function AddPointsDialog:sendCallback(clickOk)
     local points = tonumber(self.pointsInput:getText())
     local reason = self.reasonInput:getText()
 
+    if clickOk then
+        if reason == "" then
+            g_gui:showInfoDialog({
+                text = ScoreBoardFrame.translations.dialogs.errors.missingReason,
+                dialogType = DialogElement.TYPE_WARNING
+            })
+        elseif points == 0 then
+            g_gui:showInfoDialog({
+                text = ScoreBoardFrame.translations.dialogs.errors.zeroPoints,
+                dialogType = DialogElement.TYPE_WARNING
+            })
+        elseif points == nil then
+            g_gui:showInfoDialog({
+                text = ScoreBoardFrame.translations.dialogs.errors.notANumber,
+                dialogType = DialogElement.TYPE_WARNING
+            })
+        end
+
+        return
+    end
+
     self:close()
 
     if self.target ~= nil then

@@ -37,6 +37,10 @@
 		<text name="CM_dialog_addPoints_pointsText"								text="Punkte"/>
 		<text name="CM_dialog_addPoints_reasonText"								text="Grund"/>
 
+		<text name="CM_dialog_addPoints_error_missingReason" 					text="Grund fehlt!"/>
+		<text name="CM_dialog_addPoints_error_zeroPoints" 						text="Die Punkte dürfen nicht 0 sein!"/>
+		<text name="CM_dialog_addPoints_error_notANumber" 						text="Punkte müssen eine Zahl sein!"/>
+
 		<text name="CM_VictoryPoints_leftTitle" 								text=""/>
 		<text name="CM_VictoryPoints_middleTitle" 								text="Faktor"/>
 		<text name="CM_VictoryPoints_rightTitle" 								text="Wert"/>

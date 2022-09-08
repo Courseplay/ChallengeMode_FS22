@@ -33,9 +33,13 @@
 		<text name="CM_dialog_adminWrongPassword"								text="Wrong password(%s)"/>
 		<text name="CM_dialog_newGoal" 											text="Enter the new goal."/>
 
-		<text name="CM_dialog_addPoints_title"									text="Punkte hinzufügen"/>
-		<text name="CM_dialog_addPoints_pointsText"								text="Punkte"/>
-		<text name="CM_dialog_addPoints_reasonText"								text="Grund"/>
+		<text name="CM_dialog_addPoints_title"									text="add Points"/>
+		<text name="CM_dialog_addPoints_pointsText"								text="Points"/>
+		<text name="CM_dialog_addPoints_reasonText"								text="Reason"/>
+
+		<text name="CM_dialog_addPoints_error_missingReason" 					text="Reason is missing!"/>
+		<text name="CM_dialog_addPoints_error_zeroPoints" 						text="Points cannot be 0!"/>
+		<text name="CM_dialog_addPoints_error_notANumber" 						text="Points have to be a number!"/>
 
 		<text name="CM_VictoryPoints_leftTitle"									text=""/>
 		<text name="CM_VictoryPoints_middleTitle"								text="Factor"/>
