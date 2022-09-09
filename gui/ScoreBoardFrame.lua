@@ -261,6 +261,8 @@ end
 
 function ScoreBoardFrame:onFrameClose()
 	ScoreBoardFrame:superClass().onFrameClose(self)
+
+	self.showChangelog = false
 end
 
 function ScoreBoardFrame:updateLists()
