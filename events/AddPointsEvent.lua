@@ -50,6 +50,6 @@ function AddPointsEvent.sendEvent(...)
     if g_server ~= nil then
         g_server:broadcastEvent(AddPointsEvent.new(...))
     else
-        g_client:getServerConnection():sendEvent(AddPointsEvent.new())
+        g_client:getServerConnection():sendEvent(AddPointsEvent.new(...))
     end
 end
