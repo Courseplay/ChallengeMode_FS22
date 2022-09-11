@@ -407,16 +407,12 @@ function ScoreBoardFrame:onListSelectionChanged(list, section, index)
 end
 
 function ScoreBoardFrame:onFocusEnterList(list)
-	if self.selectedList ~= nil then 
+	if self.selectedList ~= nil then
 		self.selectedList:clearElementSelection()
 	end
+
 	self.selectedList = list
-
-	if list == self.leftList and list:getSelectedSection() ~= 1 then
-		self.showChangelog = false
-
-		self:updateMenuButtons()
-	end
+	self:updateMenuButtons()
 end
 
 function ScoreBoardFrame:getValidFarms()
@@ -551,6 +547,26 @@ function ScoreBoardFrame:onDoubleClickPoint(list, section, index, cell)
 	end
 end
 
+function ScoreBoardFrame:onClickLeftListCallback(list, section, index, cell)
+	self.selectedList = self.leftList
+
+	if self.leftList:getSelectedSection() ~= self.LEFT_SECTIONS.POINTS then
+		self.showChangelog = false
+	end
+
+	self:updateMenuButtons()
+end
+
+function ScoreBoardFrame:onClickRightListCallback(list, section, index, cell)
+	self.selectedList = self.rightList
+	self:updateMenuButtons()
+end
+
+function ScoreBoardFrame:onClickChangelogListCallback(list, section, index, cell)
+	self.selectedList = self.changelogList
+	self:updateMenuButtons()
+end
+
 function ScoreBoardFrame:isAdminLoginButtonDisabled()
 	return g_challengeMod.isAdminModeActive
 end
@@ -607,6 +623,8 @@ function ScoreBoardFrame:showAddPointsDialog(farmId)
 		dialog.target:setCallback(self.onTextInputAddPoints, self, farmId)
 
 		g_gui:showDialog("AddPointsDialog")
+	else
+		print("dialog doesnt exist")
 	end
 end
 
