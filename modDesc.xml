@@ -64,6 +64,7 @@ Ingame UI mit eigenem Passwort zum Einstellen der Spielregeln.
 		<sourceFile filename="events/ChangeFarmVisibilityEvent.lua"/>
 		<sourceFile filename="events/ChangeGoalEvent.lua"/>
 		<sourceFile filename="events/MarkStartVehicleEvent.lua"/>
+		<sourceFile filename="events/AddPointsEvent.lua"/> 
 	</extraSourceFiles>
 
 	<l10n filenamePrefix="translations/translation" />

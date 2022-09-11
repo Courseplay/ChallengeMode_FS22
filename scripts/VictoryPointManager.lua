@@ -264,7 +264,7 @@ function VictoryPointManager:addAdditionalPoint(farmId, point, noEvent)
 	end
 
 	table.insert(self.additionalPoints[farmId], point)
-	if noEvent then
+	if noEvent == nil or noEvent == false then
 		AddPointsEvent.sendEvent(farmId, point)
 	end
 end
