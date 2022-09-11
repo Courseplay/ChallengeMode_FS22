@@ -41,7 +41,7 @@ function AddPointsEvent:run(connection)
     local point = CmUtil.packPointData(self.points, self.addedBy, self.date, self.reason)
 
     if not connection:getIsServer() then
-        g_server:broadcastEvent(AddPointsEvent.new(self.farmId, point))
+        g_server:broadcastEvent(AddPointsEvent.new(self.farmId, point), nil, connection)
     end
     g_victoryPointManager:addAdditionalPoint(self.farmId, point, true)
 end
