@@ -43,7 +43,7 @@ function AddPointsEvent:run(connection)
     if not connection:getIsServer() then
         g_server:broadcastEvent(AddPointsEvent.new(self.farmId, point))
     end
-    g_victoryPointManager:addAdditionalPoint(self.farmId, point)
+    g_victoryPointManager:addAdditionalPoint(self.farmId, point, true)
 end
 
 function AddPointsEvent.sendEvent(...)
