@@ -64,8 +64,8 @@
                 <GuiElement type="smoothList" profile="ingameMenuPriceList" id="changelogList" focusChangeTop="nil" focusChangeBottom="nil" listSectionHeader="section" onDoubleClick="onDoubleClickPoint" onClick="onClickChangelogListCallback">
                     <GuiElement type="listItem" profile="ingameMenuPriceListItem">
                         <GuiElement type="text" name="userName" profile="ingameMenuPriceSellpointTitle" />
-						<GuiElement type="text" name="date" profile="ingameMenuPriceItemBuyPrice" />
-						<GuiElement type="text" name="addedPoints" profile="ingameMenuPriceItemPrice" textOffset="-30px 0" />
+						<GuiElement type="text" name="date" profile="ingameMenuPriceItemPrice" textOffset="-181px 0px"/>
+						<GuiElement type="text" name="addedPoints" profile="ingameMenuPriceItemBuyPrice" />
                     </GuiElement>
 
 					<GuiElement type="listItem" profile="ingameMenuAnimalsListSectionHeader" name="section">
@@ -74,7 +74,7 @@
                 </GuiElement>
 
                 <GuiElement type="threePartBitmap" profile="verticalListSliderRightDocked" size="12px 652px" position="28px -104px">
-                    <GuiElement type="slider" profile="verticalListSliderBar" size="6px 644px" dataElementId="rightList" id="rightListSlider" />
+                    <GuiElement type="slider" profile="verticalListSliderBar" size="6px 644px" dataElementId="changelogList" id="rightListSlider" />
                 </GuiElement>
             </GuiElement>
         </GuiElement>

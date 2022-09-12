@@ -390,7 +390,6 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 		cell:getAttribute("userName"):setText(point.addedBy)
 		cell:getAttribute("date"):setText(point.date)
 		cell:getAttribute("addedPoints"):setText(point.points)
-		--TODO: implement that double click on reason shows info dialog with reason
 	end
 end
 
