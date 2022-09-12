@@ -26,7 +26,6 @@ function AddPointsDialog:onOpen()
     self.extraInputDisableTime = 100
     FocusManager:setFocus(self.pointsInput)
     self.pointsInput.blockTime = 0
-    --self.pointsInput:onFocusActive()
 
     if self.pointsInput.imeActive or self.reasonInput.imeActive then
         if self.yesButton ~= nil then
@@ -131,6 +130,7 @@ function AddPointsDialog:onReasonEnterPressed()
 end
 
 function AddPointsDialog:onEscPressed()
+    printCallstack()
     return self:onClickBack()
 end
 

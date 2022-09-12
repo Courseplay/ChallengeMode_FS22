@@ -192,6 +192,16 @@ function CmUtil.fixInGameMenuPage(frame, pageName, image, position, predicateFun
 	inGameMenu:rebuildTabList()
 end
 
+function CmUtil.fixMultipleTextInputElements(self, superFunc, action, value, eventUsed)
+	if not self.isCapturingInput then
+		eventUsed = superFunc(self, action, value, eventUsed)
+	end
+
+	return eventUsed
+end
+
+TextInputElement.inputEvent = Utils.overwrittenFunction(TextInputElement.inputEvent, CmUtil.fixMultipleTextInputElements)
+
 function CmUtil.createAdditionalPoint(value, userName, reason)
 	return {
 		points = value,
