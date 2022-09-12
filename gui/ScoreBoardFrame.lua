@@ -546,6 +546,18 @@ function ScoreBoardFrame:onDoubleClickPoint(list, section, index, cell)
 	end
 end
 
+function ScoreBoardFrame:onDoubleClickFarm(list, section, index, cell)
+	if section == self.LEFT_SECTIONS.POINTS and g_challengeMod.isAdminModeActive then
+		self:onClickAddPoints()
+	end
+end
+
+function ScoreBoardFrame:onDoubleClickValue(list, section, index, cell)
+	if g_challengeMod.isAdminModeActive then
+		self:onClickChange()
+	end
+end
+
 function ScoreBoardFrame:onClickLeftListCallback(list, section, index, cell)
 	self.selectedList = self.leftList
 
