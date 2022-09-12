@@ -155,7 +155,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 				self:onClickAdminChangePassword()
 				self:updateMenuButtons()
 			end,
-			callbackEnabled = self.isAdminLoginButtonDisabled,
+			callbackEnabled = self.isAdminChangePasswordButtonEnabled,
 		},
 		--- Changes a value button.
 		{
