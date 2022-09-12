@@ -471,7 +471,7 @@ end
 ----------------------------------------------------
 
 function ScoreBoardFrame:onClickAdminLogin()
-	self:openTextInputDialog(self.onTextInputAdminPassword, nil, self.translations.dialogs.admin,
+	self:openPasswortDialog(self.onTextInputAdminPassword, nil, self.translations.dialogs.admin,
 		self.challengeMod:getDefaultAdminPassword())
 end
 
@@ -586,8 +586,13 @@ function ScoreBoardFrame:isAdminLogoutButtonDisabled()
 	return not g_challengeMod.isAdminModeActive
 end
 
-function ScoreBoardFrame:isAdminChangePasswordButtonDisabled()
-	return not g_challengeMod.isAdminModeActive
+function ScoreBoardFrame:isAdminChangePasswordButtonEnabled()
+	local isMasterUser = false
+	local user = g_currentMission.userManager:getUserByUserId(g_currentMission.player.userId)
+	if user ~= nil then
+		isMasterUser = user:getIsMasterUser()
+	end
+	return g_challengeMod.isAdminModeActive and isMasterUser
 end
 
 function ScoreBoardFrame:isChangeButtonEnabled()
@@ -624,6 +629,21 @@ function ScoreBoardFrame:openTextInputDialog(callbackFunc, args, title, ...)
 		maxCharacters = 50,
 		confirmText = g_i18n:getText("button_ok"),
 		args = args
+	})
+end
+
+function ScoreBoardFrame:openPasswortDialog(callbackFunc, args, title, defaultPassword, ...)
+	title = string.format(title, defaultPassword)
+	if ... ~= nil then
+		title = string.format(title, ...)
+	end
+
+	g_gui:showPasswordDialog({
+		text = title,
+		callback = callbackFunc,
+		target = self,
+		args = args,
+		defaultPassword = defaultPassword
 	})
 end
 

@@ -28,7 +28,7 @@
 		<text name="CM_buttonText_unmarkStartVehicle" 							text="Kein Startfahrzeug" />
 
 		<text name="CM_dialog_changeTitle" 										text="Wert ändern" />
-		<text name="CM_dialog_adminTitle" 										text="Login(default: %s)" />
+		<text name="CM_dialog_adminTitle" 										text="Login" />
 		<text name="CM_dialog_adminChangePasswordTitle" 						text="Aktuelles Passwort: %s" />
 		<text name="CM_dialog_adminWrongPassword" 								text="Falsches Passwort! (%s)"/>
 		<text name="CM_dialog_newGoal" 											text="Gib das neue Ziel ein."/>
