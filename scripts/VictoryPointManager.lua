@@ -101,7 +101,8 @@ function VictoryPointManager:addBuildingsFactor(category, factorData, farmId, fa
 end
 
 function VictoryPointManager:addProductionsFactor(category, factorData, farmId, farm)
-	local value = VictoryPointsUtil.getTotalProductionValue(farmId)
+	local maxFillLevel = g_ruleManager:getGeneralRuleValue("maxFillLevel")
+	local value = VictoryPointsUtil.getTotalProductionValue(farmId, maxFillLevel)
 	category:addElement(VictoryPoint.createFromXml(factorData, value))
 end
 
