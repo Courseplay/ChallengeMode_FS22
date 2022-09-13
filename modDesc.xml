@@ -9,36 +9,53 @@
 
 	<description>
         <en><![CDATA[Challenge.
+Challengetime!
+This mod provides everything you need to create your own challange.
+Ingame UI with extra password to set the rules and values to your needs.
+The password can only be changed by the server admin.
 
-Settings:
-- Points for win.
-- Points per Money on Bank.
-- Points per fruit in storage.
-- Points per area (HA).
-- Storagelimit, with a certain amount in storage, no more points will be gained.
+The following Values can be set to get a point:
+- How much Money (without credits).
+- How many Liters on each fruit.
+- The amout of area you own (HA).
+- Animals when grown up.
+
+Additional Rules:
+- How many points for the win.
+- A Storagelimit, any amout abouve that value will not be count.
 - Helper limit 0-6.
 - Rent Vehicles on/off/Shop only.
 - Turn off specific mission types.
-- Set a Missionlimit from 0-8 per farm.
-- Credit on/off/limited.
+- Set a Missionlimit per farm from 0-8.
+- Credit on/off/limited(value).
+- Add or reduce points of a farm with a reason (e.g. won a challenge, punishment) with a complete log!
+- Hide a farm that doesn't participate in the challenge (e.g. LU)
 
-Ingame UI with own extra password to set the rules.
+TODO:
+- LDI example for 24/7 Server
 ]]></en>
 		<de><![CDATA[Wettkampfmodus.
+Challengetime!
+This mod provides everything you need to create your own challange.
+Ingame UI with extra password to set the rules and values to your needs.
+The password can only be changed by the server admin.
 
-Einstellungen:
-- Punkte zum Sieg.
-- Punkte für Geld auf dem Konto.
-- Punkte für Früchte im Lager.
-- Punkte für Fläche (HA).
-- Lagerlimit, ab welchem Lagerstand, gibt es keine Punkte mehr dazu.
-- Helferlimit von 0-6.
-- Fahrzeuge mieten an/aus/nur Shop.
-- Einzelne Missionstypen ein- und ausschalten.
-- Missionslimit pro Farm 0-8.
-- Kredit an/aus/ limitiert.
+The following Values can be set to get a point:
+- How much Money (without credits).
+- How many Liters on each fruit.
+- The amout of area you own (HA).
+- Animals when grown up.
 
-Ingame UI mit eigenem Passwort zum Einstellen der Spielregeln.
+Additional Rules:
+- How many points for the win.
+- A Storagelimit, any amout abouve that value will not be count.
+- Helper limit 0-6.
+- Rent Vehicles on/off/Shop only.
+- Turn off specific mission types.
+- Set a Missionlimit per farm from 0-8.
+- Credit on/off/limited(value).
+- Add or reduce points of a farm with a reason (e.g. won a challenge, punishment) with a complete log!
+- Hide a farm that doesn't participate in the challenge (e.g. LU)
 ]]></de>
     </description>
 
