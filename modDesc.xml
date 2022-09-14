@@ -22,7 +22,7 @@ The following Values can be set to get a point:
 
 Additional Rules:
 - How many points are needed to win
-- A storage limit. Anything abouve that value won't be count.
+- A storage limit. Anything above that value won't be count.
 - Helper limit 0-6.
 - Rent Vehicles for mission and shop/ only in the shop, or turn it off completly.
 - Turn off specific mission types.
