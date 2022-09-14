@@ -9,30 +9,30 @@
 
 	<description>
         <en><![CDATA[Challenge.
-Challengetime!
+Challenge Time!
 This mod provides everything you need to create your own challange.
-Ingame UI with extra password to set the rules and values to your needs.
+Custom Ingame UI with extra password to configure the rule set and values to your needs.
 The password can only be changed by the server admin.
 
 The following Values can be set to get a point:
 - How much Money (without credits).
-- How many Liters on each fruit.
-- The amout of area you own (HA).
+- How many Liters off each fruit.
+- The amount of area you own (HA).
 - Animals when grown up.
 
 Additional Rules:
-- How many points for the win.
-- A Storagelimit, any amout abouve that value will not be count.
+- How many points are needed to win
+- A storage limit. Anything abouve that value won't be count.
 - Helper limit 0-6.
-- Rent Vehicles on/off/Shop only.
+- Rent Vehicles for mission and shop/ only in the shop, or turn it off completly.
 - Turn off specific mission types.
-- Set a Missionlimit per farm from 0-8.
-- Credit on/off/limited(value).
+- Set a mission limit per farm from 0-8 missions active at the same time.
+- Loan on/off/limited to a specified value.
 - Add or reduce points of a farm with a reason (e.g. won a challenge, punishment) with a complete log!
 - Hide a farm that doesn't participate in the challenge (e.g. LU)
 
-TODO:
-- LDI example for 24/7 Server
+What is planed for the future:
+- Integration of the Limited Daily Income Mod into the rule set to configure those limits within the same UI
 ]]></en>
 		<de><![CDATA[Wettkampfmodus.
 Challengetime!
