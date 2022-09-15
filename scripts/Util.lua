@@ -109,8 +109,9 @@ function CmUtil.loadConfigCategories(xmlFile, baseXmlKey)
 						vText = getText("%s_%s_%s", textPrefix, categoryName, vText)
 					end
 				end
+				local tmp = xmlFile:getValue(valueKey, 1)
 				local value = {
-					value = xmlFile:getValue(valueKey, 1),
+					value = tmp < 0 and math.huge or tmp,
 					name = xmlFile:getValue(valueKey .. "#name"),
 					text = vText,
 				}

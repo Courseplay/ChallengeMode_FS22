@@ -139,6 +139,7 @@
 					<Value>50</Value>
 					<Value>75</Value>
 					<Value>100</Value>
+					<Value name="ANIMAL_NO_LIMIT" text="noLimit">-1</Value>
 				</Values>
 			</Element>
 		</Category>
@@ -156,7 +157,7 @@
 					<Value>8</Value>
 					<Value>9</Value>
 					<Value>10</Value>
-					<Value name="ANIMAL_NO_LIMIT" text="noLimit">5000</Value>
+					<Value name="ANIMAL_NO_LIMIT" text="noLimit">-1</Value>
 				</Values>
 			</Element>
 		</Category>

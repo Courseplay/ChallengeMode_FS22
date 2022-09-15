@@ -73,6 +73,7 @@
 		<text name="CM_Rules_general_creditLimit_deactivated" 					text="Deaktiviert"/>
 		<text name="CM_Rules_general_maxNumberOfAnimals_title" 					text="Maximale Anzahl zählender Tiere:"/>
 		<text name="CM_Rules_general_maxNumberOfAnimals_deactivated"			text="Deaktiviert"/>
+		<text name="CM_Rules_general_maxNumberOfAnimals_noLimit"				text="Kein Limit"/>
 
 		<text name="CM_Rules_visibleFarms_title" 								text="Farmen:"/>
 		<text name="CM_Rules_visibleFarms_visible" 								text="Sichtbar"/>
@@ -83,7 +84,7 @@
 		<text name="CM_Rules_missions_deactivated" 								text="Deaktiviert"/>
 
 		<text name="CM_Rules_animalHusbandryLimits_title" 						text="Tierstall Limits"/>
-		<text name="CM_Rules_animalHusbandryLimits_noLimit" 					text="kein Limit"/>
+		<text name="CM_Rules_animalHusbandryLimits_noLimit" 					text="Kein Limit"/>
 		<text name="CM_Rules_animalHusbandryLimits_deactivated" 				text="Deaktiviert"/>
 
 		<text name="unit_pointsShort" 											text="Pkt"/>
