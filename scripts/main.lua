@@ -127,6 +127,14 @@ function ChallengeMod:setupGui()
 	g_gui:loadGui(Utils.getFilename("gui/ScoreBoardFrame.xml", self.BASE_DIRECTORY), "ScoreBoardPage", frame, true)
 
 	CmUtil.fixInGameMenuPage(frame, "pageScoreBoard", self.image)
+	g_gui:loadProfiles(Utils.getFilename("gui/guiProfiles.xml", self.BASE_DIRECTORY))
+
+	self:setupDialogs()
+end
+
+function ChallengeMod:setupDialogs()
+	local dialog = AddPointsDialog.new()
+	g_gui:loadGui(Utils.getFilename("gui/dialogs/AddPointsDialog.xml", self.BASE_DIRECTORY), "AddPointsDialog", dialog, false)
 end
 
 function ChallengeMod:registerXmlSchema()

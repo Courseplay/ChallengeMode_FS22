@@ -11,20 +11,35 @@
 
 		<text name="CM_rightList_leftTitle" 									text="Goal: %d" />
 
+		<text name="CM_changelogList_leftTitle"									text="User Name"/>
+		<text name="CM_changelogList_middleTitle"								text="Date"/>
+		<text name="CM_changelogList_rightTitle"								text="Points"/>
+
 		<text name="CM_menuBtn_admin_login" 									text="Login" />
 		<text name="CM_menuBtn_admin_logout" 									text="Logout" />
 		<text name="CM_menuBtn_admin_changePassword"							text="Change password" />
 		<text name="CM_menuBtn_change" 											text="Change value" />
 		<text name="CM_menuBtn_changeFarmVisibility" 							text="Changes farm visibility" />
+		<text name="CM_menuBtn_showChangelog" 									text="Show Changelog" />
+		<text name="CM_menuBtn_hideChangelog" 									text="Hide Changelog" />
+		<text name="CM_menuBtn_addPoints" 										text="Add Points" />
 
 		<text name="CM_buttonText_markStartVehicle" 							text="starting vehicle" />
 		<text name="CM_buttonText_unmarkStartVehicle" 							text="no starting vehicle" />
 
 		<text name="CM_dialog_changeTitle" 										text="Change value" />
-		<text name="CM_dialog_adminTitle" 										text="Login (default: %s)" />
+		<text name="CM_dialog_adminTitle" 										text="Login" />
 		<text name="CM_dialog_adminChangePasswordTitle"							text="Current password: %s" />
-		<text name="CM_dialog_adminWrongPassword"								text="Wrong password(%s)"/>
+		<text name="CM_dialog_adminWrongPassword"								text="Wrong password (%s)"/>
 		<text name="CM_dialog_newGoal" 											text="Enter the new goal."/>
+
+		<text name="CM_dialog_addPoints_title"									text="add Points"/>
+		<text name="CM_dialog_addPoints_pointsText"								text="Points"/>
+		<text name="CM_dialog_addPoints_reasonText"								text="Reason"/>
+
+		<text name="CM_dialog_addPoints_error_missingReason" 					text="Reason is missing!"/>
+		<text name="CM_dialog_addPoints_error_zeroPoints" 						text="Points cannot be 0!"/>
+		<text name="CM_dialog_addPoints_error_notANumber" 						text="Points have to be a number!"/>
 
 		<text name="CM_VictoryPoints_leftTitle"									text=""/>
 		<text name="CM_VictoryPoints_middleTitle"								text="Factor"/>
