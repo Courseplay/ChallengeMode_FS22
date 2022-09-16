@@ -4,13 +4,18 @@ ScoreBoardFrame = {
 		MAIN_BOC = "mainBox",
 		LEFT_COLUMN = "leftColumn",
 		RIGHT_COLUMN = "rightColumn",
+		CHANGELOG_COLUMN = "changelogColumn",
 		LEFT_LIST = "leftList",
 		RIGHT_LIST = "rightList",
+		CHANGELOG_LIST = "changelogList",
 		LEFT_COLUMN_HEADER = "leftColumnHeader",
 		RIGHT_COLUMN_HEADER = "rightColumnHeader",
 		GOAL = "goal",
 		RIGHT_LIST_MIDDLE_TITLE = "rightList_middleTitle",
-		RIGHT_LIST_RIGHT_TITLE = "rightList_rightTitle"
+		RIGHT_LIST_RIGHT_TITLE = "rightList_rightTitle",
+		CHANGELOG_LEFT_TITLE = "changelogList_leftTitle",
+		CHANGELOG_MIDDLE_TITLE = "changelogList_middleTitle",
+		CHANGELOG_RIGHT_TITLE = "changelogList_rightTitle"
 	},
 	COLOR = {
 		GREEN = {
@@ -39,19 +44,30 @@ ScoreBoardFrame.translations = {
 		adminLogout = g_i18n:getText("CM_menuBtn_admin_logout"),
 		adminChangePassword = g_i18n:getText("CM_menuBtn_admin_changePassword"),
 		change = g_i18n:getText("CM_menuBtn_change"),
-		changeFarmVisibility = g_i18n:getText("CM_menuBtn_changeFarmVisibility")
+		changeFarmVisibility = g_i18n:getText("CM_menuBtn_changeFarmVisibility"),
+		showChangelog = g_i18n:getText("CM_menuBtn_showChangelog"),
+		hideChangelog = g_i18n:getText("CM_menuBtn_hideChangelog"),
+		addPoints = g_i18n:getText("CM_menuBtn_addPoints")
 	},
 	dialogs = {
 		admin = g_i18n:getText("CM_dialog_adminTitle"),
 		adminChangePassword = g_i18n:getText("CM_dialog_adminChangePasswordTitle"),
 		adminWrongPassword = g_i18n:getText("CM_dialog_adminWrongPassword"),
 		value = g_i18n:getText("CM_dialog_changeTitle"),
-		newGoal = g_i18n:getText("CM_dialog_newGoal")
+		newGoal = g_i18n:getText("CM_dialog_newGoal"),
+		errors = {
+			missingReason = g_i18n:getText("CM_dialog_addPoints_error_missingReason"),
+			zeroPoints = g_i18n:getText("CM_dialog_addPoints_error_zeroPoints"),
+			notANumber = g_i18n:getText("CM_dialog_addPoints_error_notANumber")
+		}
 	},
 	leftSections = {
 		"",
 		g_i18n:getText("CM_leftList_section_two"),
 	},
+	changelogSections = {
+		""
+	}
 
 }
 
@@ -67,6 +83,8 @@ function ScoreBoardFrame.new(target, custom_mt)
 	self.victoryPointManager = g_victoryPointManager
 	self.ruleManager = g_ruleManager
 	self.farms = {}
+	self.showChangelog = false
+	self.selectedList = self.leftList
 
 	return self
 end
@@ -76,6 +94,29 @@ function ScoreBoardFrame:onGuiSetupFinished()
 
 	self.leftList:setDataSource(self)
 	self.rightList:setDataSource(self)
+	self.changelogList:setDataSource(self)
+
+	-- Save the current selected list to decide which buttons will be shown and which not
+	local orig = self.leftList.onFocusEnter
+	function self.leftList.onFocusEnter(...)
+		orig(...)
+
+		self:onFocusEnterList(self.leftList)
+	end
+
+	orig = self.rightList.onFocusEnter
+	function self.rightList.onFocusEnter(...)
+		orig(...)
+
+		self:onFocusEnterList(self.rightList)
+	end
+
+	orig = self.changelogList.onFocusEnter
+	function self.changelogList.onFocusEnter(...)
+		orig(...)
+
+		self:onFocusEnterList(self.changelogList)
+	end
 
 	self.menuButtons = {
 		{
@@ -91,7 +132,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 				self:updateMenuButtons()
 				self:updateLists()
 			end,
-			callbackDisabled = self.isAdminLoginButtonDisabled,
+			callbackEnabled = self.isAdminLogoutButtonDisabled,
 		},
 		--- Logout admin button.
 		{
@@ -103,7 +144,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 				self:updateMenuButtons()
 				self:updateLists()
 			end,
-			callbackDisabled = self.isAdminLogoutButtonDisabled,
+			callbackEnabled = self.isAdminLoginButtonDisabled,
 		},
 		--- Change admin password.
 		{
@@ -114,7 +155,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 				self:onClickAdminChangePassword()
 				self:updateMenuButtons()
 			end,
-			callbackDisabled = self.isAdminChangePasswordButtonDisabled,
+			callbackEnabled = self.isAdminChangePasswordButtonEnabled,
 		},
 		--- Changes a value button.
 		{
@@ -126,7 +167,19 @@ function ScoreBoardFrame:onGuiSetupFinished()
 				self:updateMenuButtons()
 				self:updateLists()
 			end,
-			callbackDisabled = self.isChangeButtonDisabled,
+			callbackEnabled = self.isChangeButtonEnabled,
+		},
+		--- Shows dialog to add points to selected farm
+		{
+			profile = "buttonSelect",
+			inputAction = InputAction.MENU_ACTIVATE,
+			text = self.translations.menuButtons.addPoints,
+			callback = function()
+				CmUtil.try(self.onClickAddPoints, self)
+				self:updateMenuButtons()
+				self:updateLists()
+			end,
+			callbackEnabled = self.isAddPointsButtonEnabled,
 		},
 		--- Changes farm visibility.
 		{
@@ -137,8 +190,30 @@ function ScoreBoardFrame:onGuiSetupFinished()
 				self:onClickChangeFarmVisibility()
 				self:updateMenuButtons()
 			end,
-			callbackDisabled = self.isAdminLogoutButtonDisabled,
+			callbackEnabled = self.isAddPointsButtonEnabled,
 		},
+		--- Show all point changes for the selected farm.
+		{
+			profile = "buttonActivate",
+			inputAction = InputAction.MENU_CANCEL,
+			text = self.translations.menuButtons.showChangelog,
+			callback = function ()
+				self:onClickShowChangelog()
+				self:updateMenuButtons()
+			end,
+			callbackEnabled = self.isShowChangelogButtonEnabled
+		},
+		--- Hide point changes for selected farm
+		{
+			profile = "buttonActivate",
+			inputAction = InputAction.MENU_CANCEL,
+			text = self.translations.menuButtons.hideChangelog,
+			callback = function ()
+				self:onClickHideChangelog()
+				self:updateMenuButtons()
+			end,
+			callbackEnabled = self.isHideChangelogButtonEnabled
+		}
 	}
 	self.managers = {
 		function(...)
@@ -155,6 +230,9 @@ function ScoreBoardFrame:onGuiSetupFinished()
 		[self.rightList] = function()
 			local sx, ix = self.leftList:getSelectedPath()
 			return self.managers[sx]():getNumberOfElements()
+		end,
+		[self.changelogList] = function ()
+			return 1
 		end
 	}
 	self.sectionTitles = {
@@ -164,6 +242,9 @@ function ScoreBoardFrame:onGuiSetupFinished()
 		[self.rightList] = function(rsx)
 			local sx, ix = self.leftList:getSelectedPath()
 			return self.managers[sx]():getElement(rsx):getTitle()
+		end,
+		[self.changelogList] = function (sx)
+			return self.translations.changelogSections[sx]
 		end
 	}
 end
@@ -180,6 +261,8 @@ end
 
 function ScoreBoardFrame:onFrameClose()
 	ScoreBoardFrame:superClass().onFrameClose(self)
+
+	self.showChangelog = false
 end
 
 function ScoreBoardFrame:updateLists()
@@ -187,6 +270,7 @@ function ScoreBoardFrame:updateLists()
 	self.farms = self:getValidFarms()
 	self.leftList:reloadData()
 	self.rightList:reloadData()
+	self.changelogList:reloadData()
 	self.goal:setText(self.translations.goal(self.victoryPointManager:getGoal()))
 end
 
@@ -201,7 +285,7 @@ end
 function ScoreBoardFrame:updateMenuButtons()
 	self.menuButtonInfo = {}
 	for i, btn in pairs(self.menuButtons) do
-		if btn.callbackDisabled == nil or not btn.callbackDisabled(self) then
+		if btn.callbackEnabled == nil or btn.callbackEnabled(self) then
 			table.insert(self.menuButtonInfo, btn)
 		end
 	end
@@ -232,19 +316,32 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 		else
 			return g_challengeMod.isAdminModeActive and self.NUM_SETTINGS_ADMIN or self.NUM_SETTINGS
 		end
-	else
-		local sx, ix = self.leftList:getSelectedPath()
-		local farmId = self:getCurrentFarmId()
-		local l = self.managers[sx](farmId)
+	elseif list == self.rightList then
+		if list:getIsVisible() then
+			local farmId = self:getCurrentFarmId()
+			local sx, ix = self.leftList:getSelectedPath()
+			local l = self.managers[sx](farmId)
 
-		if l == nil then
-			CmUtil.debug("Categories for not found %d", section)
-			printCallstack()
+			if l == nil then
+				CmUtil.debug("Categories for not found %d", section)
+				printCallstack()
 
+				return 0
+			end
+
+			return l:getNumberOfElements(section)
+		else
 			return 0
 		end
+	else
+		if list:getIsVisible() then
+			local farmId = self:getCurrentFarmId()
+			local points = g_victoryPointManager:getAdditionalPointsForFarm(farmId) or {}
 
-		return l:getNumberOfElements(section)
+			return #points or 0
+		else
+			return 0
+		end
 	end
 end
 
@@ -274,29 +371,47 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 			cell:getAttribute("title"):setText(self.translations.adminPointsTitle)
 			cell:getAttribute("icon"):setVisible(false)
 		end
-	else
-		local element = self:getElement(section, index)
-		if element then
-			cell:getAttribute("title"):setText(element:getTitle())
+	elseif list == self.rightList then
+		if not self.showChangelog then
+			local element = self:getElement(section, index)
+			if element then
+				cell:getAttribute("title"):setText(element:getTitle())
 
-			cell:getAttribute("value"):setText(element:getText())
+				cell:getAttribute("value"):setText(element:getText())
 
-			cell:getAttribute("conversionValue"):setText(element:getFactorText())
+				cell:getAttribute("conversionValue"):setText(element:getFactorText())
+			end
 		end
+	else
+		local farmId = self:getCurrentFarmId()
+		local points = g_victoryPointManager:getAdditionalPointsForFarm(farmId)
+		local point = points[index]
+
+		cell:getAttribute("userName"):setText(point.addedBy)
+		cell:getAttribute("date"):setText(point.date)
+		cell:getAttribute("addedPoints"):setText(point.points)
 	end
 end
 
 function ScoreBoardFrame:onListSelectionChanged(list, section, index)
-	--TODO: separate between left and right list. 
-	-- This has to be done to separate between editing the factors on the right side and setting points on the left side for the selected farm. 
-	-- Also the protocol of the point editing needs to be opened for the selected farm. My plan is to create a protocol for each farm to keep it relativly clean and easy to read.
-	-- Maybe just print the protocol as the right list if the button is pressed.
 	if list == self.leftList then
-		--self.leftList:reloadData()
-		self.rightList:reloadData()
+		if not self.showChangelog then
+			self.rightList:reloadData()
+		else
+			self.changelogList:reloadData()
+		end
 	end
 	self:updateMenuButtons()
 	self:updateTitles()
+end
+
+function ScoreBoardFrame:onFocusEnterList(list)
+	if self.selectedList ~= nil then
+		self.selectedList:clearElementSelection()
+	end
+
+	self.selectedList = list
+	self:updateMenuButtons()
 end
 
 function ScoreBoardFrame:getValidFarms()
@@ -346,12 +461,17 @@ function ScoreBoardFrame:getElement(section, index)
 	return list:getElement(section, index)
 end
 
+function ScoreBoardFrame:updateRightColumn()
+	self.rightColumn:setVisible(not self.showChangelog)
+	self.changelogColumn:setVisible(self.showChangelog)
+end
+
 ----------------------------------------------------
 --- Button callbacks
 ----------------------------------------------------
 
 function ScoreBoardFrame:onClickAdminLogin()
-	self:openTextInputDialog(self.onTextInputAdminPassword, nil, self.translations.dialogs.admin,
+	self:openPasswortDialog(self.onTextInputAdminPassword, nil, self.translations.dialogs.admin,
 		self.challengeMod:getDefaultAdminPassword())
 end
 
@@ -386,8 +506,76 @@ function ScoreBoardFrame:onClickChange()
 	end
 end
 
+function ScoreBoardFrame:onClickAddPoints()
+	if self.selectedList ~= self.leftList or self.selectedList:getSelectedSection() ~= self.LEFT_SECTIONS.POINTS then
+		print("Error: Can't change points of no farm")
+		return
+	end
+
+	local farmId = self:getCurrentFarmId()
+	self:showAddPointsDialog(farmId)
+end
+
 function ScoreBoardFrame:onClickSetGoal()
 	self:openTextInputDialog(self.onTextInputChangeGoal, nil, self.translations.dialogs.newGoal)
+end
+
+function ScoreBoardFrame:onClickShowChangelog()
+	self.showChangelog = true
+
+	self:updateRightColumn()
+	self:updateLists()
+end
+
+function ScoreBoardFrame:onClickHideChangelog()
+	self.showChangelog = false
+
+	self:updateRightColumn()
+	self:updateLists()
+end
+
+function ScoreBoardFrame:onDoubleClickPoint(list, section, index, cell)
+	if self.selectedList == self.changelogList then
+		local farmId = self:getCurrentFarmId()
+		local point = g_victoryPointManager:getAdditionalPointsForFarm(farmId)[index]
+
+		g_gui:showInfoDialog({
+			dialogType = DialogElement.TYPE_INFO,
+			text = point.reason
+		})
+	end
+end
+
+function ScoreBoardFrame:onDoubleClickFarm(list, section, index, cell)
+	if section == self.LEFT_SECTIONS.POINTS and g_challengeMod.isAdminModeActive then
+		self:onClickAddPoints()
+	end
+end
+
+function ScoreBoardFrame:onDoubleClickValue(list, section, index, cell)
+	if g_challengeMod.isAdminModeActive then
+		self:onClickChange()
+	end
+end
+
+function ScoreBoardFrame:onClickLeftListCallback(list, section, index, cell)
+	self.selectedList = self.leftList
+
+	if self.leftList:getSelectedSection() ~= self.LEFT_SECTIONS.POINTS then
+		self.showChangelog = false
+	end
+
+	self:updateMenuButtons()
+end
+
+function ScoreBoardFrame:onClickRightListCallback(list, section, index, cell)
+	self.selectedList = self.rightList
+	self:updateMenuButtons()
+end
+
+function ScoreBoardFrame:onClickChangelogListCallback(list, section, index, cell)
+	self.selectedList = self.changelogList
+	self:updateMenuButtons()
 end
 
 function ScoreBoardFrame:isAdminLoginButtonDisabled()
@@ -398,12 +586,29 @@ function ScoreBoardFrame:isAdminLogoutButtonDisabled()
 	return not g_challengeMod.isAdminModeActive
 end
 
-function ScoreBoardFrame:isAdminChangePasswordButtonDisabled()
-	return not g_challengeMod.isAdminModeActive
+function ScoreBoardFrame:isAdminChangePasswordButtonEnabled()
+	local isMasterUser = false
+	local user = g_currentMission.userManager:getUserByUserId(g_currentMission.player.userId)
+	if user ~= nil then
+		isMasterUser = user:getIsMasterUser()
+	end
+	return g_challengeMod.isAdminModeActive and isMasterUser
 end
 
-function ScoreBoardFrame:isChangeButtonDisabled()
-	return not g_challengeMod.isAdminModeActive
+function ScoreBoardFrame:isChangeButtonEnabled()
+	return g_challengeMod.isAdminModeActive and self.selectedList == self.rightList
+end
+
+function ScoreBoardFrame:isAddPointsButtonEnabled()
+	return g_challengeMod.isAdminModeActive and self.selectedList == self.leftList and self.selectedList:getSelectedSection() == self.LEFT_SECTIONS.POINTS
+end
+
+function ScoreBoardFrame:isShowChangelogButtonEnabled()
+	return not self.showChangelog and self.selectedList == self.leftList and self.selectedList:getSelectedSection() == self.LEFT_SECTIONS.POINTS
+end
+
+function ScoreBoardFrame:isHideChangelogButtonEnabled()
+	return self.showChangelog
 end
 
 ----------------------------------------------------
@@ -425,6 +630,33 @@ function ScoreBoardFrame:openTextInputDialog(callbackFunc, args, title, ...)
 		confirmText = g_i18n:getText("button_ok"),
 		args = args
 	})
+end
+
+function ScoreBoardFrame:openPasswortDialog(callbackFunc, args, title, defaultPassword, ...)
+	title = string.format(title, defaultPassword)
+	if ... ~= nil then
+		title = string.format(title, ...)
+	end
+
+	g_gui:showPasswordDialog({
+		text = title,
+		callback = callbackFunc,
+		target = self,
+		args = args,
+		defaultPassword = defaultPassword
+	})
+end
+
+function ScoreBoardFrame:showAddPointsDialog(farmId)
+	local dialog = g_gui.guis.AddPointsDialog
+
+	if dialog ~= nil then
+		dialog.target:setCallback(self.onTextInputAddPoints, self, farmId)
+
+		g_gui:showDialog("AddPointsDialog")
+	else
+		print("dialog doesnt exist")
+	end
 end
 
 function ScoreBoardFrame:onTextInputAdminPassword(text, clickOk)
@@ -453,6 +685,15 @@ function ScoreBoardFrame:onTextInputChangeValue(text, clickOk, element)
 			element:onTextInput(text)
 			self:updateLists()
 		end
+	end
+end
+
+function ScoreBoardFrame:onTextInputAddPoints(points, reason, clickOk, farmId)
+	if clickOk then
+		local point = CmUtil.createAdditionalPoint(points, g_currentMission.playerNickname, reason)
+
+		g_victoryPointManager:addAdditionalPoint(farmId, point)
+		self:updateLists()
 	end
 end
 

@@ -192,3 +192,29 @@ function CmUtil.fixInGameMenuPage(frame, pageName, image, position, predicateFun
 
 	inGameMenu:rebuildTabList()
 end
+
+function CmUtil.fixMultipleTextInputElements(self, superFunc, action, value, eventUsed)
+	if not self.isCapturingInput then
+		eventUsed = superFunc(self, action, value, eventUsed)
+	end
+
+	return eventUsed
+end
+
+TextInputElement.inputEvent = Utils.overwrittenFunction(TextInputElement.inputEvent, CmUtil.fixMultipleTextInputElements)
+
+function CmUtil.createAdditionalPoint(value, userName, reason)
+	return {
+		points = value,
+		addedBy = userName,
+		date = g_i18n:getCurrentDate() .. " " .. getDate("%H:%M"),
+		reason = reason
+	}
+end
+
+function CmUtil.packPointData(points, addedBy, date, reason)
+	local point = CmUtil.createAdditionalPoint(points, addedBy, reason)
+	point.date = date
+
+	return point
+end

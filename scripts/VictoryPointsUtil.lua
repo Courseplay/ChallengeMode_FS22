@@ -22,6 +22,20 @@ function VictoryPointsUtil.getStorageAmount(farmId, maxFillLevel)
 			end
 		end
 	end
+
+	for _, production in pairs(g_currentMission.productionChainManager:getProductionPointsForFarmId(farmId)) do
+		local storage = production.storage
+
+		for fillType, _ in pairs(production.outputFillTypeIds) do
+			local fillLevel = storage:getFillLevel(fillType)
+
+			if totalFillLevels[fillType] == nil then
+				totalFillLevels[fillType] = 0
+			end
+			totalFillLevels[fillType] = totalFillLevels[fillType] + math.min(fillLevel, maxFillLevel)
+		end
+	end
+
 	CmUtil.debug("Total storage of: %.2f", totalFillLevel )
 	return totalFillLevels
 end
@@ -29,8 +43,8 @@ end
 function VictoryPointsUtil.getBaleAmount(farmId, maxFillLevel)
 	if farmId == nil then 
 		local fillTypes = {}
-		for i, bale in pairs(g_baleManager.bales) do 
-			for _,data in pairs(bale.fillTypes) do 
+		for i, bale in pairs(g_baleManager.bales) do
+			for _,data in pairs(bale.fillTypes) do
 				fillTypes[data.fillTypeIndex] = 1
 			end
 		end
@@ -158,11 +172,12 @@ function VictoryPointsUtil.getVehicleSellValue(farmId)
 	return value
 end
 
-function VictoryPointsUtil.getTotalProductionValue(farmId)
+function VictoryPointsUtil.getTotalProductionValue(farmId, maxFillLevel)
 	local value = 0
 	local productionPoints = g_currentMission.productionChainManager:getProductionPointsForFarmId(farmId)
+	maxFillLevel = maxFillLevel == Rule.MAX_FILL_LEVEL_DISABLED and math.huge or maxFillLevel
 	for i, production in pairs(productionPoints) do
-
+		--TODO: implement
 	end
 	return value
 end
