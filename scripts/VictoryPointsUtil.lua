@@ -12,7 +12,7 @@ function VictoryPointsUtil.getStorageAmount(farmId, maxFillLevel)
 		if usedStorages[storage] == nil and storage:getOwnerFarmId() == farmId and not storage.foreignSilo then
 			usedStorages[storage] = true
 			local fillLevels = storage:getFillLevels()
-			for fillType, v in pairs(fillLevels) do 
+			for fillType, v in pairs(fillLevels) do
 				CmUtil.debug("Storage fillType(%s) found.", g_fillTypeManager:getFillTypeNameByIndex(fillType))
 				totalFillLevel = totalFillLevel + v
 				if totalFillLevels[fillType] == nil then
@@ -83,6 +83,52 @@ function VictoryPointsUtil.getPalletAmount(farmId, maxFillLevel)
 	return palletFillLevels
 end
 
+function VictoryPointsUtil.getAnimalAmount(farmId, maxNumberOfAnimals)
+	if farmId == nil then
+		return VictoryPointsUtil.getAnimalTypes()
+	end
+
+	local numberOfAnimals = {}
+	for _, animalType in pairs(g_currentMission.animalSystem:getTypes()) do
+		local backupFunction = function ()
+			local animalTypeIndex = animalType.typeIndex
+			local husbandries = {}
+
+			for _, placeable in pairs(g_currentMission.husbandrySystem:getPlaceablesByFarm(farmId)) do
+				if placeable:getAnimalTypeIndex() == animalTypeIndex then
+					table.insert(husbandries, placeable)
+				end
+			end
+
+			return husbandries
+		end
+		--needed because giants function is buggy. maybe after a patch it will work as intended 
+		--but until then the backup function will be used. 
+		--Ive coded it this way so that giants' function will be used if it works without having to update our code.
+		local husbandries = {xpcall(function ()
+			return g_currentMission.husbandrySystem:getPlaceablesByFarm(farmId, animalType)
+		end, backupFunction)}
+
+		for _, husbandry in pairs(husbandries[2]) do
+			local clusters = husbandry:getClusters()
+			local numberOfAnimalsInHusbandary = 0
+
+			-- sums up each cluster that can reproduce itself. this is needed because each animal with a different age is stored in a different cluster.
+			for _, cluster in pairs(clusters) do
+				local animalSubType = g_currentMission.animalSystem:getSubTypeByIndex(cluster:getSubTypeIndex())
+
+				if cluster:getAge() >= animalSubType.reproductionMinAgeMonth then
+					numberOfAnimalsInHusbandary = numberOfAnimalsInHusbandary + cluster:getNumAnimals()
+				end
+			end
+
+			numberOfAnimals[animalType] = (numberOfAnimals[animalType] or 0) + math.min(numberOfAnimalsInHusbandary, maxNumberOfAnimals)
+		end
+	end
+
+	return numberOfAnimals
+end
+
 function VictoryPointsUtil.getTotalArea(farmId)
 	if farmId == nil then 
 		return 0
@@ -150,10 +196,45 @@ function VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
 	end
 end
 
+function VictoryPointsUtil.addAnimalTypeFactors(numberOfAnimals, category, factorData)
+	local orderedAnimalTypes = table.toList(numberOfAnimals)
+	local animalSystem = g_currentMission.animalSystem
+
+	table.sort(orderedAnimalTypes, function (a, b)
+			if type(a) == "number" then
+			a = g_currentMission.animalSystem:getSubTypeByIndex(a)
+			end
+			if type(b) == "number" then
+			b = g_currentMission.animalSystem:getSubTypeByIndex(b)
+			end
+
+		return a.name < b.name
+	end)
+
+	for _, animalType in pairs(orderedAnimalTypes) do
+		--while loading the savegame animalType is a number, but when im ingame and open the CM frame then animalType is a table.
+		--I don't know why but this is a workaround
+		if type(animalType) == "number" then
+			animalType = g_currentMission.animalSystem:getTypeByIndex(animalType)
+		end
+		--every animal type must have at least 1 sub type so this is always valid
+		local subTypeIndex = animalType.subTypes[1]
+		local subType = animalSystem:getSubTypeByIndex(subTypeIndex)
+		factorData.name = animalType.name
+		-- Assumption: All sub type fill types are named the same (like giants did)
+		factorData.title = g_fillTypeManager:getFillTypeTitleByIndex(subType.fillTypeIndex)
+		category:addElement(VictoryPoint.createFromXml(factorData, numberOfAnimals[animalType]))
+	end
+end
+
 function VictoryPointsUtil.getFillTypes()
 	local fillTypes = table.copy(g_fillTypeManager:getFillTypes())
-	for fillType, _ in pairs(VictoryPointManager.ignoredFillTypes)	 do 
+	for fillType, _ in pairs(VictoryPointManager.ignoredFillTypes) do
 		fillTypes[fillType] = nil
 	end
 	return fillTypes
+end
+
+function VictoryPointsUtil.getAnimalTypes()
+	return table.copy(g_currentMission.animalSystem:getTypes())
 end
