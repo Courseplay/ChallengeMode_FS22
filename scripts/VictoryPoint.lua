@@ -140,5 +140,8 @@ function VictoryPoint.readStream(streamId, connection)
 	local categoryName = streamReadString(streamId)
 	local name = streamReadString(streamId)
 	local value = streamReadFloat32(streamId)
+	print("getList: " .. tostring(g_victoryPointManager:getList()))
+	print("get element: " .. tostring(g_victoryPointManager:getList():getElementByName(categoryName, name)))
+	print("setFactor: " .. tostring(g_victoryPointManager:getList():getElementByName(categoryName, name):setFactor(value)))
 	g_victoryPointManager:getList():getElementByName(categoryName, name):setFactor(value)
 end
