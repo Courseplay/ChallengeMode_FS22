@@ -32,6 +32,7 @@ function ChangeElementEvent:readStream(streamId, connection)
 	local value = streamReadFloat32(streamId)
 	local ix = streamReadUInt8(streamId)
 	local element = self.TYPES[type].readStream(categoryName, categoryId, name, value, ix)
+
 	self:run(connection, element, type)
 end
 
@@ -50,6 +51,7 @@ function ChangeElementEvent:run(connection, element, type)
 	if not connection:getIsServer() then
 		g_server:broadcastEvent(ChangeElementEvent.new(element, type), nil, connection)
 	end
+	g_challengeMod.frame:updateLists()
 end
 
 function ChangeElementEvent.sendEvent(element, type)

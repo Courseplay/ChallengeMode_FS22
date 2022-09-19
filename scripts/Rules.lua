@@ -74,6 +74,7 @@ function Rule.readStream(categoryName, categoryId, name, value, ix)
 	local category = g_ruleManager:getList():getElement(categoryId)
 	local element = category:getElementByName(name)
 	element:setSavedValue(ix)
+
 	return element
 end
 
