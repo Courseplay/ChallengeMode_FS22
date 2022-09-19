@@ -66,10 +66,6 @@ function ScoreBoardList:addElement(element, ix)
 end
 
 function ScoreBoardList:getElement(index, ...)
-	for k,v in pairs(self.elements) do
-		print("k: " .. tostring(k) .. "    v: " .. tostring(v))
-	end
-
 	return self.elements[index]:getElement(...)
 end
 

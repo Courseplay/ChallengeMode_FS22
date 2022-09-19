@@ -32,15 +32,17 @@ function ScoreBoardElement:getFactorText()
 end
 
 function ScoreBoardElement:getValueToSave()
-	
 end
 
 function ScoreBoardElement:setSavedValue(value)
-	
 end
 
 function ScoreBoardElement:getName()
-	return self.name	
+	return self.name
+end
+
+function ScoreBoardElement:getFactor()
+	return 0 -- just needed for rules mp sync
 end
 
 function ScoreBoardElement:setParent(parent, id)
@@ -53,7 +55,6 @@ function ScoreBoardElement:getParent(parent)
 end
 
 function ScoreBoardElement:onTextInput(value)
-		
 end
 
 function ScoreBoardElement:isTextInputAllowed()
@@ -61,7 +62,7 @@ function ScoreBoardElement:isTextInputAllowed()
 end
 
 function ScoreBoardElement:onClick()
-		
+
 end
 
 function ScoreBoardElement:saveToXMLFile(xmlFile, baseXmlKey, ix)
@@ -83,7 +84,6 @@ function ScoreBoardElement.loadFromXMLFile(category, xmlFile, baseXmlKey)
 end
 
 function ScoreBoardElement:applyValues()
-
 end
 
 function ScoreBoardElement:writeJoinStream(streamId, connection)
