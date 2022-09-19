@@ -188,7 +188,7 @@ function ChallengeMod:saveToXMLFile(filename)
 end
 
 function ChallengeMod:saveStartVehicleAttributeToXMLFile(xmlFile, key, usedModNames)
-	xmlFile:setBool(key .. "#isStartVehicle", self.isStartVehicle)
+	xmlFile:setBool(key .. "#isStartVehicle", self.isStartVehicle or false)
 end
 
 Vehicle.saveToXMLFile = Utils.appendedFunction(Vehicle.saveToXMLFile, ChallengeMod.saveStartVehicleAttributeToXMLFile)

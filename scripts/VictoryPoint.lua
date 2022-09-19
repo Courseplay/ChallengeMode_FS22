@@ -8,6 +8,9 @@ VictoryPoint = {
 	end,
 	VOLUME_TEXT = function(liters)
 		return string.format("%.2f%s/%s", g_i18n:getFluid(liters), g_i18n:getText("unit_literShort"), g_i18n:getText("unit_pointsShort"))
+	end,
+	ANIMAL_TEXT = function (numberOfAnimals)
+		return string.format("%.2f%s/%s", numberOfAnimals, g_i18n:getText("unit_piecesShort"), g_i18n:getText("unit_pointsShort"))
 	end
 }
 local VictoryPoint_mt = Class(VictoryPoint, ScoreBoardElement)
@@ -38,6 +41,10 @@ function VictoryPoint:getValue()
 	if self.value == nil then
 		CmUtil.debug("Victory point value is nil: %s", self.name)
 		printCallstack()
+		return 0
+	end
+	-- division by 0 is not allowed
+	if self.factor == 0 then
 		return 0
 	end
 	return self.value / self.factor
