@@ -26,10 +26,10 @@ function ChangeElementEvent:readStream(streamId, connection)
 	local type = streamReadUIntN(streamId, self.SEND_NUM_BITS)
 	CmUtil.debug("ChangeElementEvent readStream type: %s", type)
 	local function getElement()
-		local e = self.TYPES[type].readStream(streamId, connection)
+		local e = 1
 		return e
 	end
-	local element = CmUtil.try(getElement)
+	local element = self.TYPES[type].readStream(streamId, connection)--CmUtil.try(getElement)
 	self:run(connection, element, type)
 end
 
