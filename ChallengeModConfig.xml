@@ -62,6 +62,7 @@
 			<IgnoredFillType>HORSE_DUN</IgnoredFillType>
 			<IgnoredFillType>CHICKEN</IgnoredFillType>
 			<IgnoredFillType>CHICKEN_ROOSTER</IgnoredFillType>
+			<IgnoredFillType>UNKNOWN</IgnoredFillType>
 		</IgnoredFillTypes>
 	</VictoryPoints>
 
