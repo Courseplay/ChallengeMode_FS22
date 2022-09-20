@@ -21,11 +21,11 @@ function ScoreBoardCategory:getTitle()
 end
 
 function ScoreBoardCategory:getName()
-	return self.name	
+	return self.name
 end
 
 function ScoreBoardCategory:setParent(parent, id)
-	self.parent = parent	
+	self.parent = parent
 	self.id = id
 end
 
@@ -47,11 +47,11 @@ function ScoreBoardCategory:getElement(index)
 end
 
 function ScoreBoardCategory:getElementByName(name)
-	if name == nil then 
+	if name == nil then
 		return self
 	end
-	for _, element in pairs(self.elements) do 
-		if element:getName() == name then 
+	for _, element in pairs(self.elements) do
+		if element:getName() == name then
 			return element
 		end
 	end
@@ -70,7 +70,6 @@ function ScoreBoardCategory:clear()
 end
 
 function ScoreBoardCategory:onTextInput(value)
-		
 end
 
 function ScoreBoardCategory:isTextInputAllowed()
@@ -78,7 +77,6 @@ function ScoreBoardCategory:isTextInputAllowed()
 end
 
 function ScoreBoardCategory:onClick()
-		
 end
 
 function ScoreBoardCategory:saveToXMLFile(xmlFile, baseXmlKey, ix)
@@ -103,7 +101,7 @@ end
 
 function ScoreBoardCategory:count()
 	local value = 0
-	for _, element in pairs(self.elements) do 
+	for _, element in pairs(self.elements) do
 		value = value + element:count()
 	end
 	return value
@@ -129,23 +127,23 @@ end
 
 function ScoreBoardCategory:applyValues(staticList)
 	local element = staticList:getElementByName(self.name)
-	if element then 
-		for i, e in ipairs(self.elements) do 
+	if element then
+		for i, e in ipairs(self.elements) do
 			e:applyValues(element)
-		end	
+		end
 	end
 end
 
 function ScoreBoardCategory:writeStream(streamId, ...)
 	streamWriteUInt8(streamId, #self.elements)
-	for i, element in ipairs(self.elements) do 
+	for i, element in ipairs(self.elements) do
 		streamWriteString(streamId, element:getName())
 		element:writeJoinStream(streamId, ...)
 	end
 end
 
 function ScoreBoardCategory:readStream(streamId, ...)
-	for i= 1, streamReadUInt8(streamId) do 
+	for i= 1, streamReadUInt8(streamId) do
 		local elementName = streamReadString(streamId)
 		local e = self:getElementByName(elementName)
 		e:readJoinStream(streamId, ...)

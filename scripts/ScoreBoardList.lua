@@ -70,7 +70,7 @@ function ScoreBoardList:getElement(index, ...)
 end
 
 function ScoreBoardList:getElementByName(name, ...)
-	for _, element in pairs(self.elements) do 
+	for _, element in pairs(self.elements) do
 		if element:getName() == name then 
 			return element:getElementByName(...)
 		end
@@ -95,7 +95,7 @@ end
 
 function ScoreBoardList:count()
 	local value = 0
-	for _, element in pairs(self.elements) do 
+	for _, element in pairs(self.elements) do
 		value = value + element:count()
 	end
 	return value
