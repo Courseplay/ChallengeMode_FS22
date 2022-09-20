@@ -136,9 +136,11 @@ function VictoryPoint:writeStream(streamId, connection)
 	streamWriteFloat32(streamId, self:getFactor())
 end
 
-function VictoryPoint.readStream(streamId, connection)
-	local categoryName = streamReadString(streamId)
-	local name = streamReadString(streamId)
-	local value = streamReadFloat32(streamId)
-	g_victoryPointManager:getList():getElementByName(categoryName, name):setFactor(value)
+function VictoryPoint.readStream(categoryName, categoryId, name, value, ix)
+	local element = g_victoryPointManager:getList():getElementByName(categoryName, name)
+	element:setFactor(value)
+	return element
+	print("getList: " .. tostring(g_victoryPointManager:getList()))
+	print("get element: " .. tostring(g_victoryPointManager:getList():getElementByName(categoryName, name)))
+	print("setFactor: " .. tostring(g_victoryPointManager:getList():getElementByName(categoryName, name):setFactor(value)))
 end
