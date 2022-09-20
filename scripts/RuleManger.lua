@@ -126,12 +126,17 @@ function RuleManager:getGeneralRuleValue(name)
 	return self.ruleList:getElementByName("general", name):getValue()
 end
 
+
 function RuleManager:getMissionRules()
 	return self.ruleList:getElementByName("missions"):getElements()
 end
 
 function RuleManager:getAnimalHusbandryLimitByName(name)
 	return self.ruleList:getElementByName("animalHusbandryLimits"):getElementByName(name)
+end
+
+function RuleManager:getRuleMaxValue(category, name)
+	return self.ruleList:getElementByName(category, name):getMaxValue()
 end
 
 g_ruleManager = RuleManager.new()

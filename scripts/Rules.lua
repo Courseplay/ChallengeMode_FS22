@@ -38,6 +38,17 @@ function Rule:getValue()
 	return self.values[self.currentIx]
 end
 
+function Rule:getMaxValue()
+	local maxValue = self.values[1]
+
+	for _, value in pairs(self.values) do
+		if value > maxValue then
+			maxValue = value
+		end
+	end
+	return maxValue
+end
+
 function Rule:onTextInput(value)
 
 end
@@ -91,7 +102,7 @@ end
 
 local function updateVehicleLeaseRule(screen, storeItem, vehicle, saleItem)
 	screen.leaseButton:setVisible(screen.leaseButton:getIsVisible() and
-		g_ruleManager:getGeneralRuleValue("leaseVehicle") ~= Rule.LEASE_VEHICLE_DEACTIVATED)
+		(g_challengeMod:getIsFarmVisible(g_currentMission:getFarmId()) and g_ruleManager:getGeneralRuleValue("leaseVehicle") ~= Rule.LEASE_VEHICLE_DEACTIVATED or not g_challengeMod:getIsFarmVisible(g_currentMission:getFarmId())))
 	screen.buttonsPanel:invalidateLayout()
 end
 
@@ -114,7 +125,7 @@ local function updateVehicleLeaseMissionRule(screen, superFunc, state, canLease)
 		screen:setMenuButtonInfoDirty()
 	end
 
-	if g_ruleManager:getGeneralRuleValue("leaseVehicle") ~= Rule.LEASE_VEHICLE_ALLOWED then
+	if g_challengeMod:getIsFarmVisible(g_currentMission:getFarmId()) and (g_ruleManager:getGeneralRuleValue("leaseVehicle") ~= Rule.LEASE_VEHICLE_ALLOWED or not g_challengeMod:getIsFarmVisible(g_currentMission:getFarmId())) then
 		superFunc(screen, state, false)
 		updateButtons()
 		return
@@ -147,6 +158,9 @@ MissionManager.updateMissions = Utils.appendedFunction(MissionManager.updateMiss
 
 local function hasFarmReachedMissionLimit(manager, superFunc, farmId, ...)
 	local maxMissions = g_ruleManager:getGeneralRuleValue("maxMissions")
+	if not g_challengeMod:getIsFarmVisible(farmId) then
+		maxMissions = g_ruleManager:getRuleMaxValue("general", "maxMissions")
+	end
 	local total = 0
 	for _, mission in ipairs(manager.missions) do
 		if mission.farmId == farmId and
@@ -160,20 +174,22 @@ end
 MissionManager.hasFarmReachedMissionLimit = Utils.overwrittenFunction(MissionManager.hasFarmReachedMissionLimit,
 	hasFarmReachedMissionLimit)
 
-function Rule.getCanStartHelper(currentMission, superFunc, permission, ...)
+function Rule.getCanStartHelper(currentMission, superFunc, permission, connection, farmId, checkClient)
 	if permission == "hireAssistant" and
-		g_ruleManager:getGeneralRuleValue("maxHelpers") <= #currentMission.aiSystem.activeJobVehicles then
+		(g_challengeMod:getIsFarmVisible(farmId) and g_ruleManager:getGeneralRuleValue("maxHelpers") <= #currentMission.aiSystem.activeJobVehicles or not g_challengeMod:getIsFarmVisible(farmId) and g_ruleManager:getRuleMaxValue("general", "maxHelpers") <= #currentMission.aiSystem.activeJobVehicles) then
 		return false
 	end
 
-	return superFunc(currentMission, permission, ...)
+	return superFunc(currentMission, permission, connection, farmId, checkClient)
 end
 
 function Rule.updateLoanRule(frame)
 	local limit = g_ruleManager:getGeneralRuleValue("creditLimit")
+	if not g_challengeMod:getIsFarmVisible(frame.playerFarm.farmId) then
+		limit = g_ruleManager:getRuleMaxValue("general", "creditLimit")
+	end
 	frame.borrowButtonInfo.disabled = frame.borrowButtonInfo.disabled or frame.playerFarm.loan >= limit
 	frame:setMenuButtonInfoDirty()
-
 end
 
 InGameMenuFinancesFrame.updateFinancesLoanButtons = Utils.appendedFunction(InGameMenuFinancesFrame.updateFinancesLoanButtons
@@ -191,7 +207,7 @@ function Rule.updateAnimalHusbandryLimitRules(husbandry, superFunc, ...)
 		end
 		local rule = g_ruleManager:getAnimalHusbandryLimitByName(animalType.name)
 		if rule then
-			if rule:getValue() <= #animalTypeList then
+			if g_challengeMod:getIsFarmVisible(g_currentMission:getFarmId()) and rule:getValue() <= #animalTypeList or not g_challengeMod:getIsFarmVisible(g_currentMission:getFarmId()) and rule:getMaxValue() <= #animalTypeList then
 				return false, g_i18n:getText("warning_tooManyHusbandries")
 			end
 		end
