@@ -11,20 +11,35 @@
 
 		<text name="CM_rightList_leftTitle" 									text="Goal: %d" />
 
+		<text name="CM_changelogList_leftTitle"									text="User Name"/>
+		<text name="CM_changelogList_middleTitle"								text="Date"/>
+		<text name="CM_changelogList_rightTitle"								text="Points"/>
+
 		<text name="CM_menuBtn_admin_login" 									text="Login" />
 		<text name="CM_menuBtn_admin_logout" 									text="Logout" />
 		<text name="CM_menuBtn_admin_changePassword"							text="Change password" />
 		<text name="CM_menuBtn_change" 											text="Change value" />
 		<text name="CM_menuBtn_changeFarmVisibility" 							text="Changes farm visibility" />
+		<text name="CM_menuBtn_showChangelog" 									text="Show Changelog" />
+		<text name="CM_menuBtn_hideChangelog" 									text="Hide Changelog" />
+		<text name="CM_menuBtn_addPoints" 										text="Add Points" />
 
 		<text name="CM_buttonText_markStartVehicle" 							text="starting vehicle" />
 		<text name="CM_buttonText_unmarkStartVehicle" 							text="no starting vehicle" />
 
 		<text name="CM_dialog_changeTitle" 										text="Change value" />
-		<text name="CM_dialog_adminTitle" 										text="Login (default: %s)" />
+		<text name="CM_dialog_adminTitle" 										text="Login" />
 		<text name="CM_dialog_adminChangePasswordTitle"							text="Current password: %s" />
-		<text name="CM_dialog_adminWrongPassword"								text="Wrong password(%s)"/>
+		<text name="CM_dialog_adminWrongPassword"								text="Wrong password (%s)"/>
 		<text name="CM_dialog_newGoal" 											text="Enter the new goal."/>
+
+		<text name="CM_dialog_addPoints_title"									text="add Points"/>
+		<text name="CM_dialog_addPoints_pointsText"								text="Points"/>
+		<text name="CM_dialog_addPoints_reasonText"								text="Reason"/>
+
+		<text name="CM_dialog_addPoints_error_missingReason" 					text="Reason is missing!"/>
+		<text name="CM_dialog_addPoints_error_zeroPoints" 						text="Points cannot be 0!"/>
+		<text name="CM_dialog_addPoints_error_notANumber" 						text="Points have to be a number!"/>
 
 		<text name="CM_VictoryPoints_leftTitle"									text=""/>
 		<text name="CM_VictoryPoints_middleTitle"								text="Factor"/>
@@ -47,10 +62,12 @@
 		<text name="CM_VictoryPoints_general_totalStorage_title"				text="Total storage"/>
 		<text name="CM_VictoryPoints_general_totalBales_title"					text="Total bales"/>
 		<text name="CM_VictoryPoints_general_totalPallets_title"				text="Total pallets"/>
+		<text name="CM_VictoryPoints_general_totalAnimals_title" 				text="Total Animals"/>
 
 		<text name="CM_VictoryPoints_storage_title"								text="Storage"/>
 		<text name="CM_VictoryPoints_bales_title"								text="Bale storage"/>
 		<text name="CM_VictoryPoints_pallets_title"								text="Pallet storage"/>
+		<text name="CM_VictoryPoints_animals_title" 							text="Animals"/>
 
 		<text name="CM_Rules_leftTitle"											text=""/>
 		<text name="CM_Rules_middleTitle"										text=""/>
@@ -69,6 +86,9 @@
 		<text name="CM_Rules_general_maxFillLevel_deactivated"					text="Deactivated"/>			
 		<text name="CM_Rules_general_creditLimit_title"							text="Credit limit:"/>
 		<text name="CM_Rules_general_creditLimit_deactivated"					text="Deactivated"/>
+		<text name="CM_Rules_general_maxNumberOfAnimals_title" 					text="Max amount of counting Animals:"/>
+		<text name="CM_Rules_general_maxNumberOfAnimals_deactivated"			text="Deaktiviert"/>
+		<text name="CM_Rules_general_maxNumberOfAnimals_noLimit"				text="No Limit"/>
 
 		<text name="CM_Rules_visibleFarms_title"								text="Farms:"/>
 		<text name="CM_Rules_visibleFarms_visible"								text="Visible"/>
@@ -83,5 +103,6 @@
 		<text name="CM_Rules_animalHusbandryLimits_deactivated"					text="Deactivated"/>
 
 		<text name="unit_pointsShort" 											text="Pt"/>
+		<text name="unit_piecesShort"											text="Pc."/>
 	</texts>
 </l10n>

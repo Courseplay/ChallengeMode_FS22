@@ -11,6 +11,7 @@
 			<Element dependency="storage" genericFunc="addDependentPoint" unitTextFunc="VOLUME_TEXT" name="totalStorage" default="1" />
 			<Element dependency="bales" genericFunc="addDependentPoint" unitTextFunc="VOLUME_TEXT" name="totalBales" default="1" />
 			<Element dependency="pallets" genericFunc="addDependentPoint" unitTextFunc="VOLUME_TEXT" name="totalPallets" default="1" />
+			<Element dependency="animals" genericFunc="addDependentPoint" unitTextFunc="ANIMAL_TEXT" name="totalAnimals" default="1" />
 		</Category>
 		<Category name="storage">
 			<Element genericFunc="addStorageFactors" unitTextFunc="VOLUME_TEXT" default="1" />
@@ -20,6 +21,9 @@
 		</Category>
 		<Category name="pallets">
 			<Element genericFunc="addPalletFactors" unitTextFunc="VOLUME_TEXT" default="1" />
+		</Category>
+		<Category name="animals">
+			<Element genericFunc="addAnimalFactors" unitTextFunc="ANIMAL_TEXT" default="1"/>
 		</Category>
 
 		<IgnoredFillTypes>
@@ -126,6 +130,19 @@
 					<Value>1000000</Value>
 				</Values>
 			</Element>
+			<Element name="maxNumberOfAnimals" default="1">
+				<Values>
+					<Value name="MAX_FILL_LEVEL_DISABLED" text="deactivated">0</Value>
+					<Value>5</Value>
+					<Value>10</Value>
+					<Value>20</Value>
+					<Value>30</Value>
+					<Value>50</Value>
+					<Value>75</Value>
+					<Value>100</Value>
+					<Value name="ANIMAL_NO_LIMIT" text="noLimit">-1</Value>
+				</Values>
+			</Element>
 		</Category>
 		<Category name="animalHusbandryLimits">
 			<Element genericFunc="addAnimalHusbandryLimitRules" default="1">
@@ -141,7 +158,7 @@
 					<Value>8</Value>
 					<Value>9</Value>
 					<Value>10</Value>
-					<Value name="ANIMAL_NO_LIMIT" text="noLimit">5000</Value>
+					<Value name="ANIMAL_NO_LIMIT" text="noLimit">-1</Value>
 				</Values>
 			</Element>
 		</Category>

@@ -8,6 +8,7 @@ function VictoryPointManager.new(custom_mt)
 	self.isServer = g_server
 
 	self.totalPoints = {}
+	self.additionalPoints = {}
 	self.pointList = {}
 
 	return self
@@ -15,6 +16,15 @@ end
 
 function VictoryPointManager:registerXmlSchema(xmlSchema, baseXmlKey)
 	ScoreBoardList.registerXmlSchema(xmlSchema, baseXmlKey .. ".VictoryPoints")
+
+	baseXmlKey = baseXmlKey .. ".AdditionalPoints"
+	xmlSchema:register(XMLValueType.INT, baseXmlKey .. ".Farm(?)#id", "Id of Farm with additional Points")
+	baseXmlKey = baseXmlKey .. ".Farm(?)"
+	xmlSchema:register(XMLValueType.STRING, baseXmlKey .. ".Point(?)", "The reason why the additonal Point was added.")
+	baseXmlKey = baseXmlKey .. ".Point(?)"
+	xmlSchema:register(XMLValueType.INT, baseXmlKey .. "#points", "Value of how many Points this point is worth.", 0)
+	xmlSchema:register(XMLValueType.STRING, baseXmlKey .. "#date", "Documents when the additional Point was added.")
+	xmlSchema:register(XMLValueType.STRING, baseXmlKey .. "#addedBy", "Documents which user has added the additional Point")
 end
 
 function VictoryPointManager:registerConfigXmlSchema(xmlSchema, baseXmlKey)
@@ -47,10 +57,45 @@ end
 
 function VictoryPointManager:saveToXMLFile(xmlFile, baseXmlKey)
 	self.staticPointList:saveToXMLFile(xmlFile, baseXmlKey .. ".VictoryPoints", 0)
+
+	-- Save additional points to xml file
+	local idx = 0
+	baseXmlKey = baseXmlKey .. ".AdditionalPoints"
+	for farmId, points in pairs(self.additionalPoints) do
+		xmlFile:setValue(string.format(baseXmlKey .. ".Farm(%d)#id", idx), farmId)
+
+		local idx_point = 0
+		for _, point in pairs(points) do
+			local xmlKeyForFarm = string.format(baseXmlKey .. ".Farm(%d).Point(%d)", idx, idx_point)
+
+			xmlFile:setValue(xmlKeyForFarm .. "#points", point.points)
+			xmlFile:setValue(xmlKeyForFarm .. "#addedBy", point.addedBy)
+			xmlFile:setValue(xmlKeyForFarm .. "#date", point.date)
+			xmlFile:setValue(xmlKeyForFarm, point.reason)
+
+			idx_point = idx_point + 1
+		end
+		idx = idx + 1
+	end
 end
 
 function VictoryPointManager:loadFromXMLFile(xmlFile, baseXmlKey)
 	ScoreBoardList.loadFromXMLFile(self, xmlFile, baseXmlKey .. ".VictoryPoints")
+
+	-- Load additional points from xml file
+	baseXmlKey = baseXmlKey .. ".AdditionalPoints.Farm"
+	xmlFile:iterate(baseXmlKey, function (ix, key)
+		local farmId = xmlFile:getValue(key .. "#id")
+
+		xmlFile:iterate(key .. ".Point", function (idx, farmKey)
+			local reason = xmlFile:getValue(farmKey)
+			local points = xmlFile:getValue(farmKey .. "#points")
+			local addedBy = xmlFile:getValue(farmKey .. "#addedBy")
+			local date = xmlFile:getValue(farmKey .. "#date")
+
+			self:addAdditionalPoint(farmId, CmUtil.packPointData(points, addedBy, date, reason))
+		end)
+	end)
 end
 
 function VictoryPointManager:writeStream(streamId, connection)
@@ -67,55 +112,63 @@ function VictoryPointManager:readStream(streamId, connection)
 	self.victoryGoal = streamReadInt32(streamId)
 end
 
-function VictoryPointManager:addStorageFactors(category, factorData, farmId, farm)
+function VictoryPointManager:addStorageFactors(category, factorData, farmId)
 	local maxFillLevel = g_ruleManager:getGeneralRuleValue("maxFillLevel")
 	local fillLevels = VictoryPointsUtil.getStorageAmount(farmId, maxFillLevel)
 	VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
 end
 
-function VictoryPointManager:addBaleFactors(category, factorData, farmId, farm)
+function VictoryPointManager:addBaleFactors(category, factorData, farmId)
 	local maxFillLevel = g_ruleManager:getGeneralRuleValue("maxFillLevel")
 	local fillLevels = VictoryPointsUtil.getBaleAmount(farmId, maxFillLevel)
 	VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
 end
 
-function VictoryPointManager:addPalletFactors(category, factorData, farmId, farm)
+function VictoryPointManager:addPalletFactors(category, factorData, farmId)
 	local maxFillLevel = g_ruleManager:getGeneralRuleValue("maxFillLevel")
 	local fillLevels = VictoryPointsUtil.getPalletAmount(farmId, maxFillLevel)
 	VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
 end
 
-function VictoryPointManager:addMoneyFactor(category, factorData, farmId, farm)
+function VictoryPointManager:addAnimalFactors(category, factorData, farmId)
+	local maxNumberOfAnimals = g_ruleManager:getGeneralRuleValue("maxNumberOfAnimals")
+	local numberOfAnimals = VictoryPointsUtil.getAnimalAmount(farmId, maxNumberOfAnimals)
+	VictoryPointsUtil.addAnimalTypeFactors(numberOfAnimals, category, factorData)
+end
+
+function VictoryPointManager:addMoneyFactor(category, factorData, farmId)
+	local farm = g_farmManager:getFarmById(farmId)
 	local money = farm and farm.money - farm.loan or 0
 	category:addElement(VictoryPoint.createFromXml(factorData, money))
 end
 
-function VictoryPointManager:addAreaFactor(category, factorData, farmId, farm)
+function VictoryPointManager:addAreaFactor(category, factorData, farmId)
 	local area = VictoryPointsUtil.getTotalArea(farmId)
 	category:addElement(VictoryPoint.createFromXml(factorData, area))
 end
 
-function VictoryPointManager:addBuildingsFactor(category, factorData, farmId, farm)
+function VictoryPointManager:addBuildingsFactor(category, factorData, farmId)
 	local value = VictoryPointsUtil.getTotalBuildingSellValue(farmId)
 	category:addElement(VictoryPoint.createFromXml(factorData, value))
 end
 
-function VictoryPointManager:addProductionsFactor(category, factorData, farmId, farm)
-	local value = VictoryPointsUtil.getTotalProductionValue(farmId)
+function VictoryPointManager:addProductionsFactor(category, factorData, farmId)
+	local maxFillLevel = g_ruleManager:getGeneralRuleValue("maxFillLevel")
+	local value = VictoryPointsUtil.getTotalProductionValue(farmId, maxFillLevel)
 	category:addElement(VictoryPoint.createFromXml(factorData, value))
 end
 
-function VictoryPointManager:addVehiclesFactor(category, factorData, farmId, farm)
+function VictoryPointManager:addVehiclesFactor(category, factorData, farmId)
 	local value = VictoryPointsUtil.getVehicleSellValue(farmId)
 	category:addElement(VictoryPoint.createFromXml(factorData, value))
 end
 
-function VictoryPointManager:addDependentPoint(category, factorData, farmId, farm, dependency)
+function VictoryPointManager:addDependentPoint(category, factorData, farmId, dependency)
 	CmUtil.debug("Dependent: %s, points: %s", factorData.name, dependency:count() or 0)
 	category:addElement(VictoryPoint.createFromXml(factorData, farmId ~= nil and dependency:count() or 0))
 end
 
-function VictoryPointManager:getNewPointList(farmId, farm)
+function VictoryPointManager:getNewPointList(farmId)
 	local dependedPoints = {}
 	local pointList = ScoreBoardList.new("victoryPoints", self.titles)
 	for _, categoryData in ipairs(self.configData) do
@@ -125,7 +178,7 @@ function VictoryPointManager:getNewPointList(farmId, farm)
 				if pointData.genericFunc == nil then
 					category:addElement(VictoryPoint.createFromXml(pointData))
 				else
-					self[pointData.genericFunc](self, category, pointData, farmId, farm)
+					self[pointData.genericFunc](self, category, pointData, farmId)
 				end
 			else
 				table.insert(dependedPoints, {
@@ -145,16 +198,28 @@ function VictoryPointManager:getNewPointList(farmId, farm)
 				category:addElement(VictoryPoint.createFromXml(point.data), point.pIx)
 			else
 				local dependency = pointList:getElementByName(point.data.dependency)
-				self[point.data.genericFunc](self, category, point.data, farmId, farm, dependency)
+				self[point.data.genericFunc](self, category, point.data, farmId, dependency)
 			end
 		end
 	end
 	return pointList
 end
 
-function VictoryPointManager:calculatePoints(farmId, farm)
-	self.pointList[farmId] = self:getNewPointList(farmId, farm)
-	self.totalPoints[farmId] = self.pointList[farmId]:count()
+function VictoryPointManager:calculatePoints(farmId)
+	self.pointList[farmId] = self:getNewPointList(farmId)
+	self.totalPoints[farmId] = self.pointList[farmId]:count() + self:sumAdditionalPoints(farmId)
+end
+
+function VictoryPointManager:sumAdditionalPoints(farmId)
+	local sumPoints = 0
+
+	if self.additionalPoints[farmId] ~= nil then
+		for _, point in pairs(self.additionalPoints[farmId]) do
+			sumPoints = sumPoints + point.points
+		end
+	end
+
+	return sumPoints
 end
 
 function VictoryPointManager:update()
@@ -165,7 +230,7 @@ function VictoryPointManager:update()
 		local farmId = farm.farmId
 		if CmUtil.isValidFarm(farmId, farm) then
 			CmUtil.debug("Calculating points for farm id: %d", farmId)
-			self:calculatePoints(farmId, farm)
+			self:calculatePoints(farmId)
 		end
 	end
 end
@@ -182,6 +247,10 @@ function VictoryPointManager:getTotalPoints(farmId)
 	return self.totalPoints[farmId]
 end
 
+function VictoryPointManager:getAdditionalPointsForFarm(farmId)
+	return self.additionalPoints[farmId]
+end
+
 function VictoryPointManager:isVictoryGoalReached(farmId)
 	return self.totalPoints[farmId] > self.victoryGoal
 end
@@ -194,6 +263,17 @@ function VictoryPointManager:setGoal(newGoal, noEventSend)
 	self.victoryGoal = tonumber(newGoal)
 	if noEventSend == nil or noEventSend == false then
 		ChangeGoalEvent.sendEvent(self.victoryGoal)
+	end
+end
+
+function VictoryPointManager:addAdditionalPoint(farmId, point, noEvent)
+	if self.additionalPoints[farmId] == nil then
+		self.additionalPoints[farmId] = {}
+	end
+
+	table.insert(self.additionalPoints[farmId], 1, point)
+	if noEvent == nil or noEvent == false then
+		AddPointsEvent.sendEvent(farmId, point)
 	end
 end
 

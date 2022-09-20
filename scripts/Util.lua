@@ -109,8 +109,9 @@ function CmUtil.loadConfigCategories(xmlFile, baseXmlKey)
 						vText = getText("%s_%s_%s", textPrefix, categoryName, vText)
 					end
 				end
+				local tmp = xmlFile:getValue(valueKey, 1)
 				local value = {
-					value = xmlFile:getValue(valueKey, 1),
+					value = tmp < 0 and math.huge or tmp,
 					name = xmlFile:getValue(valueKey .. "#name"),
 					text = vText,
 				}
@@ -190,4 +191,30 @@ function CmUtil.fixInGameMenuPage(frame, pageName, image, position, predicateFun
 	end
 
 	inGameMenu:rebuildTabList()
+end
+
+function CmUtil.fixMultipleTextInputElements(self, superFunc, action, value, eventUsed)
+	if not self.isCapturingInput then
+		eventUsed = superFunc(self, action, value, eventUsed)
+	end
+
+	return eventUsed
+end
+
+TextInputElement.inputEvent = Utils.overwrittenFunction(TextInputElement.inputEvent, CmUtil.fixMultipleTextInputElements)
+
+function CmUtil.createAdditionalPoint(value, userName, reason)
+	return {
+		points = value,
+		addedBy = userName,
+		date = g_i18n:getCurrentDate() .. " " .. getDate("%H:%M"),
+		reason = reason
+	}
+end
+
+function CmUtil.packPointData(points, addedBy, date, reason)
+	local point = CmUtil.createAdditionalPoint(points, addedBy, reason)
+	point.date = date
+
+	return point
 end

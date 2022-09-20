@@ -127,6 +127,14 @@ function ChallengeMod:setupGui()
 	g_gui:loadGui(Utils.getFilename("gui/ScoreBoardFrame.xml", self.BASE_DIRECTORY), "ScoreBoardPage", frame, true)
 
 	CmUtil.fixInGameMenuPage(frame, "pageScoreBoard", self.image)
+	g_gui:loadProfiles(Utils.getFilename("gui/guiProfiles.xml", self.BASE_DIRECTORY))
+
+	self:setupDialogs()
+end
+
+function ChallengeMod:setupDialogs()
+	local dialog = AddPointsDialog.new()
+	g_gui:loadGui(Utils.getFilename("gui/dialogs/AddPointsDialog.xml", self.BASE_DIRECTORY), "AddPointsDialog", dialog, false)
 end
 
 function ChallengeMod:registerXmlSchema()
@@ -180,7 +188,7 @@ function ChallengeMod:saveToXMLFile(filename)
 end
 
 function ChallengeMod:saveStartVehicleAttributeToXMLFile(xmlFile, key, usedModNames)
-	xmlFile:setBool(key .. "#isStartVehicle", self.isStartVehicle)
+	xmlFile:setBool(key .. "#isStartVehicle", self.isStartVehicle or false)
 end
 
 Vehicle.saveToXMLFile = Utils.appendedFunction(Vehicle.saveToXMLFile, ChallengeMod.saveStartVehicleAttributeToXMLFile)
