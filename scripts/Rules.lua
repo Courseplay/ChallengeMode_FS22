@@ -125,7 +125,7 @@ local function updateVehicleLeaseMissionRule(screen, superFunc, state, canLease)
 		screen:setMenuButtonInfoDirty()
 	end
 
-	if g_challengeMod:getIsFarmVisible(g_currentMission:getFarmId()) and g_ruleManager:getGeneralRuleValue("leaseVehicle") ~= Rule.LEASE_VEHICLE_ALLOWED or not g_challengeMod:getIsFarmVisible(g_currentMission:getFarmId()) then
+	if g_challengeMod:getIsFarmVisible(g_currentMission:getFarmId()) and (g_ruleManager:getGeneralRuleValue("leaseVehicle") ~= Rule.LEASE_VEHICLE_ALLOWED or not g_challengeMod:getIsFarmVisible(g_currentMission:getFarmId())) then
 		superFunc(screen, state, false)
 		updateButtons()
 		return
