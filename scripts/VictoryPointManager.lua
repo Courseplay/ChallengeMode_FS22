@@ -53,6 +53,8 @@ function VictoryPointManager:loadConfigData(xmlFile, baseXmlKey)
 	end)
 
 	self.staticPointList = self:getNewPointList()
+	local storageCategory = self.staticPointList:getElementByName("storage"):clone()
+	self.staticPointList:mergeElements(storageCategory, "storage", "bales", "pallets")
 end
 
 function VictoryPointManager:saveToXMLFile(xmlFile, baseXmlKey)
