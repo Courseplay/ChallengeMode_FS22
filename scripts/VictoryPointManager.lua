@@ -53,9 +53,11 @@ function VictoryPointManager:loadConfigData(xmlFile, baseXmlKey)
 	end)
 
 	self.staticPointList = self:getNewPointList()
-	local storageCategory = self.staticPointList:getElementByName("storage")
+	self.fillTypePointList = self.staticPointList:clone()
+	local storageCategory = self.fillTypePointList:getElementByName("storage")
 	storageCategory = ScoreBoardCategory.new(storageCategory:getName(), storageCategory:getTitle())
-	self.staticPointList:mergeElements(storageCategory, "storage", "bales", "pallets")
+	self.fillTypePointList:mergeElements(storageCategory, "storage", "bales", "pallets")
+	self.fillTypePointList:removeElement(1)
 end
 
 function VictoryPointManager:saveToXMLFile(xmlFile, baseXmlKey)
@@ -238,8 +240,21 @@ function VictoryPointManager:update()
 	end
 end
 
+function VictoryPointManager:updateVictoryPoint(categoryName, pointName, factor)
+	assert(type(factor) == "number", "Error: Only numbers are allowed as factors")
+	local point = self.staticPointList:getElementByName(categoryName, pointName)
+	if point ~= nil then
+		point:setFactor(factor)
+	end
+
+	point = self.fillTypePointList:getElementByName(categoryName, pointName)
+	if point ~= nil then
+		point:setFactor(factor)
+	end
+end
+
 function VictoryPointManager:getList(farmId)
-	return farmId ~= nil and self.pointList[farmId] or self.staticPointList
+	return farmId ~= nil and self.pointList[farmId] or self.fillTypePointList
 end
 
 function VictoryPointManager:getListByName()
