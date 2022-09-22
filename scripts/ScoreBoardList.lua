@@ -120,7 +120,7 @@ function ScoreBoardList:applyValues(staticList)
 end
 
 function ScoreBoardList:clone()
-	local list = ScoreBoardList.new(self.name, self.title)
+	local list = ScoreBoardList.new(self.name, self.titles)
 
 	for _, element in pairs(self.elements) do
 		local e = element:clone()
