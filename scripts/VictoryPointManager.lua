@@ -115,8 +115,25 @@ end
 function VictoryPointManager:addFillTypeFactors(category, factorData, farmId)
 	local maxFillLevel = g_ruleManager:getGeneralRuleValue("maxFillLevel")
 	local fillLevels = VictoryPointsUtil.getStorageAmount(farmId, maxFillLevel)
-	fillLevels = VictoryPointsUtil.getBaleAmount(farmId, maxFillLevel, fillLevels)
 	fillLevels = VictoryPointsUtil.getPalletAmount(farmId, maxFillLevel, fillLevels)
+	VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
+end
+
+function VictoryPointManager:addStorageFactors(category, factorData, farmId)
+	local maxFillLevel = g_ruleManager:getGeneralRuleValue("maxFillLevel")
+	local fillLevels = VictoryPointsUtil.getStorageAmount(farmId, maxFillLevel)
+	VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
+end
+
+function VictoryPointManager:addBaleFactors(category, factorData, farmId)
+	local maxFillLevel = g_ruleManager:getGeneralRuleValue("maxFillLevel")
+	local fillLevels = VictoryPointsUtil.getBaleAmount(farmId, maxFillLevel)
+	VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
+end
+
+function VictoryPointManager:addPalletFactors(category, factorData, farmId)
+	local maxFillLevel = g_ruleManager:getGeneralRuleValue("maxFillLevel")
+	local fillLevels = VictoryPointsUtil.getPalletAmount(farmId, maxFillLevel)
 	VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
 end
 

@@ -40,7 +40,7 @@ function VictoryPointsUtil.getStorageAmount(farmId, maxFillLevel)
 	return totalFillLevels
 end
 
-function VictoryPointsUtil.getBaleAmount(farmId, maxFillLevel, totalFillLevels)
+function VictoryPointsUtil.getBaleAmount(farmId, maxFillLevel)
 	if farmId == nil then 
 		local fillTypes = {}
 		for i, bale in pairs(g_baleManager.bales) do
@@ -51,15 +51,17 @@ function VictoryPointsUtil.getBaleAmount(farmId, maxFillLevel, totalFillLevels)
 		return fillTypes
 	end
 	maxFillLevel = maxFillLevel == Rule.MAX_FILL_LEVEL_DISABLED and math.huge or maxFillLevel
+
+	local baleFillLevels = {}
 	for _, object in pairs(g_currentMission.nodeToObject) do
 		if object:isa(Bale) and object:getOwnerFarmId(farmId) == farmId and not object.isMissionBale then 
-			if totalFillLevels[object.fillType] == nil then 
-				totalFillLevels[object.fillType] = 0
+			if baleFillLevels[object.fillType] == nil then 
+				baleFillLevels[object.fillType] = 0
 			end
-			totalFillLevels[object.fillType] = totalFillLevels[object.fillType] + math.min(object.fillLevel, maxFillLevel)
+			baleFillLevels[object.fillType] = baleFillLevels[object.fillType] + math.min(object.fillLevel, maxFillLevel)
 		end
 	end
-	return totalFillLevels
+	return baleFillLevels
 end
 
 function VictoryPointsUtil.getPalletAmount(farmId, maxFillLevel, totalFillLevels)
