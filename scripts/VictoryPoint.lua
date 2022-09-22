@@ -140,7 +140,4 @@ function VictoryPoint.readStream(categoryName, categoryId, name, value, ix)
 	local element = g_victoryPointManager:getList():getElementByName(categoryName, name)
 	element:setFactor(value)
 	return element
-	print("getList: " .. tostring(g_victoryPointManager:getList()))
-	print("get element: " .. tostring(g_victoryPointManager:getList():getElementByName(categoryName, name)))
-	print("setFactor: " .. tostring(g_victoryPointManager:getList():getElementByName(categoryName, name):setFactor(value)))
 end
