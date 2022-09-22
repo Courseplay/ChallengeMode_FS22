@@ -21,11 +21,11 @@ function ScoreBoardCategory:getTitle()
 end
 
 function ScoreBoardCategory:getName()
-	return self.name	
+	return self.name
 end
 
 function ScoreBoardCategory:setParent(parent, id)
-	self.parent = parent	
+	self.parent = parent
 	self.id = id
 end
 
@@ -34,7 +34,7 @@ function ScoreBoardCategory:getParent()
 end
 
 function ScoreBoardCategory:addElement(element, ix)
-	if ix ~= nil then 
+	if ix ~= nil then
 		table.insert(self.elements, ix, element)
 	else
 		table.insert(self.elements, element)
@@ -47,11 +47,11 @@ function ScoreBoardCategory:getElement(index)
 end
 
 function ScoreBoardCategory:getElementByName(name)
-	if name == nil then 
+	if name == nil then
 		return self
 	end
-	for _, element in pairs(self.elements) do 
-		if element:getName() == name then 
+	for _, element in pairs(self.elements) do
+		if element:getName() == name then
 			return element
 		end
 	end
@@ -111,7 +111,7 @@ end
 
 function ScoreBoardCategory:clone(...)
 	local category = ScoreBoardCategory.new(self.name, self.title)
-	for i, element in ipairs(self.elements) do 
+	for i, element in ipairs(self.elements) do
 		local e = element:clone(...)
 		category:addElement(e)
 	end
