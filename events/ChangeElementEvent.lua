@@ -25,24 +25,33 @@ end
 function ChangeElementEvent:readStream(streamId, connection)
 	local type = streamReadUIntN(streamId, self.SEND_NUM_BITS)
 	CmUtil.debug("ChangeElementEvent readStream type: %s", type)
-	local function getElement()
-		local e = self.TYPES[type].readStream(streamId, connection)
-		return e
-	end
-	local element = CmUtil.try(getElement)
+
+	local categoryName = streamReadString(streamId)
+	local categoryId = streamReadUInt8(streamId)
+	local name = streamReadString(streamId)
+	local value = streamReadFloat32(streamId)
+	local ix = streamReadUInt8(streamId)
+	local element = self.TYPES[type].readStream(categoryName, categoryId, name, value, ix)
+
 	self:run(connection, element, type)
 end
 
 function ChangeElementEvent:writeStream(streamId, connection)
-	CmUtil.debug("ChangeElementEvent writeStream type: %s ", self.type)
 	streamWriteUIntN(streamId, self.type, self.SEND_NUM_BITS)
-	self.element:writeStream(streamId, connection)
+	CmUtil.debug("ChangeElementEvent writeStream type: %s ", self.type)
+	streamWriteString(streamId, self.element:getParent():getName())
+	streamWriteUInt8(streamId, self.element:getParent().id)
+	streamWriteString(streamId, self.element.name)
+	streamWriteFloat32(streamId, self.element:getFactor())
+	streamWriteUInt8(streamId, self.element.currentIx)
+
 end
 
 function ChangeElementEvent:run(connection, element, type)
 	if not connection:getIsServer() then
 		g_server:broadcastEvent(ChangeElementEvent.new(element, type), nil, connection)
 	end
+	g_challengeMod.frame:updateLists()
 end
 
 function ChangeElementEvent.sendEvent(element, type)

@@ -654,8 +654,6 @@ function ScoreBoardFrame:showAddPointsDialog(farmId)
 		dialog.target:setCallback(self.onTextInputAddPoints, self, farmId)
 
 		g_gui:showDialog("AddPointsDialog")
-	else
-		print("dialog doesnt exist")
 	end
 end
 

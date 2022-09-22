@@ -8,37 +8,68 @@
 	</title>
 
 	<description>
-        <en><![CDATA[Challenge.
+        <en><![CDATA[
+Challenge Time!
+This mod provides everything you need to create your own challange.
+Custom Ingame UI with extra password to configure the rule set and values to your needs.
+The password can only be changed by the server admin.
 
-Settings:
-- Points for win.
-- Points per Money on Bank.
-- Points per fruit in storage.
-- Points per area (HA).
-- Storagelimit, with a certain amount in storage, no more points will be gained.
+The following Values can be set to get a point:
+- How much Money (without credits).
+- How many Liters of each fruit.
+- The amount of area you own (HA).
+- Animals when grown up.
+
+Additional Rules:
+- How many points are needed to win
+- A storage limit. Anything above that value won't be count.
 - Helper limit 0-6.
-- Rent Vehicles on/off/Shop only.
+- Animal Husbandry 0-6.
+- Rent Vehicles for mission and shop/ only in the shop, or turn it off completly.
 - Turn off specific mission types.
-- Set a Missionlimit from 0-8 per farm.
-- Credit on/off/limited.
+- Set a mission limit per farm from 0-8 missions active at the same time.
+- Loan on/off/limited to a specified value.
+- Add or reduce points of a farm with a reason (e.g. won a challenge, punishment) with a complete log!
+- Hide a farm that doesn't participate in the challenge (e.g. Contractor)
 
-Ingame UI with own extra password to set the rules.
-]]></en>
-		<de><![CDATA[Wettkampfmodus.
+What is planed for the future:
+- Integration of the Limited Daily Income Mod into the rule set to configure those limits within the same UI
 
-Einstellungen:
-- Punkte zum Sieg.
-- Punkte für Geld auf dem Konto.
-- Punkte für Früchte im Lager.
-- Punkte für Fläche (HA).
-- Lagerlimit, ab welchem Lagerstand, gibt es keine Punkte mehr dazu.
-- Helferlimit von 0-6.
-- Fahrzeuge mieten an/aus/nur Shop.
-- Einzelne Missionstypen ein- und ausschalten.
-- Missionslimit pro Farm 0-8.
-- Kredit an/aus/ limitiert.
+We suggest you for a 24/7 Server to use the Mod limited daily income, for more fairness.
 
-Ingame UI mit eigenem Passwort zum Einstellen der Spielregeln.
+For more information, help, and report issues please visit <a href="https://github.com/Courseplay/ChallengeMode_FS22">github</a>.
+]]>
+</en>
+		<de><![CDATA[
+Zeit für einen Wettkampf!
+Diese Mod bietet euch alles um euren eigenen Wettkampf auszutragen.
+Ein eigenes Menü mit einem eigenen Passwort um die Regeln und Werte auf die eigenen Bedürfnisse anzupassen.
+Das Passwort kann nur durch einen Serveradministator geändert werden.
+
+Diese Punkte können angepasst werden um Punkte zu bekommen:
+- Geld auf dem Konto (ohne Kredit)
+- Wie viel Liter pro Frucht (in eurem Besitz).
+- Die gesamte Fläche, die ihr besitzt (HA)
+- Ausgewachsene Tiere
+
+Weitere Regeln:
+- Wie viele Punkte zum Sieg nötig sind.
+- Ein Limit wie viel Frucht gezählt werden soll (alles was darüber hinaus ist, wird nicht gezählt).
+- Helferlimit 0-6.
+- Tierstalllimit pro Farm 0-6.
+- Fahrzeuge mieten für Missionen und im Shop / nur im Shop, oder komplett deaktiviert.
+- Bestimmte Missionstypen deaktivieren.
+- Ein Missionslimit pro Farm von 0-8 aktiven Missionen zur selben Zeit.
+- Kredit an/aus/limitiert auf einen bestimmten Wert.
+- Punkte zu einer Farm hinzufügen oder abziehen (z.B. eine Challenge gewonnen oder eine Bestrafung), mit komplettem Verlauf!
+- Verstecke eine Farm, die nicht an dem Wettkampf teilnimmt (z.B. Lohnunternehmen)
+
+Was ist für die Zukunft geplant:
+- Die Einstellungsoptionen der Limits des Mod Tägliche Einkommensbegrenzung in das UI integrieren.
+
+Wir empfehlen euch für einen 24/7 Server für mehr Fairness die Mod Tägliche Einkommensbegrenzung zu nutzen.
+
+Für mehr Informationen, Hilfe und Fehlermeldungen, schaut bitte auf <a href="https://github.com/Courseplay/ChallengeMode_FS22">Github</a> vorbei.
 ]]></de>
     </description>
 
