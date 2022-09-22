@@ -14,14 +14,14 @@
 			<Element dependency="animals" genericFunc="addDependentPoint" unitTextFunc="ANIMAL_TEXT" name="totalAnimals" default="1" />
 		</Category>
 		<Category name="storage">
-			<Element genericFunc="addStorageFactors" unitTextFunc="VOLUME_TEXT" default="1" />
+			<Element genericFunc="addFillTypeFactors" unitTextFunc="VOLUME_TEXT" default="1" />
 		</Category>
-		<Category name="bales">
+		<!--Category name="bales">
 			<Element genericFunc="addBaleFactors" unitTextFunc="VOLUME_TEXT" default="1" />
 		</Category>
 		<Category name="pallets">
 			<Element genericFunc="addPalletFactors" unitTextFunc="VOLUME_TEXT" default="1" />
-		</Category>
+		</Category-->
 		<Category name="animals">
 			<Element genericFunc="addAnimalFactors" unitTextFunc="ANIMAL_TEXT" default="1"/>
 		</Category>
