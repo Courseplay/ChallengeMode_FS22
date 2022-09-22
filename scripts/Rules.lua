@@ -4,7 +4,6 @@ local Rule_mt = Class(Rule, ScoreBoardElement)
 function Rule.new(name, default, title, valuesData, custom_mt)
 	local self = ScoreBoardElement.new(name, title, custom_mt or Rule_mt)
 	self.currentIx = default or 1
-	self.title = title
 	self.values = {}
 	self.texts = {}
 	if valuesData then
@@ -25,6 +24,21 @@ end
 
 function Rule.createFromXml(data)
 	return Rule.new(data.name, data.default, data.title, data.values)
+end
+
+function Rule:clone()
+	local data = {}
+
+	assert(#self.values == #self.texts)
+	for i = 1, #self.self.values do
+		data:insert({
+				value = self.values[i],
+				text = self.texts[i]
+			}
+		)
+	end
+
+	return Rule.new(self.name, self.currentIx, self.title, data)
 end
 
 function Rule:getText()

@@ -83,6 +83,10 @@ function ScoreBoardElement.loadFromXMLFile(category, xmlFile, baseXmlKey)
 	end)
 end
 
+function ScoreBoardElement:clone()
+	return ScoreBoardElement.new(self.name, self.title)
+end
+
 function ScoreBoardElement:applyValues()
 end
 

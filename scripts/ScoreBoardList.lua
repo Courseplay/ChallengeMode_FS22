@@ -115,6 +115,17 @@ function ScoreBoardList:applyValues(staticList)
 	end
 end
 
+function ScoreBoardList:clone()
+	local list = ScoreBoardList.new(self.name, self.title)
+
+	for _, element in pairs(self.elements) do
+		local e = element:clone()
+		list:addElement(e)
+	end
+
+	return list
+end
+
 --- Combines all specified elements into newElement and add newElement to self.elements
 --- @param newElement ScoreBoardCategory
 --- @param ... string names of all elements to combine

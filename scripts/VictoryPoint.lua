@@ -19,7 +19,6 @@ function VictoryPoint.new(name, value, factor, title, inputText, unitTextFunc, d
 	local self = ScoreBoardElement.new(name, title, custom_mt or VictoryPoint_mt)
 	self.value = value
 	self.factor = factor
-	self.title = title
 	self.inputText = inputText
 	self.dependency = dependency
 	self.unitTextFunc = unitTextFunc
@@ -32,6 +31,10 @@ end
 
 function VictoryPoint.createFromXml(data, value)
 	return VictoryPoint.new(data.name, value, data.default, data.title, data.inputText, data.unitTextFunc, data.dependency)
+end
+
+function VictoryPoint:clone()
+	return VictoryPoint.new(self.name, self.value, self.factor, self.title, self.inputText, self.unitTextFunc, self.dependency)
 end
 
 function VictoryPoint:getValue()
@@ -102,10 +105,6 @@ end
 
 function VictoryPoint:isTextInputAllowed()
 	return not self.dependency
-end
-
-function VictoryPoint:clone(farmId, farm)
-
 end
 
 function VictoryPoint:__tostring()
