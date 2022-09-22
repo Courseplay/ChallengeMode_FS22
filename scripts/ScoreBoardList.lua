@@ -8,6 +8,8 @@ function ScoreBoardList.new(name, titles, elements, custom_mt)
 	self.titles = titles
 	self.name = name
 	self.elements = elements or {}
+	self.nameToIndex = {}
+
 	return self
 end
 
@@ -59,8 +61,10 @@ end
 function ScoreBoardList:addElement(element, ix)
 	if ix ~= nil then 
 		table.insert(self.elements, ix, element)
+		self.nameToIndex[element:getName()] = ix
 	else
 		table.insert(self.elements, element)
+		self.nameToIndex[element:getName()] = #self.elements
 	end
 	element:setParent(self, ix or #self.elements)
 end
@@ -77,9 +81,13 @@ function ScoreBoardList:getElementByName(name, ...)
 	end
 end
 
+function ScoreBoardList:getElementIndexByName(name)
+	return self.nameToIndex[name]
+end
+
 function ScoreBoardList:setElementByName(name, newCategory)
-	for ix, element in pairs(self.elements) do 
-		if element:getName() == name then 
+	for ix, element in pairs(self.elements) do
+		if element:getName() == name then
 			self.elements[ix] = newCategory
 		end
 	end
@@ -102,7 +110,24 @@ function ScoreBoardList:count()
 end
 
 function ScoreBoardList:applyValues(staticList)
-	for i, element in ipairs(self.elements) do 
+	for i, element in ipairs(self.elements) do
 		element:applyValues(staticList)
-	end	
+	end
+end
+
+--- Combines all specified elements into newElement and add newElement to self.elements
+--- @param newElement ScoreBoardCategory
+--- @param ... string names of all elements to combine
+function ScoreBoardList:mergeElements(newElement, ...)
+	for _, name in pairs({...}) do
+		local idx = self:getElementIndexByName(name)
+		local element = self:getElementByName(name)
+		for _, elem in pairs(element:getElements()) do
+			newElement:addElement(elem)
+		end
+
+		self.elements[idx] = nil
+		self.nameToIndex[name] = nil
+	end
+	self:addElement(newElement)
 end

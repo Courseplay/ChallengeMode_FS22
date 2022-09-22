@@ -34,7 +34,7 @@ function ScoreBoardCategory:getParent()
 end
 
 function ScoreBoardCategory:addElement(element, ix)
-	if ix ~= nil then 
+	if ix ~= nil then
 		table.insert(self.elements, ix, element)
 	else
 		table.insert(self.elements, element)
@@ -109,7 +109,7 @@ end
 
 function ScoreBoardCategory:clone(...)
 	local category = ScoreBoardCategory.new(self.name, self.title)
-	for i, element in ipairs(self.elements) do 
+	for i, element in ipairs(self.elements) do
 		local e = element:clone(...)
 		category:addElement(e)
 	end
