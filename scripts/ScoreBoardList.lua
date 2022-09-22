@@ -69,6 +69,10 @@ function ScoreBoardList:addElement(element, ix)
 	element:setParent(self, ix or #self.elements)
 end
 
+function ScoreBoardList:removeElement(idx)
+	return table.remove(self.elements, idx)
+end
+
 function ScoreBoardList:getElement(index, ...)
 	return self.elements[index]:getElement(...)
 end

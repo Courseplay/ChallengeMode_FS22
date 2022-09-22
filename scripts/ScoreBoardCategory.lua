@@ -42,6 +42,10 @@ function ScoreBoardCategory:addElement(element, ix)
 	element:setParent(self, ix or #self.elements)
 end
 
+function ScoreBoardCategory:removeElement(idx)
+	return table.remove(self.elements, idx)
+end
+
 function ScoreBoardCategory:getElement(index)
 	return index ~= nil and self.elements[index] or self
 end
