@@ -216,12 +216,12 @@ function ScoreBoardFrame:onGuiSetupFinished()
 		}
 	}
 	self.managers = {
-		function(...)
+		function(detailed, ...)
 			return self.victoryPointManager:getList(...)
 		end,
-		function(...)
+		function(detailed, ...)
 			local sx, ix = self.leftList:getSelectedPath()
-			return ix == 1 and self.ruleManager:getList() or self.victoryPointManager:getList()
+			return ix == 1 and self.ruleManager:getList() or self.victoryPointManager:getList(detailed or false)
 		end,
 	}
 
@@ -229,7 +229,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 		[self.leftList] = function() return self.NUM_LEFT_SECTIONS end,
 		[self.rightList] = function()
 			local sx, ix = self.leftList:getSelectedPath()
-			return self.managers[sx]():getNumberOfElements()
+			return self.managers[sx](true):getNumberOfElements()
 		end,
 		[self.changelogList] = function ()
 			return 1
@@ -298,6 +298,7 @@ function ScoreBoardFrame:updateMenuButtons()
 end
 
 function ScoreBoardFrame:getNumberOfSections(list)
+	print("number of sections: " .. tostring(self.numSections[list]()))
 	return self.numSections[list]()
 end
 
@@ -320,7 +321,7 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 		if list:getIsVisible() then
 			local farmId = self:getCurrentFarmId()
 			local sx, ix = self.leftList:getSelectedPath()
-			local l = self.managers[sx](farmId)
+			local l = self.managers[sx](nil, farmId)
 
 			if l == nil then
 				CmUtil.debug("Categories for not found %d", section)
@@ -329,6 +330,7 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 				return 0
 			end
 
+			print("number of items in section " .. tostring(section) .. ": " .. tostring(l:getNumberOfElements(section)))
 			return l:getNumberOfElements(section)
 		else
 			return 0
@@ -451,7 +453,7 @@ function ScoreBoardFrame:getElement(section, index)
 	end
 	local sx, ix = self.leftList:getSelectedPath()
 	local farmId = self:getCurrentFarmId()
-	local list = self.managers[sx](farmId)
+	local list = self.managers[sx](nil, farmId)
 	if list == nil then
 		CmUtil.debug("Element not found for (%s|%s).", tostring(section), tostring(index))
 		printCallstack()
