@@ -57,7 +57,6 @@ function VictoryPointManager:loadConfigData(xmlFile, baseXmlKey)
 	local storageCategory = self.fillTypePointList:getElementByName("storage")
 	storageCategory = ScoreBoardCategory.new(storageCategory:getName(), storageCategory:getTitle())
 	self.fillTypePointList:mergeElements(storageCategory, "storage", "bales", "pallets")
-	self.fillTypePointList:removeElement(1)
 end
 
 function VictoryPointManager:saveToXMLFile(xmlFile, baseXmlKey)
