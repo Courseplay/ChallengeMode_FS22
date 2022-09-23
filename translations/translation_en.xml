@@ -59,6 +59,12 @@
 		<text name="CM_VictoryPoints_general_ownedVehicleValue_input_text" 		text="Please enter how much vehicle sell value equals one point."/>
 		<text name="CM_VictoryPoints_general_productionValue_input_text" 		text="Please enter how much production value equals one point."/>
 
+		<text name="CM_VictoryPoints_general_input_text_format"					text="Please enter how much %s equals one point."/>
+		<text name="CM_VictoryPoints_storage_input_text_format"					text="Please enter how much %s equals one point."/>
+		<text name="CM_VictoryPoints_bales_input_text_format"					text="Please enter how much %s equals one point."/>
+		<text name="CM_VictoryPoints_pallets_input_text_format"					text="Please enter how much %s equals one point."/>
+		<text name="CM_VictoryPoints_animals_input_text_format"					text="Please enter how many %s equal one point."/>
+
 		<text name="CM_VictoryPoints_general_totalStorage_title"				text="Total storage"/>
 		<text name="CM_VictoryPoints_general_totalBales_title"					text="Total bales"/>
 		<text name="CM_VictoryPoints_general_totalPallets_title"				text="Total pallets"/>
@@ -104,5 +110,7 @@
 
 		<text name="unit_pointsShort" 											text="Pt"/>
 		<text name="unit_piecesShort"											text="Pc."/>
+
+		<text name="animalName_plural_cow"										text="Cows"/>
 	</texts>
 </l10n>
