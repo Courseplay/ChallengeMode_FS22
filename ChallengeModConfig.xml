@@ -10,18 +10,18 @@
 
 			<Element dependency="storage" genericFunc="addDependentPoint" unitTextFunc="VOLUME_TEXT" name="totalStorage" default="1" />
 			<Element dependency="bales" genericFunc="addDependentPoint" unitTextFunc="VOLUME_TEXT" name="totalBales" default="1" />
-			<Element dependency="pallets" genericFunc="addDependentPoint" unitTextFunc="VOLUME_TEXT" name="totalPallets" default="1" />
+			<!--Element dependency="pallets" genericFunc="addDependentPoint" unitTextFunc="VOLUME_TEXT" name="totalPallets" default="1" /-->
 			<Element dependency="animals" genericFunc="addDependentPoint" unitTextFunc="ANIMAL_TEXT" name="totalAnimals" default="1" />
 		</Category>
 		<Category name="storage">
-			<Element genericFunc="addStorageFactors" unitTextFunc="VOLUME_TEXT" default="1" />
+			<Element genericFunc="addFillTypeFactors" unitTextFunc="VOLUME_TEXT" default="1" />
 		</Category>
 		<Category name="bales">
 			<Element genericFunc="addBaleFactors" unitTextFunc="VOLUME_TEXT" default="1" />
 		</Category>
-		<Category name="pallets">
+		<!--Category name="pallets">
 			<Element genericFunc="addPalletFactors" unitTextFunc="VOLUME_TEXT" default="1" />
-		</Category>
+		</Category-->
 		<Category name="animals">
 			<Element genericFunc="addAnimalFactors" unitTextFunc="ANIMAL_TEXT" default="1"/>
 		</Category>
