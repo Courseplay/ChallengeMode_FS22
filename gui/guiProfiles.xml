@@ -250,4 +250,8 @@
 		<Value name="size" value="60px 40px"/>
     </Profile>
 
+    <Profile name="CMChangelogDateText" extends="ingameMenuPriceSellpointTitle" >
+        
+    </Profile>
+
 </GUIProfiles>

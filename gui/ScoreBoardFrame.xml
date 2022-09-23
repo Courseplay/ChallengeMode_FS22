@@ -64,7 +64,7 @@
                 <GuiElement type="smoothList" profile="ingameMenuPriceList" id="changelogList" focusChangeTop="nil" focusChangeBottom="nil" listSectionHeader="section" onDoubleClick="onDoubleClickPoint" onClick="onClickChangelogListCallback">
                     <GuiElement type="listItem" profile="ingameMenuPriceListItem">
                         <GuiElement type="text" name="userName" profile="ingameMenuPriceSellpointTitle" />
-						<GuiElement type="text" name="date" profile="ingameMenuPriceItemPrice" textOffset="-181px 0px"/>
+						<GuiElement type="text" name="date" profile="CMChangelogDateText"/>
 						<GuiElement type="text" name="addedPoints" profile="ingameMenuPriceItemBuyPrice" />
                     </GuiElement>
 
