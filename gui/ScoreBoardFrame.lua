@@ -680,7 +680,14 @@ end
 function ScoreBoardFrame:onTextInputChangeValue(text, clickOk, element)
 	if clickOk then
 		if text ~= nil and element ~= nil then
-			element:onTextInput(text)
+			local sx, ix = self.leftList:getSelectedPath()
+			local list = self.managers[sx]()
+			for _, category in pairs(list:getElements()) do
+				local elementToUpdate = category:getElementByName(element:getName())
+				if elementToUpdate ~= nil then
+					elementToUpdate:onTextInput(text)
+				end
+			end
 			self:updateLists()
 		end
 	end

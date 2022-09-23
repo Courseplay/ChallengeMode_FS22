@@ -112,6 +112,13 @@ function VictoryPointManager:readStream(streamId, connection)
 	self.victoryGoal = streamReadInt32(streamId)
 end
 
+function VictoryPointManager:addFillTypeFactors(category, factorData, farmId)
+	local maxFillLevel = g_ruleManager:getGeneralRuleValue("maxFillLevel")
+	local fillLevels = VictoryPointsUtil.getStorageAmount(farmId, maxFillLevel)
+	fillLevels = VictoryPointsUtil.getPalletAmount(farmId, maxFillLevel, fillLevels)
+	VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
+end
+
 function VictoryPointManager:addStorageFactors(category, factorData, farmId)
 	local maxFillLevel = g_ruleManager:getGeneralRuleValue("maxFillLevel")
 	local fillLevels = VictoryPointsUtil.getStorageAmount(farmId, maxFillLevel)

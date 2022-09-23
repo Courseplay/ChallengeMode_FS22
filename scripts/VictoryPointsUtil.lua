@@ -51,6 +51,7 @@ function VictoryPointsUtil.getBaleAmount(farmId, maxFillLevel)
 		return fillTypes
 	end
 	maxFillLevel = maxFillLevel == Rule.MAX_FILL_LEVEL_DISABLED and math.huge or maxFillLevel
+
 	local baleFillLevels = {}
 	for _, object in pairs(g_currentMission.nodeToObject) do
 		if object:isa(Bale) and object:getOwnerFarmId(farmId) == farmId and not object.isMissionBale then 
@@ -63,24 +64,23 @@ function VictoryPointsUtil.getBaleAmount(farmId, maxFillLevel)
 	return baleFillLevels
 end
 
-function VictoryPointsUtil.getPalletAmount(farmId, maxFillLevel)
+function VictoryPointsUtil.getPalletAmount(farmId, maxFillLevel, totalFillLevels)
 	if farmId == nil then 
 		return VictoryPointsUtil.getFillTypes()
 	end
 	maxFillLevel = maxFillLevel == Rule.MAX_FILL_LEVEL_DISABLED and math.huge or maxFillLevel
-	local palletFillLevels = {}
 	for _, object in pairs(g_currentMission.vehicles) do
 		if object.spec_pallet and object:getOwnerFarmId(farmId) == farmId then
 			local fillUnitIndex = object.spec_pallet.fillUnitIndex
 			local fillLevel = object:getFillUnitFillLevel(fillUnitIndex)
 			local fillType = object:getFillUnitFillType(fillUnitIndex)
-			if palletFillLevels[fillType] == nil then 
-				palletFillLevels[fillType] = 0
+			if totalFillLevels[fillType] == nil then 
+				totalFillLevels[fillType] = 0
 			end
-			palletFillLevels[fillType] = palletFillLevels[fillType] + math.min(fillLevel, maxFillLevel)
+			totalFillLevels[fillType] = totalFillLevels[fillType] + math.min(fillLevel, maxFillLevel)
 		end
 	end
-	return palletFillLevels
+	return totalFillLevels
 end
 
 function VictoryPointsUtil.getAnimalAmount(farmId, maxNumberOfAnimals)
