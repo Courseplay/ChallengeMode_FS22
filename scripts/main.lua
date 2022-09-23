@@ -123,11 +123,11 @@ end
 ShopMenu.updateGarageButtonInfo = Utils.appendedFunction(ShopMenu.updateGarageButtonInfo, ChallengeMod.addStartVehicleButton)
 
 function ChallengeMod:setupGui()
+	g_gui:loadProfiles(Utils.getFilename("gui/guiProfiles.xml", self.BASE_DIRECTORY))
 	self.frame = ScoreBoardFrame.new()
 	g_gui:loadGui(Utils.getFilename("gui/ScoreBoardFrame.xml", self.BASE_DIRECTORY), "ScoreBoardPage", self.frame, true)
 
 	CmUtil.fixInGameMenuPage(self.frame, "pageScoreBoard", self.image)
-	g_gui:loadProfiles(Utils.getFilename("gui/guiProfiles.xml", self.BASE_DIRECTORY))
 
 	self:setupDialogs()
 end
