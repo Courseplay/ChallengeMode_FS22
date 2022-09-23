@@ -223,6 +223,7 @@ function VictoryPointsUtil.addAnimalTypeFactors(numberOfAnimals, category, facto
 		factorData.name = animalType.name
 		-- Assumption: All sub type fill types are named the same (like giants did)
 		factorData.title = g_fillTypeManager:getFillTypeTitleByIndex(subType.fillTypeIndex)
+		factorData.animalNamePlural = g_i18n:getText("animalName_plural_%s", string.lower(animalType.name))
 		category:addElement(VictoryPoint.createFromXml(factorData, numberOfAnimals[animalType]))
 	end
 end

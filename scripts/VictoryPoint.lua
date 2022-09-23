@@ -15,7 +15,7 @@ VictoryPoint = {
 }
 local VictoryPoint_mt = Class(VictoryPoint, ScoreBoardElement)
 ---@class VictoryPoint : ScoreBoardElement
-function VictoryPoint.new(name, value, factor, title, inputText, unitTextFunc, dependency, custom_mt)
+function VictoryPoint.new(name, value, factor, title, inputText, unitTextFunc, dependency, animalNamePlural, custom_mt)
 	local self = ScoreBoardElement.new(name, title, custom_mt or VictoryPoint_mt)
 	self.value = value
 	self.factor = factor
@@ -23,6 +23,7 @@ function VictoryPoint.new(name, value, factor, title, inputText, unitTextFunc, d
 	self.inputText = inputText
 	self.dependency = dependency
 	self.unitTextFunc = unitTextFunc
+	self.animalNamePlural = animalNamePlural
 	if unitTextFunc then
 		self.factorText = self[unitTextFunc](factor)
 	end
@@ -31,7 +32,7 @@ function VictoryPoint.new(name, value, factor, title, inputText, unitTextFunc, d
 end
 
 function VictoryPoint.createFromXml(data, value)
-	return VictoryPoint.new(data.name, value, data.default, data.title, data.inputText, data.unitTextFunc, data.dependency)
+	return VictoryPoint.new(data.name, value, data.default, data.title, data.inputText, data.unitTextFunc, data.dependency, data.animalNamePlural)
 end
 
 function VictoryPoint:getValue()
@@ -77,7 +78,10 @@ function VictoryPoint:getTitle()
 end
 
 function VictoryPoint:getInputText()
-	return self.inputText
+	if self.animalNamePlural ~= nil then
+		return self.inputText:format(self.animalNamePlural)
+	end
+	return self.inputText:format(self.title)
 end
 
 function VictoryPoint:getFactorText()
@@ -140,7 +144,4 @@ function VictoryPoint.readStream(categoryName, categoryId, name, value, ix)
 	local element = g_victoryPointManager:getList():getElementByName(categoryName, name)
 	element:setFactor(value)
 	return element
-	print("getList: " .. tostring(g_victoryPointManager:getList()))
-	print("get element: " .. tostring(g_victoryPointManager:getList():getElementByName(categoryName, name)))
-	print("setFactor: " .. tostring(g_victoryPointManager:getList():getElementByName(categoryName, name):setFactor(value)))
 end

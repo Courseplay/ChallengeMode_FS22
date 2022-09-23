@@ -56,16 +56,16 @@
 
             <GuiElement type="empty" profile="ingameMenuPriceRightColumn" id="changelogColumn" visible="false">
                 <GuiElement type="boxLayout" profile="ingameCalendarHeaderBox" id="changelogColumnHeaderBox" size="680px 104px">
-                    <GuiElement type="text" profile="ingameMenuPriceHeader" size="180px 104px" text="$l10n_CM_changelogList_leftTitle" id="changelogList_leftTitle" /> 
+                    <GuiElement type="text" profile="ingameMenuPriceHeader" size="190px 104px" text="$l10n_CM_changelogList_leftTitle" id="changelogList_leftTitle" /> 
                     <GuiElement type="text" profile="ingameMenuPriceHeader" size="330px 104px" text="$l10n_CM_changelogList_middleTitle" id="changelogList_middleTitle" />
                     <GuiElement type="text" profile="ingameMenuPriceHeader" size="160px 104px" text="$l10n_CM_changelogList_rightTitle" id="changelogList_rightTitle" textOffset="0 0" />
                 </GuiElement>
 
                 <GuiElement type="smoothList" profile="ingameMenuPriceList" id="changelogList" focusChangeTop="nil" focusChangeBottom="nil" listSectionHeader="section" onDoubleClick="onDoubleClickPoint" onClick="onClickChangelogListCallback">
                     <GuiElement type="listItem" profile="ingameMenuPriceListItem">
-                        <GuiElement type="text" name="userName" profile="ingameMenuPriceSellpointTitle" />
-						<GuiElement type="text" name="date" profile="ingameMenuPriceItemPrice" textOffset="-181px 0px"/>
-						<GuiElement type="text" name="addedPoints" profile="ingameMenuPriceItemBuyPrice" />
+                        <GuiElement type="text" name="userName" profile="CmChangelogUserNameText" />
+						<GuiElement type="text" name="date" profile="CmChangelogDateText"/>
+						<GuiElement type="text" name="addedPoints" profile="CmChangelogPointsText" />
                     </GuiElement>
 
 					<GuiElement type="listItem" profile="ingameMenuAnimalsListSectionHeader" name="section">

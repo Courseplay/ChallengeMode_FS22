@@ -246,8 +246,32 @@
 		<Value name="textSize" value="18px"/> 
         <Value name="maxCharacters" value="300"/>
     </Profile>
+    <Profile name="CmDialogPointsTextInput" extends="CmDialogTextInput" with="anchorMiddleCenter">
+		<Value name="maxCharacters" value="14"/>
+    </Profile>
 	<Profile name="CmDialogText" extends="dialogText" with="anchorMiddleLeft">
 		<Value name="size" value="60px 40px"/>
+    </Profile>
+
+    <Profile name="CmChangelogUserNameText" extends="textDefault" with="anchorMiddleLeft">
+        <Value name="size" value="190px 50px"/> 
+        <Value name="textVerticalAlignment" value="middle" />
+        <Value name="textAutoWidth" value="true" />
+        <Value name="position" value="45px 0" />
+    </Profile>
+
+    <Profile name="CmChangelogDateText" extends="textDefault" with="anchorMiddleLeft">
+        <Value name="size" value="330px 50px"/>
+        <Value name="textVerticalAlignment" value="middle" />
+        <Value name="textAutoWidth" value="true" />
+        <Value name="position" value="215px 0" />
+    </Profile>
+
+    <Profile name="CmChangelogPointsText" extends="textDefault" with="anchorMiddleLeft">
+        <Value name="size" value="160px 50px" />
+        <Value name="textVerticalAlignment" value="middle" />
+        <Value name="format" value="currency" />
+        <Value name="position" value="520px 0" />
     </Profile>
 
 </GUIProfiles>

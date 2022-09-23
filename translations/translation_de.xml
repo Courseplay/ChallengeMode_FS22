@@ -58,6 +58,12 @@
 		<text name="CM_VictoryPoints_general_ownedBuildingValue_input_text" 	text="Gib ein wie viel Gebäudeverkaufswert einem Punkt entspricht."/>
 		<text name="CM_VictoryPoints_general_ownedVehicleValue_input_text" 		text="Gib ein wie viel Fahrzeugverkaufswert einem Punkt entspricht."/>
 		<text name="CM_VictoryPoints_general_productionValue_input_text" 		text="Gib ein wie viel Produktionswert einem Punkt entspricht."/>
+		
+		<text name="CM_VictoryPoints_general_input_text_format"					text="Gib ein wie viel %s einem Punkt entspricht."/>
+		<text name="CM_VictoryPoints_storage_input_text_format"					text="Gib ein wie viel %s einem Punkt entspricht."/>
+		<text name="CM_VictoryPoints_bales_input_text_format"					text="Gib ein wie viel %s einem Punkt entspricht."/>
+		<text name="CM_VictoryPoints_pallets_input_text_format"					text="Gib ein wie viel %s einem Punkt entspricht."/>
+		<text name="CM_VictoryPoints_animals_input_text_format"					text="Gib ein wie viele %se einem Punkt entsprechen."/>
 
 		<text name="CM_VictoryPoints_general_totalStorage_title" 				text="Gesamtes Lager"/>
 		<text name="CM_VictoryPoints_general_totalBales_title" 					text="Gesamte Ballen"/>
@@ -104,5 +110,11 @@
 
 		<text name="unit_pointsShort" 											text="Pkt"/>
 		<text name="unit_piecesShort"											text="Stk"/>
+
+		<text name="animalName_plural_cow"										text="Kühe"/>
+		<text name="animalName_plural_pig"										text="Schweine"/>
+		<text name="animalName_plural_horse"									text="Pferde"/>
+		<text name="animalName_plural_chicken"									text="Hühner"/>
+		<text name="animalName_plural_sheep"									text="Schaafe"/>
 	</texts>
 </l10n>
