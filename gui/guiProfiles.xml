@@ -246,6 +246,9 @@
 		<Value name="textSize" value="18px"/> 
         <Value name="maxCharacters" value="300"/>
     </Profile>
+    <Profile name="CmDialogPointsTextInput" extends="CmDialogTextInput" with="anchorMiddleCenter">
+		<Value name="maxCharacters" value="14"/>
+    </Profile>
 	<Profile name="CmDialogText" extends="dialogText" with="anchorMiddleLeft">
 		<Value name="size" value="60px 40px"/>
     </Profile>
