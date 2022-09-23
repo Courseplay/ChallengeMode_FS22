@@ -112,5 +112,9 @@
 		<text name="unit_piecesShort"											text="Stk"/>
 
 		<text name="animalName_plural_cow"										text="Kühe"/>
+		<text name="animalName_plural_pig"										text="Schweine"/>
+		<text name="animalName_plural_horse"									text="Pferde"/>
+		<text name="animalName_plural_chicken"									text="Hühner"/>
+		<text name="animalName_plural_sheep"									text="Schaafe"/>
 	</texts>
 </l10n>
