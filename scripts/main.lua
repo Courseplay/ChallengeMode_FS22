@@ -27,6 +27,7 @@ function ChallengeMod.new(custom_mt)
 
 	if ChallengeMod.isDevelopmentVersion then
 		addConsoleCommand('CmGenerateContracts', 'Generates new contracts', 'consoleGenerateFieldMission', g_missionManager)
+		CmUtil.debugActive = true
 	end
 
 	return self

@@ -30,7 +30,10 @@ function ChangeElementEvent:readStream(streamId, connection)
 	local categoryId = streamReadUInt8(streamId)
 	local name = streamReadString(streamId)
 	local value = streamReadFloat32(streamId)
-	local ix = streamReadUInt8(streamId)
+	local ix
+	if type == 2 then
+		ix = streamReadUInt8(streamId)
+	end
 	local element = self.TYPES[type].readStream(categoryName, categoryId, name, value, ix)
 
 	self:run(connection, element, type)
@@ -39,11 +42,14 @@ end
 function ChangeElementEvent:writeStream(streamId, connection)
 	streamWriteUIntN(streamId, self.type, self.SEND_NUM_BITS)
 	CmUtil.debug("ChangeElementEvent writeStream type: %s ", self.type)
+
 	streamWriteString(streamId, self.element:getParent():getName())
 	streamWriteUInt8(streamId, self.element:getParent().id)
 	streamWriteString(streamId, self.element.name)
 	streamWriteFloat32(streamId, self.element:getFactor())
-	streamWriteUInt8(streamId, self.element.currentIx)
+	if self.type == 2 then
+		streamWriteUInt8(streamId, self.element.currentIx)
+	end
 
 end
 

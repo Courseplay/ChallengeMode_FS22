@@ -268,6 +268,7 @@ end
 
 function VictoryPointManager:setGoal(newGoal, noEventSend)
 	self.victoryGoal = tonumber(newGoal)
+	CmUtil.debug("Set goal to %s", self.victoryGoal)
 	if noEventSend == nil or noEventSend == false then
 		ChangeGoalEvent.sendEvent(self.victoryGoal)
 	end
