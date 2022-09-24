@@ -63,7 +63,7 @@
 		<text name="CM_VictoryPoints_storage_input_text_format"					text="Gib ein wie viel %s einem Punkt entspricht."/>
 		<text name="CM_VictoryPoints_bales_input_text_format"					text="Gib ein wie viel %s einem Punkt entspricht."/>
 		<text name="CM_VictoryPoints_pallets_input_text_format"					text="Gib ein wie viel %s einem Punkt entspricht."/>
-		<text name="CM_VictoryPoints_animals_input_text_format"					text="Gib ein wie viele %se einem Punkt entsprechen."/>
+		<text name="CM_VictoryPoints_animals_input_text_format"					text="Gib ein wie viele %s einem Punkt entsprechen."/>
 
 		<text name="CM_VictoryPoints_general_totalStorage_title" 				text="Gesamtes Lager"/>
 		<text name="CM_VictoryPoints_general_totalBales_title" 					text="Gesamte Ballen"/>
@@ -115,6 +115,6 @@
 		<text name="animalName_plural_pig"										text="Schweine"/>
 		<text name="animalName_plural_horse"									text="Pferde"/>
 		<text name="animalName_plural_chicken"									text="Hühner"/>
-		<text name="animalName_plural_sheep"									text="Schaafe"/>
+		<text name="animalName_plural_sheep"									text="Schafe"/>
 	</texts>
 </l10n>
