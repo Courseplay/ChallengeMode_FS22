@@ -17,6 +17,7 @@ end
 function VictoryPointManager:registerXmlSchema(xmlSchema, baseXmlKey)
 	ScoreBoardList.registerXmlSchema(xmlSchema, baseXmlKey .. ".VictoryPoints")
 
+	xmlSchema:register(XMLValueType.INT, baseXmlKey .. ".VictoryPoints#goal", "Goal of the challenge in points", 1000000)
 	baseXmlKey = baseXmlKey .. ".AdditionalPoints"
 	xmlSchema:register(XMLValueType.INT, baseXmlKey .. ".Farm(?)#id", "Id of Farm with additional Points")
 	baseXmlKey = baseXmlKey .. ".Farm(?)"
@@ -57,6 +58,7 @@ end
 
 function VictoryPointManager:saveToXMLFile(xmlFile, baseXmlKey)
 	self.staticPointList:saveToXMLFile(xmlFile, baseXmlKey .. ".VictoryPoints", 0)
+	xmlFile:setValue(baseXmlKey .. ".victoryPoints#goal", self.goal)
 
 	-- Save additional points to xml file
 	local idx = 0
@@ -81,6 +83,7 @@ end
 
 function VictoryPointManager:loadFromXMLFile(xmlFile, baseXmlKey)
 	ScoreBoardList.loadFromXMLFile(self, xmlFile, baseXmlKey .. ".VictoryPoints")
+	self.goal = xmlFile:setValue(baseXmlKey .. ".victoryPoints#goal")
 
 	-- Load additional points from xml file
 	baseXmlKey = baseXmlKey .. ".AdditionalPoints.Farm"
@@ -270,6 +273,7 @@ function VictoryPointManager:setGoal(newGoal, noEventSend)
 	self.victoryGoal = tonumber(newGoal)
 	CmUtil.debug("Set goal to %s", self.victoryGoal)
 	if noEventSend == nil or noEventSend == false then
+		print("send event")
 		ChangeGoalEvent.sendEvent(self.victoryGoal)
 	end
 end
