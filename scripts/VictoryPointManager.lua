@@ -58,7 +58,7 @@ end
 
 function VictoryPointManager:saveToXMLFile(xmlFile, baseXmlKey)
 	self.staticPointList:saveToXMLFile(xmlFile, baseXmlKey .. ".VictoryPoints", 0)
-	xmlFile:setValue(baseXmlKey .. ".VictoryPoints#goal", self.goal)
+	xmlFile:setValue(baseXmlKey .. ".VictoryPoints#goal", self.victoryGoal)
 
 	-- Save additional points to xml file
 	local idx = 0
@@ -83,7 +83,7 @@ end
 
 function VictoryPointManager:loadFromXMLFile(xmlFile, baseXmlKey)
 	ScoreBoardList.loadFromXMLFile(self, xmlFile, baseXmlKey .. ".VictoryPoints")
-	self.goal = xmlFile:getValue(baseXmlKey .. ".VictoryPoints#goal")
+	self.victoryGoal = xmlFile:getValue(baseXmlKey .. ".VictoryPoints#goal")
 
 	-- Load additional points from xml file
 	baseXmlKey = baseXmlKey .. ".AdditionalPoints.Farm"
