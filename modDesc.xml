@@ -29,6 +29,7 @@ Additional Rules:
 - Turn off specific mission types.
 - Set a mission limit per farm from 0-8 missions active at the same time.
 - Loan on/off/limited to a specified value.
+- Mark vehicles and tools as starter to not count them into the points.
 - Add or reduce points of a farm with a reason (e.g. won a challenge, punishment) with a complete log!
 - Hide a farm that doesn't participate in the challenge (e.g. Contractor). That farm will get have the limits set to max, is allowed to hire helpers and rent vehicles.
 
@@ -61,6 +62,7 @@ Weitere Regeln:
 - Bestimmte Missionstypen deaktivieren.
 - Ein Missionslimit pro Farm von 0-8 aktiven Missionen zur selben Zeit.
 - Kredit an/aus/limitiert auf einen bestimmten Wert.
+- Fahrzeuge und Geräte als Startfuhrpark markieren, so dass diese nicht zu den Punkten zählen.
 - Punkte zu einer Farm hinzufügen oder abziehen (z.B. eine Challenge gewonnen oder eine Bestrafung), mit komplettem Verlauf!
 - Verstecke eine Farm, die nicht an dem Wettkampf teilnimmt (z.B. Lohnunternehmen). Diese Farm hat die Limits aufs Maximum gesetzt und darf Helfer einstellen, sowie Fahrzeuge mieten.
 
