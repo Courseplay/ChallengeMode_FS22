@@ -27,6 +27,7 @@ function ChallengeMod.new(custom_mt)
 
 	if ChallengeMod.isDevelopmentVersion then
 		addConsoleCommand('CmGenerateContracts', 'Generates new contracts', 'consoleGenerateFieldMission', g_missionManager)
+		CmUtil.debugActive = true
 	end
 
 	return self
@@ -91,7 +92,6 @@ function ChallengeMod:setup()
 
 			vehicle.isStartVehicle = not vehicle.isStartVehicle
 			ChallengeMod.setButtonText(vehicle)
-			MarkStartVehicleEvent.sendEvent(vehicle, vehicle.isStartVehicle)
 
 			g_currentMission.shopMenu:updateButtonsPanel(g_currentMission.shopMenu.pageShopItemDetails)
 		end
@@ -241,7 +241,7 @@ function ChallengeMod:writeStream(streamId, connection)
 end
 
 function ChallengeMod:writeStreamVehicleAttribute(streamId, connection)
-	streamWriteBool(streamId, self.isStartVehicle ~= nil)
+	streamWriteBool(streamId, self.isStartVehicle or false)
 end
 Vehicle.writeStream = Utils.appendedFunction(Vehicle.writeStream, ChallengeMod.writeStreamVehicleAttribute)
 

@@ -40,6 +40,7 @@
 		<text name="CM_dialog_addPoints_error_missingReason" 					text="Reason is missing!"/>
 		<text name="CM_dialog_addPoints_error_zeroPoints" 						text="Points cannot be 0!"/>
 		<text name="CM_dialog_addPoints_error_notANumber" 						text="Points have to be a number!"/>
+		<text name="CM_dialog_setGoal_error_invalidGoal" 						text="Goal have to be a number!"/>
 
 		<text name="CM_VictoryPoints_leftTitle"									text=""/>
 		<text name="CM_VictoryPoints_middleTitle"								text="Factor"/>

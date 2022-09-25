@@ -94,7 +94,6 @@ Für mehr Informationen, Hilfe und Fehlermeldungen, schaut bitte auf <a href="ht
 		<sourceFile filename="events/ChangeAdminPasswordEvent.lua"/>
 		<sourceFile filename="events/ChangeFarmVisibilityEvent.lua"/>
 		<sourceFile filename="events/ChangeGoalEvent.lua"/>
-		<sourceFile filename="events/MarkStartVehicleEvent.lua"/>
 		<sourceFile filename="events/AddPointsEvent.lua"/> 
 	</extraSourceFiles>
 
