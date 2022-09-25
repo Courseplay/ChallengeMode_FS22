@@ -242,7 +242,7 @@ function ChallengeMod:writeStream(streamId, connection)
 end
 
 function ChallengeMod:writeStreamVehicleAttribute(streamId, connection)
-	streamWriteBool(streamId, self.isStartVehicle ~= nil)
+	streamWriteBool(streamId, self.isStartVehicle or false)
 end
 Vehicle.writeStream = Utils.appendedFunction(Vehicle.writeStream, ChallengeMod.writeStreamVehicleAttribute)
 
