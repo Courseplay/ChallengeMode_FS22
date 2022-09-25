@@ -58,7 +58,8 @@ ScoreBoardFrame.translations = {
 		errors = {
 			missingReason = g_i18n:getText("CM_dialog_addPoints_error_missingReason"),
 			zeroPoints = g_i18n:getText("CM_dialog_addPoints_error_zeroPoints"),
-			notANumber = g_i18n:getText("CM_dialog_addPoints_error_notANumber")
+			notANumber = g_i18n:getText("CM_dialog_addPoints_error_notANumber"),
+			invalidGoal = g_i18n:getText("CM_dialog_setGoal_error_invalidGoal")
 		}
 	},
 	leftSections = {
@@ -704,10 +705,20 @@ end
 
 function ScoreBoardFrame:onTextInputChangeGoal(text, clickOk)
 	if clickOk then
-		self.victoryPointManager:setGoal(tonumber(text))
-		self:updateTitles()
-		self:updateLists()
-		self:updateMenuButtons()
-		self.goal.overlayState = GuiOverlay.STATE_NORMAL
+		local newGoal = tonumber(text)
+		if newGoal ~= nil then
+			self.victoryPointManager:setGoal(newGoal)
+			self:updateTitles()
+			self:updateLists()
+			self:updateMenuButtons()
+			self.goal.overlayState = GuiOverlay.STATE_NORMAL
+		else
+			g_gui:showInfoDialog({
+				dialogType = DialogElement.TYPE_WARNING,
+				text = self.translations.dialogs.errors.invalidGoal,
+				callback = self.onClickSetGoal,
+				target = self
+			})
+		end
 	end
 end
