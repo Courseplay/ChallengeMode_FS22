@@ -9,7 +9,7 @@ function ChangeGoalEvent.emptyNew()
 end
 
 function ChangeGoalEvent.new(goal)
-    local self= ChangeGoalEvent.emptyNew()
+    local self = ChangeGoalEvent.emptyNew()
     self.goal = goal
 
     return self
@@ -21,11 +21,14 @@ function ChangeGoalEvent:readStream(streamId, connection)
     self:run(connection)
 end
 
-function ChangeGoalEvent:writeSteam(streamId, connection)
+function ChangeGoalEvent:writeStream(streamId, connection)
     streamWriteInt32(streamId, self.goal)
 end
 
 function ChangeGoalEvent:run(connection)
+    if not connection:getIsServer() then
+        g_server:broadcastEvent(ChangeGoalEvent.new(self.goal), nil, connection)
+    end
     g_victoryPointManager:setGoal(self.goal, true)
 end
 
