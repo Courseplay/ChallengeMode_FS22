@@ -24,8 +24,8 @@
 		<text name="CM_menuBtn_hideChangelog" 									text="Hide Changelog" />
 		<text name="CM_menuBtn_addPoints" 										text="Add Points" />
 
-		<text name="CM_buttonText_markStartVehicle" 							text="starting vehicle" />
-		<text name="CM_buttonText_unmarkStartVehicle" 							text="no starting vehicle" />
+		<text name="CM_buttonText_markStartVehicle" 							text="Starting vehicle" />
+		<text name="CM_buttonText_unmarkStartVehicle" 							text="No starting vehicle" />
 
 		<text name="CM_dialog_changeTitle" 										text="Change value" />
 		<text name="CM_dialog_adminTitle" 										text="Login" />
@@ -33,7 +33,7 @@
 		<text name="CM_dialog_adminWrongPassword"								text="Wrong password (%s)"/>
 		<text name="CM_dialog_newGoal" 											text="Enter the new goal."/>
 
-		<text name="CM_dialog_addPoints_title"									text="add Points"/>
+		<text name="CM_dialog_addPoints_title"									text="Add Points"/>
 		<text name="CM_dialog_addPoints_pointsText"								text="Points"/>
 		<text name="CM_dialog_addPoints_reasonText"								text="Reason"/>
 
