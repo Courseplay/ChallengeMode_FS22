@@ -251,9 +251,7 @@ function ScoreBoardFrame:onGuiSetupFinished()
 end
 
 function ScoreBoardFrame:onFrameOpen()
-	self:updateLists()
-	self:updateMenuButtons()
-	self:updateTitles()
+	self:updateFrame()
 	self:setSoundSuppressed(true)
 	FocusManager:setFocus(self.leftList)
 	self:setSoundSuppressed(false)
@@ -264,6 +262,14 @@ function ScoreBoardFrame:onFrameClose()
 	ScoreBoardFrame:superClass().onFrameClose(self)
 
 	self.showChangelog = false
+	self:updateRightColumn()
+	self:updateFrame()
+end
+
+function ScoreBoardFrame:updateFrame()
+	self:updateLists()
+	self:updateTitles()
+	self:updateMenuButtons()
 end
 
 function ScoreBoardFrame:updateLists()
@@ -525,14 +531,14 @@ function ScoreBoardFrame:onClickShowChangelog()
 	self.showChangelog = true
 
 	self:updateRightColumn()
-	self:updateLists()
+	self:updateFrame()
 end
 
 function ScoreBoardFrame:onClickHideChangelog()
 	self.showChangelog = false
 
 	self:updateRightColumn()
-	self:updateLists()
+	self:updateFrame()
 end
 
 function ScoreBoardFrame:onDoubleClickPoint(list, section, index, cell)
@@ -564,6 +570,9 @@ function ScoreBoardFrame:onClickLeftListCallback(list, section, index, cell)
 
 	if self.leftList:getSelectedSection() ~= self.LEFT_SECTIONS.POINTS then
 		self.showChangelog = false
+
+		self:updateRightColumn()
+		self:updateFrame()
 	end
 
 	self:updateMenuButtons()
