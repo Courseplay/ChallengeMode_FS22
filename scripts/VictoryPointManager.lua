@@ -106,6 +106,19 @@ function VictoryPointManager:writeStream(streamId, connection)
 	self.staticPointList:writeStream(streamId)
 
 	streamWriteInt32(streamId, self.victoryGoal)
+
+	--tell client number of elements
+	streamWriteInt32(streamId, #self.additionalPoints)
+	for farmId, points in pairs(self.additionalPoints) do
+		streamWriteInt32(streamId, #points)
+		for _, point in pairs(points) do
+			streamWriteInt8(streamId, farmId)
+			streamWriteInt32(streamId, point.points)
+			streamWriteString(streamId, point.addedBy)
+			streamWriteString(streamId, point.date)
+			streamWriteString(streamId, point.reason)
+		end
+	end
 end
 
 function VictoryPointManager:readStream(streamId, connection)
@@ -113,6 +126,21 @@ function VictoryPointManager:readStream(streamId, connection)
 	self.staticPointList:readStream(streamId)
 
 	self.victoryGoal = streamReadInt32(streamId)
+
+	local numberOfFarms = streamReadInt32(streamId)
+	for i = 1, numberOfFarms do
+		local numberOfPoints = streamReadInt32(streamId)
+		for j= 1, numberOfPoints do
+			local farmId = streamReadInt8(streamId)
+			local points = streamReadInt32(streamId)
+			local addedBy = streamReadString(streamId)
+			local date = streamReadString(streamId)
+			local reason = streamReadString(streamId)
+
+			local point = CmUtil.packPointData(points, addedBy, date, reason)
+			g_victoryPointManager:addAdditionalPoint(farmId, point, true)
+		end
+	end
 end
 
 function VictoryPointManager:addFillTypeFactors(category, factorData, farmId)
