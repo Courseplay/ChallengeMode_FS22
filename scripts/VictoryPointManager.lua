@@ -83,7 +83,7 @@ end
 
 function VictoryPointManager:loadFromXMLFile(xmlFile, baseXmlKey)
 	ScoreBoardList.loadFromXMLFile(self, xmlFile, baseXmlKey .. ".VictoryPoints")
-	self.victoryGoal = xmlFile:getValue(baseXmlKey .. ".VictoryPoints#goal")
+	self.victoryGoal = xmlFile:getValue(baseXmlKey .. ".VictoryPoints#goal", self.victoryGoal)
 
 	-- Load additional points from xml file
 	baseXmlKey = baseXmlKey .. ".AdditionalPoints.Farm"
