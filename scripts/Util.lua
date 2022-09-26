@@ -15,6 +15,7 @@ function CmUtil.debugSparse(...)
 	end
 end
 
+
 --- Executes a function and throws a callstack, when an error appeared.
 --- Additionally the first return value is a status, if the function was executed correctly.
 ---@param func function function to be executed.
