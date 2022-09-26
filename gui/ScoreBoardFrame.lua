@@ -264,6 +264,7 @@ function ScoreBoardFrame:onFrameClose()
 	ScoreBoardFrame:superClass().onFrameClose(self)
 
 	self.showChangelog = false
+	self:updateLists()
 end
 
 function ScoreBoardFrame:updateLists()
@@ -564,6 +565,8 @@ function ScoreBoardFrame:onClickLeftListCallback(list, section, index, cell)
 
 	if self.leftList:getSelectedSection() ~= self.LEFT_SECTIONS.POINTS then
 		self.showChangelog = false
+
+		self:updateLists()
 	end
 
 	self:updateMenuButtons()
