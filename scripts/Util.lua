@@ -71,7 +71,8 @@ end
 ---@return table
 function CmUtil.loadConfigCategories(xmlFile, baseXmlKey)
 	local function getText(...)
-		return g_i18n:getText(string.format(...))
+		local s = string.format(...)
+		return g_i18n:hasText(s) and g_i18n:getText(s) or ("Missing Translation " .. s)
 	end
 
 	local categories = {}
