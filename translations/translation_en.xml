@@ -94,7 +94,7 @@
 		<text name="CM_Rules_general_creditLimit_title"							text="Credit limit:"/>
 		<text name="CM_Rules_general_creditLimit_deactivated"					text="Deactivated"/>
 		<text name="CM_Rules_general_maxNumberOfAnimals_title" 					text="Max amount of counting Animals:"/>
-		<text name="CM_Rules_general_maxNumberOfAnimals_deactivated"			text="Deaktiviert"/>
+		<text name="CM_Rules_general_maxNumberOfAnimals_deactivated"			text="Deactivated"/>
 		<text name="CM_Rules_general_maxNumberOfAnimals_noLimit"				text="No Limit"/>
 
 		<text name="CM_Rules_visibleFarms_title"								text="Farms:"/>
