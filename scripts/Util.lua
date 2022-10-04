@@ -15,6 +15,7 @@ function CmUtil.debugSparse(...)
 	end
 end
 
+
 --- Executes a function and throws a callstack, when an error appeared.
 --- Additionally the first return value is a status, if the function was executed correctly.
 ---@param func function function to be executed.
@@ -70,7 +71,8 @@ end
 ---@return table
 function CmUtil.loadConfigCategories(xmlFile, baseXmlKey)
 	local function getText(...)
-		return g_i18n:getText(string.format(...))
+		local s = string.format(...)
+		return g_i18n:hasText(s) and g_i18n:getText(s) or ("Missing Translation " .. s)
 	end
 
 	local categories = {}
