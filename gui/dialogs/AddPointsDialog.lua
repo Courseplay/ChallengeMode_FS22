@@ -24,8 +24,8 @@ function AddPointsDialog:onOpen()
     AddPointsDialog:superClass().onOpen(self)
 
     self.extraInputDisableTime = 100
-    FocusManager:setFocus(self.pointsInput)
     self.pointsInput.blockTime = 0
+    self:focusPointsInput()
 
     if self.pointsInput.imeActive or self.reasonInput.imeActive then
         if self.yesButton ~= nil then
@@ -65,26 +65,33 @@ function AddPointsDialog:sendCallback(clickOk)
     local reason = self.reasonInput:getText()
 
     if clickOk then
+        local function enterPoints(self)
+            self:focusPointsInput()
+            self.pointsInput:setForcePressed(true)
+        end
         if reason == "" then
             g_gui:showInfoDialog({
                 text = ScoreBoardFrame.translations.dialogs.errors.missingReason,
-                dialogType = DialogElement.TYPE_WARNING
+                dialogType = DialogElement.TYPE_WARNING,
+                target = self,
+                callback = self.onPointsEnterPressed,
             })
-            self:onPointsEnterPressed()
             return
         elseif points == 0 then
             g_gui:showInfoDialog({
                 text = ScoreBoardFrame.translations.dialogs.errors.zeroPoints,
-                dialogType = DialogElement.TYPE_WARNING
+                dialogType = DialogElement.TYPE_WARNING,
+                target = self,
+                callback = enterPoints
             })
-            self:onPointsEnterPressed()
             return
         elseif points == nil then
             g_gui:showInfoDialog({
                 text = ScoreBoardFrame.translations.dialogs.errors.notANumber,
-                dialogType = DialogElement.TYPE_WARNING
+                dialogType = DialogElement.TYPE_WARNING,
+                target = self,
+                callback = enterPoints
             })
-            self:onPointsEnterPressed()
             return
         end
     end
@@ -121,7 +128,7 @@ function AddPointsDialog:update(dt)
 end
 
 function AddPointsDialog:onPointsEnterPressed()
-    FocusManager:setFocus(self.reasonInput)
+    self:focusReasonInput()
     self.reasonInput:setForcePressed(true)
 end
 
@@ -152,4 +159,14 @@ function AddPointsDialog:onClickBack()
     else
         return true
     end
+end
+
+function AddPointsDialog:focusPointsInput()
+    FocusManager:setFocus(self.pointsInput)
+    self.pointsInput:onFocusActivate()
+end
+
+function AddPointsDialog:focusReasonInput()
+    FocusManager:setFocus(self.reasonInput)
+    self.reasonInput:onFocusActivate()
 end
