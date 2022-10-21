@@ -20,6 +20,7 @@ function ChallengeMod.new(custom_mt)
 	self.isServer = g_server
 	self.visibleFarms = {}
 	self.isAdminModeActive = false
+	g_messageCenter:subscribe(MessageType.FARM_CREATED, self.newFarmCreated, self)
 
 	if ChallengeMod.isDevelopmentVersion then
 		addConsoleCommand('CmGenerateContracts', 'Generates new contracts', 'consoleGenerateFieldMission', g_missionManager)
