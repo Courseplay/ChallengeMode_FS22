@@ -20,10 +20,7 @@ function ChallengeMod.new(custom_mt)
 	self.isServer = g_server
 	self.visibleFarms = {}
 	self.isAdminModeActive = false
-
-	for i = 0, FarmManager.MAX_FARM_ID do
-		self.visibleFarms[i] = true
-	end
+	g_messageCenter:subscribe(MessageType.FARM_CREATED, self.newFarmCreated, self)
 
 	if ChallengeMod.isDevelopmentVersion then
 		addConsoleCommand('CmGenerateContracts', 'Generates new contracts', 'consoleGenerateFieldMission', g_missionManager)
@@ -33,8 +30,13 @@ function ChallengeMod.new(custom_mt)
 	return self
 end
 
+function ChallengeMod:newFarmCreated(farmId)
+	self.visibleFarms[farmId] = true
+end
+
 function ChallengeMod:changeFarmVisibility(farmId, visible, noEvent)
 	if self.visibleFarms[farmId] ~= nil then
+		CmUtil.debug("Change visibility of farm %s", farmId)
 		if visible == nil then
 			self.visibleFarms[farmId] = not self.visibleFarms[farmId]
 		else
@@ -175,7 +177,7 @@ function ChallengeMod:saveToXMLFile(filename)
 		local i = 0
 		for farmId, visible in pairs(self.visibleFarms) do
 			xmlFile:setValue(string.format("%s.Farms.Farm(%d)#id", self.baseXmlKey, i), farmId)
-			xmlFile:setValue(string.format("%s.Farms.Farm(%d)#visible", self.baseXmlKey, i), visible or true)
+			xmlFile:setValue(string.format("%s.Farms.Farm(%d)#visible", self.baseXmlKey, i), visible)
 			i = i + 1
 		end
 		g_ruleManager:saveToXMLFile(xmlFile, self.baseXmlKey)
