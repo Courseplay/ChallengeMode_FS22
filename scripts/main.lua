@@ -19,7 +19,7 @@ function ChallengeMod.new(custom_mt)
 	local self = setmetatable({}, custom_mt or ChallengeMod_mt)
 	self.isServer = g_server
 	self.visibleFarms = {}
-	self.finalPointList = {}
+	self.finalPoints = {}
 	self.isAdminModeActive = false
 	self.trackDuration = false
 	self.timePassed = 1
@@ -215,8 +215,13 @@ function ChallengeMod:saveToXMLFile(filename)
 		xmlFile:setValue(self.baseXmlKey .. "#trackDuration", self.trackDuration)
 		local i = 0
 		for farmId, visible in pairs(self.visibleFarms) do
-			xmlFile:setValue(string.format("%s.Farms.Farm(%d)#id", self.baseXmlKey, i), farmId)
-			xmlFile:setValue(string.format("%s.Farms.Farm(%d)#visible", self.baseXmlKey, i), visible or true)
+			local key = string.format("%s.Farms.Farm(%d)", self.baseXmlKey, i)
+			xmlFile:setValue(key .. "#id", farmId)
+			xmlFile:setValue(key .. "#visible", visible or true)
+
+			if self:isDurationOver() and visible then
+				xmlFile:setValue(key .. "#finalPoints", self.finalPoints[farmId])
+			end
 			i = i + 1
 		end
 
@@ -254,6 +259,13 @@ function ChallengeMod:loadFromXMLFile(filename)
 			self.trackDuration = false
 		else
 			self.trackDuration = xmlFile:getValue(self.baseXmlKey .. "#trackDuration")
+
+			if self.trackDuration then
+				local key = self.baseXmlKey .. ".TimeLimit"
+
+				self:setDuration(xmlFile:getValue(key .. ".Duration", 0))
+				self.timePassed = xmlFile:getValue(key .. ".TimePassed", 1)
+			end
 		end
 
 		xmlFile:iterate(self.baseXmlKey .. ".Farms.Farm", function(ix, key)
@@ -261,6 +273,10 @@ function ChallengeMod:loadFromXMLFile(filename)
 			local visible = xmlFile:getValue(key .. "#visible", true)
 			if id ~= nil then
 				self.visibleFarms[id] = visible
+			end
+
+			if self:isDurationOver() and visible then
+				self.finalPoints[id] = xmlFile:getValue(key .. "#finalPoints")
 			end
 		end)
 
