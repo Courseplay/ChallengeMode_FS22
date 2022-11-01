@@ -20,7 +20,6 @@ function ChallengeMod.new(custom_mt)
 	self.isServer = g_server
 	self.visibleFarms = {}
 	self.isAdminModeActive = false
-	self.askForDuration = false
 	self.trackDuration = false
 	self.timePassed = 1
 	self.duration = 0
@@ -62,6 +61,18 @@ function ChallengeMod:changeAdminPassword(newPassword, noEvent)
 		if noEvent == nil or noEvent == false then
 			ChangeAdminPasswordEvent.sendEvent(newPassword)
 		end
+	end
+end
+
+function ChallengeMod:setDuration(duration)
+	self.duration = duration
+
+	if duration == 0 then
+		self.trackDuration = false
+		g_messageCenter:unsubscribe(MessageType.PERIOD_CHANGED, self)
+	else
+		self.trackDuration = true
+		g_messageCenter:subscribe(MessageType.PERIOD_CHANGED, self.onPeriodChanged, self)
 	end
 end
 
@@ -230,7 +241,7 @@ function ChallengeMod:loadFromXMLFile(filename)
 		self.adminPassword = xmlFile:getValue(self.baseXmlKey .. "#password", self.adminPassword)
 
 		if not xmlFile:hasProperty(self.baseXmlKey .. "#trackDuration") then
-			self.askForDuration = true
+			self:setDuration(0)
 		else
 			self.trackDuration = xmlFile:getValue(self.baseXmlKey .. "#trackDuration")
 		end
@@ -317,10 +328,7 @@ function ChallengeMod:saveToSaveGame()
 	end
 end
 
-function ChallengeMod:toggleDurationTracking()
-	self.trackDuration = true
-	g_messageCenter:subscribe(MessageType.PERIOD_CHANGED, self.onPeriodChanged, self)
-end
+ItemSystem.save = Utils.prependedFunction(ItemSystem.save, ChallengeMod.saveToSaveGame)
 
 function ChallengeMod:onPeriodChanged()
 	self.timePassed = self.timePassed + 1
@@ -329,8 +337,6 @@ function ChallengeMod:onPeriodChanged()
 		--TODO: store values of current point lists. this is the final score
 	end
 end
-
-ItemSystem.save = Utils.prependedFunction(ItemSystem.save, ChallengeMod.saveToSaveGame)
 
 g_challengeMod = ChallengeMod.new()
 
