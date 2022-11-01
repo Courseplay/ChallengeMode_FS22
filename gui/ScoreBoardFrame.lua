@@ -37,6 +37,7 @@ ScoreBoardFrame = {
 
 ScoreBoardFrame.translations = {
 	goal = function(goal) return string.format(g_i18n:getText("CM_rightList_leftTitle"), goal) end,
+	headerDuration = function (timePassed, duration) return string.format(g_i18n:getText("CM_title_duration"), timePassed, duration) end,
 
 	ruleTitle = g_i18n:getText("CM_leftList_ruleTitle"),
 	adminPointsTitle = g_i18n:getText("CM_leftList_adminPointsTitle"),
@@ -100,6 +101,11 @@ function ScoreBoardFrame:onGuiSetupFinished()
 	if not g_challengeMod:isTimeTracked() then
 		self.headerDuration:setVisible(false)
 	end
+
+	self.goal.overlay.alpha = 0
+	self.goal.textDisabledColor = self.goal.textColor
+	self.headerDuration.overlay.apha = 0
+	self.headerDuration.textDisabledColor = self.headerDuration.textColor
 
 	-- Save the current selected list to decide which buttons will be shown and which not
 	local orig = self.leftList.onFocusEnter
@@ -289,6 +295,7 @@ function ScoreBoardFrame:updateTitles()
 	local sx, ix = self.leftList:getSelectedPath()
 	local titles = self.managers[sx]():getTitles()
 	self.goal:setText(self.translations.goal(self.victoryPointManager:getGoal()))
+	self.headerDuration:setText(self.translations.headerDuration(g_challengeMod:getTimePassed(), g_challengeMod:getDuration()))
 	self.rightList_middleTitle:setText(titles[2])
 	self.rightList_rightTitle:setText(titles[3])
 end
@@ -303,9 +310,8 @@ function ScoreBoardFrame:updateMenuButtons()
 	self:setMenuButtonInfoDirty()
 
 	self.goal:setDisabled(not g_challengeMod.isAdminModeActive, false)
-
-	self.goal.overlay.alpha = 0
-	self.goal.textDisabledColor = self.goal.textColor
+	self.headerDuration:setDisabled(not g_challengeMod.isAdminModeActive, false)
+	self.headerDuration:setVisible(not g_challengeMod.isAdminModeActive or g_challengeMod:isTimeTracked())
 end
 
 function ScoreBoardFrame:getNumberOfSections(list)

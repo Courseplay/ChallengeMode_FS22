@@ -7,7 +7,7 @@
                 <GuiElement type="text" profile="Header" id="header" text="$l10n_CM_title"/>
             </GuiElement>
             <GuiElement type="empty" profile="RightHeaderBox">
-                <GuiElement type="text" profile="RightHeader" id="headerDuration" text="$l10n_CM_title_duration"/>
+                <GuiElement type="button" profile="RightHeader" id="headerDuration" onClick="onClickSetDuration"/>
             </GuiElement>
         </GuiElement>
 
