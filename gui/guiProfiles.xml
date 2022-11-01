@@ -177,7 +177,7 @@
 		<Value name="autoValidateLayout" value="true"/>
 		<Value name="flowDirection" value="horizontal"/>
     </Profile>
-	
+
 	<Profile name="lpsHeader" extends="textDefault" with="anchorMiddleLeft">
         <Value name="textSize" value="24px" />
         <Value name="textBold" value="true" />
@@ -243,7 +243,7 @@
     </Profile>
 
 	<Profile name="CmDialogTextInput" extends="dialogTextInput" with="anchorMiddleCenter">
-		<Value name="textSize" value="18px"/> 
+		<Value name="textSize" value="18px"/>
         <Value name="maxCharacters" value="300"/>
     </Profile>
     <Profile name="CmDialogPointsTextInput" extends="CmDialogTextInput" with="anchorMiddleCenter">
@@ -254,7 +254,7 @@
     </Profile>
 
     <Profile name="CmChangelogUserNameText" extends="textDefault" with="anchorMiddleLeft">
-        <Value name="size" value="190px 50px"/> 
+        <Value name="size" value="190px 50px"/>
         <Value name="textVerticalAlignment" value="middle" />
         <Value name="textAutoWidth" value="true" />
         <Value name="position" value="45px 0" />
@@ -272,6 +272,20 @@
         <Value name="textVerticalAlignment" value="middle" />
         <Value name="format" value="currency" />
         <Value name="position" value="520px 0" />
+    </Profile>
+
+    <Profile name="LeftHeaderBox" extends="emptyPanel" with="anchorTopLeft">
+        <Value name="size" value="600px 64px"/>
+    </Profile>
+
+    <Profile name="RightHeaderBox" extends="LeftHeaderBox" with="anchorTopRight"/>
+
+    <Profile name="Header" extends="ingameMenuFrameHeaderText" with="anchorMiddleLeft">
+        <Value name="size" value="550px 64px"/>
+    </Profile>
+
+    <Profile name="RightHeader" extends="Header" with="anchorMiddleRight">
+        <Value name="textAlignment" value="right"/>
     </Profile>
 
 </GUIProfiles>
