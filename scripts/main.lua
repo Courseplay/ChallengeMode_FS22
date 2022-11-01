@@ -20,6 +20,10 @@ function ChallengeMod.new(custom_mt)
 	self.isServer = g_server
 	self.visibleFarms = {}
 	self.isAdminModeActive = false
+	self.askForDuration = false
+	self.trackDuration = false
+	self.timePassed = 1
+	self.duration = 0
 
 	for i = 0, FarmManager.MAX_FARM_ID do
 		self.visibleFarms[i] = true
@@ -67,6 +71,14 @@ end
 
 function ChallengeMod:getDefaultAdminPassword()
 	return self.defaultAdminPassword
+end
+
+function ChallengeMod:getDuration()
+	return self.duration
+end
+
+function ChallengeMod:getTimePassed()
+	return self.timePassed
 end
 
 function ChallengeMod:loadMap()
@@ -140,8 +152,12 @@ end
 function ChallengeMod:registerXmlSchema()
 	self.xmlSchema = XMLSchema.new("ChallengeMod")
 	self.xmlSchema:register(XMLValueType.STRING, self.baseXmlKey .. "#password", "Admin password")
+	self.xmlSchema:register(XMLValueType.BOOL, self.baseXmlKey .. "#trackDuration", "Specifies if the duration is tracked or not", false)
 	self.xmlSchema:register(XMLValueType.INT, self.baseXmlKey .. ".Farms.Farm(?)#id", "Farm id")
 	self.xmlSchema:register(XMLValueType.BOOL, self.baseXmlKey .. ".Farms.Farm(?)#visible", "Farm visible", true)
+	local key = self.baseXmlKey .. ".TimeLimit"
+	self.xmlSchema:register(XMLValueType.INT, key .. ".Duration", "How long the Challenge will go at most.")
+	self.xmlSchema:register(XMLValueType.INT, key .. ".TimePassed", "The current Month of the Challenge.", 1)
 	g_victoryPointManager:registerXmlSchema(self.xmlSchema, self.baseXmlKey)
 	g_ruleManager:registerXmlSchema(self.xmlSchema, self.baseXmlKey)
 
@@ -172,12 +188,21 @@ function ChallengeMod:saveToXMLFile(filename)
 	if xmlFile ~= nil then
 		CmUtil.debug("Challenge setup saved to %s.", filename)
 		xmlFile:setValue(self.baseXmlKey .. "#password", self.adminPassword)
+		xmlFile:setValue(self.baseXmlKey .. "#trackDuration", self.trackDuration)
 		local i = 0
 		for farmId, visible in pairs(self.visibleFarms) do
 			xmlFile:setValue(string.format("%s.Farms.Farm(%d)#id", self.baseXmlKey, i), farmId)
 			xmlFile:setValue(string.format("%s.Farms.Farm(%d)#visible", self.baseXmlKey, i), visible or true)
 			i = i + 1
 		end
+
+		if self.trackDuration then
+			local key = self.baseXmlKey .. ".TimeLimit"
+
+			xmlFile:setValue(key .. ".Duration", self.duration)
+			xmlFile:setValue(key .. ".TimePassed", self.timePassed)
+		end
+
 		g_ruleManager:saveToXMLFile(xmlFile, self.baseXmlKey)
 		g_victoryPointManager:saveToXMLFile(xmlFile, self.baseXmlKey)
 		xmlFile:save()
@@ -197,8 +222,14 @@ function ChallengeMod:loadFromXMLFile(filename)
 	local xmlFile = XMLFile.loadIfExists("xmlFile", filename, self.xmlSchema)
 	if xmlFile ~= nil then
 		CmUtil.debug("Challenge setup loaded from %s.", filename)
-		self.adminPassword = xmlFile:getValue(self.baseXmlKey .. "#password", self.adminPassword)
 		--maybe save password encrypted to increase user security. Many people use the same passwords everywhere so this could make them more attackable with a password saved in clear text
+		self.adminPassword = xmlFile:getValue(self.baseXmlKey .. "#password", self.adminPassword)
+
+		if not xmlFile:hasProperty(self.baseXmlKey .. "#trackDuration") then
+			self.askForDuration = true
+		else
+			self.trackDuration = xmlFile:getValue(self.baseXmlKey .. "#trackDuration")
+		end
 
 		xmlFile:iterate(self.baseXmlKey .. ".Farms.Farm", function(ix, key)
 			local id = xmlFile:getValue(key .. "#id")
@@ -279,6 +310,19 @@ function ChallengeMod:saveToSaveGame()
 	if g_modIsLoaded[ChallengeMod.MOD_NAME] then
 		local saveGamePath = g_currentMission.missionInfo.savegameDirectory .. "/" .. ChallengeMod.configFileName
 		g_challengeMod:saveToXMLFile(saveGamePath)
+	end
+end
+
+function ChallengeMod:toggleDurationTracking()
+	self.trackDuration = true
+	g_messageCenter:subscribe(MessageType.PERIOD_CHANGED, self.onPeriodChanged, self)
+end
+
+function ChallengeMod:onPeriodChanged()
+	self.timePassed = self.timePassed + 1
+
+	if self.timePassed > self.duration then
+		--TODO: store values of current point lists. this is the final score
 	end
 end
 
