@@ -242,6 +242,7 @@ function ChallengeMod:loadFromXMLFile(filename)
 
 		if not xmlFile:hasProperty(self.baseXmlKey .. "#trackDuration") then
 			self:setDuration(0)
+			self.trackDuration = false
 		else
 			self.trackDuration = xmlFile:getValue(self.baseXmlKey .. "#trackDuration")
 		end
