@@ -1,6 +1,7 @@
 ScoreBoardFrame = {
 	CONTROLS = {
 		HEADER = "header",
+		HEADER_DURATION = "headerDuration",
 		MAIN_BOC = "mainBox",
 		LEFT_COLUMN = "leftColumn",
 		RIGHT_COLUMN = "rightColumn",
