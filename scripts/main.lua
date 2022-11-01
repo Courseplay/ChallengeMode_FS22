@@ -19,6 +19,7 @@ function ChallengeMod.new(custom_mt)
 	local self = setmetatable({}, custom_mt or ChallengeMod_mt)
 	self.isServer = g_server
 	self.visibleFarms = {}
+	self.finalPointList = {}
 	self.isAdminModeActive = false
 	self.trackDuration = false
 	self.timePassed = 1
@@ -88,12 +89,20 @@ function ChallengeMod:isTimeTracked()
 	return self.trackDuration
 end
 
+function ChallengeMod:isDurationOver()
+	return self.timePassed > self.duration
+end
+
 function ChallengeMod:getDuration()
 	return self.duration
 end
 
 function ChallengeMod:getTimePassed()
 	return self.timePassed
+end
+
+function ChallengeMod:getFinalPointList()
+	return self.finalPoints
 end
 
 function ChallengeMod:loadMap()
@@ -334,8 +343,18 @@ ItemSystem.save = Utils.prependedFunction(ItemSystem.save, ChallengeMod.saveToSa
 function ChallengeMod:onPeriodChanged()
 	self.timePassed = self.timePassed + 1
 
-	if self.timePassed > self.duration then
-		--TODO: store values of current point lists. this is the final score
+	if self:isDurationOver() then
+		g_gui:showInfoDialog({
+			dialogType = DialogElement.TYPE_INFO,
+			text = g_i18n:getText("CM_dialog_challengeOver")
+		})
+		if g_currentMission:getIsServer() then
+			for _, farm in pairs(g_farmManager:getFarms()) do
+				local farmId = farm.farmId
+				g_victoryPointManager:calculatePoints(farmId)
+				self.finalPoints[farmId] = g_victoryPointManager:getTotalPoints(farmId)
+			end
+		end
 	end
 end
 

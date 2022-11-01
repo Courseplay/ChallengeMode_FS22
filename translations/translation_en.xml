@@ -34,6 +34,7 @@
 		<text name="CM_dialog_adminWrongPassword"								text="Wrong password (%s)"/>
 		<text name="CM_dialog_newGoal" 											text="Enter the new goal."/>
 		<text name="CM_dialog_newDuration"										text="Enter the duration in months. \n A duration of 0 months will deactivate the time limit."/>
+		<text name="CM_dialog_challengeOver"									text="The challenge is over."/>
 
 		<text name="CM_dialog_addPoints_title"									text="Add Points"/>
 		<text name="CM_dialog_addPoints_pointsText"								text="Points"/>
