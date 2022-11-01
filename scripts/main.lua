@@ -73,6 +73,10 @@ function ChallengeMod:getDefaultAdminPassword()
 	return self.defaultAdminPassword
 end
 
+function ChallengeMod:isTimeTracked()
+	return self.trackDuration
+end
+
 function ChallengeMod:getDuration()
 	return self.duration
 end

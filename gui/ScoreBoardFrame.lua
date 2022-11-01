@@ -97,6 +97,9 @@ function ScoreBoardFrame:onGuiSetupFinished()
 	self.leftList:setDataSource(self)
 	self.rightList:setDataSource(self)
 	self.changelogList:setDataSource(self)
+	if not g_challengeMod:isTimeTracked() then
+		self.headerDuration:setVisible(false)
+	end
 
 	-- Save the current selected list to decide which buttons will be shown and which not
 	local orig = self.leftList.onFocusEnter
