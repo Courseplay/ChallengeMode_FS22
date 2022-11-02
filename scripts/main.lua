@@ -22,9 +22,10 @@ function ChallengeMod.new(custom_mt)
 	self.finalPoints = {}
 	self.isAdminModeActive = false
 	self.trackDuration = false
-	g_messageCenter:subscribe(MessageType.FARM_CREATED, self.newFarmCreated, self)
 	self.timePassed = 1
 	self.duration = 0
+
+	g_messageCenter:subscribe(MessageType.FARM_CREATED, self.newFarmCreated, self)
 
 	if ChallengeMod.isDevelopmentVersion then
 		addConsoleCommand('CmGenerateContracts', 'Generates new contracts', 'consoleGenerateFieldMission', g_missionManager)
@@ -223,7 +224,7 @@ function ChallengeMod:saveToXMLFile(filename)
 		for farmId, visible in pairs(self.visibleFarms) do
 			local key = string.format("%s.Farms.Farm(%d)", self.baseXmlKey, i)
 			xmlFile:setValue(key .. "#id", farmId)
-			xmlFile:setValue(key .. "#visible", visible or true)
+			xmlFile:setValue(key .. "#visible", visible)
 
 			if self:isDurationOver() and visible then
 				xmlFile:setValue(key .. "#finalPoints", self.finalPoints[farmId])
