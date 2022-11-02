@@ -65,7 +65,7 @@ function ChallengeMod:changeAdminPassword(newPassword, noEvent)
 	end
 end
 
-function ChallengeMod:setDuration(duration)
+function ChallengeMod:setDuration(duration, noEvent)
 	self.duration = duration
 
 	if duration == 0 then
@@ -74,6 +74,10 @@ function ChallengeMod:setDuration(duration)
 	else
 		self.trackDuration = true
 		g_messageCenter:subscribe(MessageType.PERIOD_CHANGED, self.onPeriodChanged, self)
+	end
+
+	if noEvent == nil or not noEvent then
+		ChangeDurationEvent.sendEvent(duration)
 	end
 end
 
@@ -308,6 +312,7 @@ function ChallengeMod:writeStream(streamId, connection)
 	end
 	streamWriteInt8(streamId, -1)
 
+	--TODO: implement sync of duration linked stuff
 	g_ruleManager:writeStream(streamId, connection)
 	g_victoryPointManager:writeStream(streamId, connection)
 end
@@ -327,6 +332,7 @@ function ChallengeMod:readStream(streamId, connection)
 		end
 		self.visibleFarms[id] = streamReadBool(streamId)
 	end
+	--TODO: implement sync of duration linked stuff
 	g_ruleManager:readStream(streamId, connection)
 	g_victoryPointManager:readStream(streamId, connection)
 end
