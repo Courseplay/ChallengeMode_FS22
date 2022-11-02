@@ -22,12 +22,9 @@ function ChallengeMod.new(custom_mt)
 	self.finalPoints = {}
 	self.isAdminModeActive = false
 	self.trackDuration = false
+	g_messageCenter:subscribe(MessageType.FARM_CREATED, self.newFarmCreated, self)
 	self.timePassed = 1
 	self.duration = 0
-
-	for i = 0, FarmManager.MAX_FARM_ID do
-		self.visibleFarms[i] = true
-	end
 
 	if ChallengeMod.isDevelopmentVersion then
 		addConsoleCommand('CmGenerateContracts', 'Generates new contracts', 'consoleGenerateFieldMission', g_missionManager)
@@ -37,8 +34,13 @@ function ChallengeMod.new(custom_mt)
 	return self
 end
 
+function ChallengeMod:newFarmCreated(farmId)
+	self.visibleFarms[farmId] = true
+end
+
 function ChallengeMod:changeFarmVisibility(farmId, visible, noEvent)
 	if self.visibleFarms[farmId] ~= nil then
+		CmUtil.debug("Change visibility of farm %s", farmId)
 		if visible == nil then
 			self.visibleFarms[farmId] = not self.visibleFarms[farmId]
 		else
