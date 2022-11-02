@@ -313,9 +313,19 @@ function ChallengeMod:writeStream(streamId, connection)
 		streamWriteInt8(streamId, farmId)
 		streamWriteBool(streamId, visible)
 	end
-	streamWriteInt8(streamId, -1)
+	streamWriteInt8(streamId, -1) -- break stream reading for visible farms
 
-	--TODO: implement sync of duration linked stuff
+	streamWriteInt32(streamId, self.timePassed)
+	streamWriteInt32(streamId, self.duration)
+	if self:isDurationOver() then
+		local numFarms = #self.finalPoints
+		streamWriteInt8(streamId, numFarms)
+
+		for farmId, points in pairs(self.finalPoints) do
+			streamWriteInt8(streamId, farmId)
+			streamWriteInt32(streamId, points)
+		end
+	end
 	g_ruleManager:writeStream(streamId, connection)
 	g_victoryPointManager:writeStream(streamId, connection)
 end
@@ -335,7 +345,18 @@ function ChallengeMod:readStream(streamId, connection)
 		end
 		self.visibleFarms[id] = streamReadBool(streamId)
 	end
-	--TODO: implement sync of duration linked stuff
+	self.timePassed = streamReadInt32(streamId)
+	self:setDuration(streamReadInt32(streamId))
+
+	if self:isDurationOver() then
+		local numFarms = streamReadInt8(streamId)
+
+		for i = 1, numFarms do
+			local farmId = streamReadInt8(streamId)
+			self.finalPoints[farmId] = streamReadInt32(streamId)
+		end
+	end
+
 	g_ruleManager:readStream(streamId, connection)
 	g_victoryPointManager:readStream(streamId, connection)
 end
