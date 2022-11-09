@@ -43,6 +43,7 @@ For more information, help, and report issues please visit <a href="https://gith
 Changelog
 V1.0.0.1
  - fixed farm visiblity bug
+ - added an option to set an amount of month for how long the challange lasts, once reached no more points will be counted (0 is off)
 ]]>
 </en>
 		<de><![CDATA[
@@ -80,6 +81,7 @@ Für mehr Informationen, Hilfe und Fehlermeldungen, schaut bitte auf <a href="ht
 Änderungsverlauf
 V1.0.0.1
  - Fehler mit der Sichtbarkeit von Farmen behoben
+ - Es kann nun eine dauer des Wettkampfes in Spiel Monaten angegeben werden. Wurde das Ende des letzten Monats erreicht, werden keine Punkte mehr gezählt.
 ]]></de>
     </description>
 

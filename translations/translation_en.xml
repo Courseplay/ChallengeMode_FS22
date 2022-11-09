@@ -93,11 +93,11 @@
 		<text name="CM_Rules_general_leaseVehicle_deactivated"					text="Deactivated"/>
 		<text name="CM_Rules_general_leaseVehicle_shopOnly"						text="Shop only"/>
 		<text name="CM_Rules_general_leaseVehicle_allowed"						text="Allowed"/>
-		<text name="CM_Rules_general_maxFillLevel_title"						text="Fill level cap: "/>
+		<text name="CM_Rules_general_maxFillLevel_title"						text="Max amount of counting liters per fruit: "/>
 		<text name="CM_Rules_general_maxFillLevel_deactivated"					text="Deactivated"/>
-		<text name="CM_Rules_general_creditLimit_title"							text="Credit limit:"/>
+		<text name="CM_Rules_general_creditLimit_title"							text="Credit limit: "/>
 		<text name="CM_Rules_general_creditLimit_deactivated"					text="Deactivated"/>
-		<text name="CM_Rules_general_maxNumberOfAnimals_title" 					text="Max amount of counting Animals:"/>
+		<text name="CM_Rules_general_maxNumberOfAnimals_title" 					text="Max amount of counting Animals: "/>
 		<text name="CM_Rules_general_maxNumberOfAnimals_deactivated"			text="Deactivated"/>
 		<text name="CM_Rules_general_maxNumberOfAnimals_noLimit"				text="No Limit"/>
 

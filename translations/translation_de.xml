@@ -90,15 +90,15 @@
 		<text name="CM_Rules_general_maxHelpers_deactivated" 					text="Deaktiviert"/>
 		<text name="CM_Rules_general_maxMissions_title" 						text="Maximale Missionen: "/>
 		<text name="CM_Rules_general_maxMissions_deactivated" 					text="Deaktiviert"/>
-		<text name="CM_Rules_general_leaseVehicle_title"						text="Fahrzeuge mieten:"/>
+		<text name="CM_Rules_general_leaseVehicle_title"						text="Fahrzeuge mieten: "/>
 		<text name="CM_Rules_general_leaseVehicle_deactivated" 					text="Deaktiviert"/>
 		<text name="CM_Rules_general_leaseVehicle_shopOnly" 					text="Nur im Shop"/>
 		<text name="CM_Rules_general_leaseVehicle_allowed" 						text="Erlaubt"/>
-		<text name="CM_Rules_general_maxFillLevel_title" 						text="Fülllstandslimit: "/>
+		<text name="CM_Rules_general_maxFillLevel_title" 						text="Maximal zählende Liter pro Frucht: "/>
 		<text name="CM_Rules_general_maxFillLevel_deactivated" 					text="Deaktiviert"/>
-		<text name="CM_Rules_general_creditLimit_title" 						text="Kreditlimit:"/>
+		<text name="CM_Rules_general_creditLimit_title" 						text="Kreditlimit: "/>
 		<text name="CM_Rules_general_creditLimit_deactivated" 					text="Deaktiviert"/>
-		<text name="CM_Rules_general_maxNumberOfAnimals_title" 					text="Maximale Anzahl zählender Tiere:"/>
+		<text name="CM_Rules_general_maxNumberOfAnimals_title" 					text="Maximale Anzahl zählender Tiere: "/>
 		<text name="CM_Rules_general_maxNumberOfAnimals_deactivated"			text="Deaktiviert"/>
 		<text name="CM_Rules_general_maxNumberOfAnimals_noLimit"				text="Kein Limit"/>
 
