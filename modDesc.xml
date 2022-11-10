@@ -43,7 +43,7 @@ For more information, help, and report issues please visit <a href="https://gith
 Changelog
 V1.0.0.1
  - fixed farm visiblity bug
- - added an option to set an amount of month for how long the challange lasts, once reached no more points will be counted (0 is off)
+ - added an option to set an amount of ingame months for how long the challange lasts. Once the end of the last month is reached no more new points will be counted. If you set the Months to 0 you turn off this feature
 ]]>
 </en>
 		<de><![CDATA[
