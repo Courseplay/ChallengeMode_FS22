@@ -83,6 +83,8 @@ Für mehr Informationen, Hilfe und Fehlermeldungen, schaut bitte auf <a href="ht
 Änderungsverlauf
 V1.0.0.1
  - Fehler mit der Sichtbarkeit von Farmen behoben
+
+V1.1.0.0
  - Es kann nun eine Dauer des Wettkampfes in Spiel-Monaten angegeben werden. Wurde das Ende des letzten Monats erreicht, werden keine neuen Punkte mehr gezählt. Wenn man die Dauer auf 0 Monate setzt dann ist das Feature deaktiviert.
 ]]></de>
     </description>
