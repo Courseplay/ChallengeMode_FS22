@@ -97,7 +97,7 @@ function ChallengeMod:isTimeTracked()
 end
 
 function ChallengeMod:isDurationOver()
-	return self.timePassed > self.duration
+	return self.trackDuration and self.timePassed > self.duration
 end
 
 function ChallengeMod:getDuration()
