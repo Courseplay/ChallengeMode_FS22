@@ -186,7 +186,7 @@ function ChallengeMod:registerXmlSchema()
 	self.xmlSchema:register(XMLValueType.BOOL, self.baseXmlKey .. "#trackDuration", "Specifies if the duration is tracked or not", false)
 	self.xmlSchema:register(XMLValueType.INT, self.baseXmlKey .. ".Farms.Farm(?)#id", "Farm id")
 	self.xmlSchema:register(XMLValueType.BOOL, self.baseXmlKey .. ".Farms.Farm(?)#visible", "Farm visible", true)
-	self.xmlSchema:register(XMLValueType.BOOL, self.baseXmlKey .. ".Farms.Farm(?)#finalPoints", "Final points of farm when challenge is over.")
+	self.xmlSchema:register(XMLValueType.INT, self.baseXmlKey .. ".Farms.Farm(?)#finalPoints", "Final points of farm when challenge is over.")
 	local key = self.baseXmlKey .. ".TimeLimit"
 	self.xmlSchema:register(XMLValueType.INT, key .. ".Duration", "How long the Challenge will go at most.")
 	self.xmlSchema:register(XMLValueType.INT, key .. ".TimePassed", "The current Month of the Challenge.", 1)
