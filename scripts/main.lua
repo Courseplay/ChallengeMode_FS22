@@ -388,6 +388,7 @@ end
 ItemSystem.save = Utils.prependedFunction(ItemSystem.save, ChallengeMod.saveToSaveGame)
 
 function ChallengeMod:onPeriodChanged()
+	CmUtil.debug("month changed. Increase Time passed by 1")
 	self.timePassed = self.timePassed + 1
 
 	if self:isDurationOver() then
