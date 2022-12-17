@@ -2,6 +2,8 @@ ChangeDurationEvent = {}
 
 ChangeDurationEvent_mt = Class(ChangeDurationEvent, Event)
 
+InitEventClass(ChangeDurationEvent, "ChangeDurationEvent")
+
 function ChangeDurationEvent.emptyNew()
     return Event.new(ChangeDurationEvent_mt)
 end
