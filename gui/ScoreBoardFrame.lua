@@ -1,6 +1,7 @@
 ScoreBoardFrame = {
 	CONTROLS = {
 		HEADER = "header",
+		HEADER_DURATION = "headerDuration",
 		MAIN_BOC = "mainBox",
 		LEFT_COLUMN = "leftColumn",
 		RIGHT_COLUMN = "rightColumn",
@@ -36,6 +37,7 @@ ScoreBoardFrame = {
 
 ScoreBoardFrame.translations = {
 	goal = function(goal) return string.format(g_i18n:getText("CM_rightList_leftTitle"), goal) end,
+	headerDuration = function (timePassed, duration) return string.format(g_i18n:getText("CM_title_duration"), timePassed, duration) end,
 
 	ruleTitle = g_i18n:getText("CM_leftList_ruleTitle"),
 	adminPointsTitle = g_i18n:getText("CM_leftList_adminPointsTitle"),
@@ -55,11 +57,13 @@ ScoreBoardFrame.translations = {
 		adminWrongPassword = g_i18n:getText("CM_dialog_adminWrongPassword"),
 		value = g_i18n:getText("CM_dialog_changeTitle"),
 		newGoal = g_i18n:getText("CM_dialog_newGoal"),
+		newDuration = g_i18n:getText("CM_dialog_newDuration"),
 		errors = {
 			missingReason = g_i18n:getText("CM_dialog_addPoints_error_missingReason"),
 			zeroPoints = g_i18n:getText("CM_dialog_addPoints_error_zeroPoints"),
 			notANumber = g_i18n:getText("CM_dialog_addPoints_error_notANumber"),
-			invalidGoal = g_i18n:getText("CM_dialog_setGoal_error_invalidGoal")
+			invalidGoal = g_i18n:getText("CM_dialog_setGoal_error_invalidGoal"),
+			invalidDuration = g_i18n:getText("CM_dialog_setDuration_error_invalidDuration")
 		}
 	},
 	leftSections = {
@@ -285,8 +289,15 @@ function ScoreBoardFrame:updateTitles()
 	local sx, ix = self.leftList:getSelectedPath()
 	local titles = self.managers[sx]():getTitles()
 	self.goal:setText(self.translations.goal(self.victoryPointManager:getGoal()))
+	self.headerDuration:setText(self.translations.headerDuration(g_challengeMod:getTimePassed(), g_challengeMod:getDuration()))
 	self.rightList_middleTitle:setText(titles[2])
 	self.rightList_rightTitle:setText(titles[3])
+
+	self.goal.overlay.alpha = 0
+	self.goal.textDisabledColor = self.goal.textColor
+	self.headerDuration.overlay.alpha = 0
+	self.headerDuration.textDisabledColor = self.headerDuration.textColor
+	self.headerDuration:setVisible(g_challengeMod.isAdminModeActive or g_challengeMod:isTimeTracked())
 end
 
 function ScoreBoardFrame:updateMenuButtons()
@@ -299,9 +310,6 @@ function ScoreBoardFrame:updateMenuButtons()
 	self:setMenuButtonInfoDirty()
 
 	self.goal:setDisabled(not g_challengeMod.isAdminModeActive, false)
-
-	self.goal.overlay.alpha = 0
-	self.goal.textDisabledColor = self.goal.textColor
 end
 
 function ScoreBoardFrame:getNumberOfSections(list)
@@ -515,7 +523,7 @@ end
 
 function ScoreBoardFrame:onClickAddPoints()
 	if self.selectedList ~= self.leftList or self.selectedList:getSelectedSection() ~= self.LEFT_SECTIONS.POINTS then
-		print("Error: Can't change points of no farm")
+		Logging.error("Can't change points of no farm")
 		return
 	end
 
@@ -525,6 +533,10 @@ end
 
 function ScoreBoardFrame:onClickSetGoal()
 	self:openTextInputDialog(self.onTextInputChangeGoal, nil, self.translations.dialogs.newGoal)
+end
+
+function ScoreBoardFrame:onClickSetDuration()
+	self:openTextInputDialog(self.onTextInputChangeDuration, nil, self.translations.dialogs.newDuration)
 end
 
 function ScoreBoardFrame:onClickShowChangelog()
@@ -717,9 +729,7 @@ function ScoreBoardFrame:onTextInputChangeGoal(text, clickOk)
 		local newGoal = tonumber(text)
 		if newGoal ~= nil then
 			self.victoryPointManager:setGoal(newGoal)
-			self:updateTitles()
-			self:updateLists()
-			self:updateMenuButtons()
+			self:updateFrame()
 			self.goal.overlayState = GuiOverlay.STATE_NORMAL
 		else
 			g_gui:showInfoDialog({
@@ -728,6 +738,25 @@ function ScoreBoardFrame:onTextInputChangeGoal(text, clickOk)
 				callback = self.onClickSetGoal,
 				target = self
 			})
+		end
+	end
+end
+
+function ScoreBoardFrame:onTextInputChangeDuration(text, clickOk)
+	if clickOk then
+		local newDuration = tonumber(text)
+
+		if newDuration == nil or newDuration < 0 then
+			g_gui:showInfoDialog({
+				dialogType = DialogElement.TYPE_WARNING,
+				text = self.translations.dialogs.errors.invalidDuration,
+				callback = self.onClickSetDuration,
+				target = self
+			})
+		else
+			g_challengeMod:setDuration(newDuration)
+			self:updateFrame()
+			self.headerDuration.overlayState = GuiOverlay.STATE_NORMAL
 		end
 	end
 end

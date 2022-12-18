@@ -2,6 +2,7 @@
 <l10n>
 	<texts>
 		<text name="CM_title" 													text="Wettkampfmodus" />
+		<text name="CM_title_duration"											text="Monat %s von %s"/>
 		<text name="CM_leftList_leftTitle" 										text="Farm" />
 		<text name="CM_leftList_rightTitle" 									text="Gesamtpunkte" />
 		<text name="CM_leftList_section_two" 									text="Einstellungen" />
@@ -32,6 +33,10 @@
 		<text name="CM_dialog_adminChangePasswordTitle" 						text="Aktuelles Passwort: %s" />
 		<text name="CM_dialog_adminWrongPassword" 								text="Falsches Passwort! (%s)"/>
 		<text name="CM_dialog_newGoal" 											text="Gib das neue Ziel ein."/>
+		<text name="CM_dialog_newDuration"text="Gib die Dauer in Monaten ein.
+Eine Dauer von 0 Monaten deaktiviert das Zeitlimit."
+		/>
+		<text name="CM_dialog_challengeOver"									text="Der Wettkampf ist vorbei."/>
 
 		<text name="CM_dialog_addPoints_title"									text="Punkte hinzufügen"/>
 		<text name="CM_dialog_addPoints_pointsText"								text="Punkte"/>
@@ -41,7 +46,8 @@
 		<text name="CM_dialog_addPoints_error_zeroPoints" 						text="Die Punkte dürfen nicht 0 sein!"/>
 		<text name="CM_dialog_addPoints_error_notANumber" 						text="Punkte müssen eine Zahl sein!"/>
 		<text name="CM_dialog_setGoal_error_invalidGoal" 						text="Ziel muss eine Zahl sein!"/>
-		
+		<text name="CM_dialog_setDuration_error_invalidDuration" 				text="Dauer muss eine positive Zahl sein!"/>
+
 
 		<text name="CM_VictoryPoints_leftTitle" 								text=""/>
 		<text name="CM_VictoryPoints_middleTitle" 								text="Faktor"/>
@@ -60,7 +66,7 @@
 		<text name="CM_VictoryPoints_general_ownedBuildingValue_input_text" 	text="Gib ein wie viel Gebäudeverkaufswert einem Punkt entspricht."/>
 		<text name="CM_VictoryPoints_general_ownedVehicleValue_input_text" 		text="Gib ein wie viel Fahrzeugverkaufswert einem Punkt entspricht."/>
 		<text name="CM_VictoryPoints_general_productionValue_input_text" 		text="Gib ein wie viel Produktionswert einem Punkt entspricht."/>
-		
+
 		<text name="CM_VictoryPoints_general_input_text_format"					text="Gib ein wie viel %s einem Punkt entspricht."/>
 		<text name="CM_VictoryPoints_storage_input_text_format"					text="Gib ein wie viel %s einem Punkt entspricht."/>
 		<text name="CM_VictoryPoints_bales_input_text_format"					text="Gib ein wie viel %s einem Punkt entspricht."/>
@@ -86,15 +92,15 @@
 		<text name="CM_Rules_general_maxHelpers_deactivated" 					text="Deaktiviert"/>
 		<text name="CM_Rules_general_maxMissions_title" 						text="Maximale Missionen: "/>
 		<text name="CM_Rules_general_maxMissions_deactivated" 					text="Deaktiviert"/>
-		<text name="CM_Rules_general_leaseVehicle_title"						text="Fahrzeuge mieten:"/>
+		<text name="CM_Rules_general_leaseVehicle_title"						text="Fahrzeuge mieten: "/>
 		<text name="CM_Rules_general_leaseVehicle_deactivated" 					text="Deaktiviert"/>
 		<text name="CM_Rules_general_leaseVehicle_shopOnly" 					text="Nur im Shop"/>
 		<text name="CM_Rules_general_leaseVehicle_allowed" 						text="Erlaubt"/>
-		<text name="CM_Rules_general_maxFillLevel_title" 						text="Fülllstandslimit: "/>
+		<text name="CM_Rules_general_maxFillLevel_title" 						text="Maximal zählende Liter pro Frucht: "/>
 		<text name="CM_Rules_general_maxFillLevel_deactivated" 					text="Deaktiviert"/>
-		<text name="CM_Rules_general_creditLimit_title" 						text="Kreditlimit:"/>
+		<text name="CM_Rules_general_creditLimit_title" 						text="Kreditlimit: "/>
 		<text name="CM_Rules_general_creditLimit_deactivated" 					text="Deaktiviert"/>
-		<text name="CM_Rules_general_maxNumberOfAnimals_title" 					text="Maximale Anzahl zählender Tiere:"/>
+		<text name="CM_Rules_general_maxNumberOfAnimals_title" 					text="Maximale Anzahl zählender Tiere: "/>
 		<text name="CM_Rules_general_maxNumberOfAnimals_deactivated"			text="Deaktiviert"/>
 		<text name="CM_Rules_general_maxNumberOfAnimals_noLimit"				text="Kein Limit"/>
 

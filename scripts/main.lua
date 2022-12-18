@@ -19,7 +19,12 @@ function ChallengeMod.new(custom_mt)
 	local self = setmetatable({}, custom_mt or ChallengeMod_mt)
 	self.isServer = g_server
 	self.visibleFarms = {}
+	self.finalPoints = {}
 	self.isAdminModeActive = false
+	self.trackDuration = false
+	self.timePassed = 1
+	self.duration = 0
+
 	g_messageCenter:subscribe(MessageType.FARM_CREATED, self.newFarmCreated, self)
 
 	if ChallengeMod.isDevelopmentVersion then
@@ -63,12 +68,65 @@ function ChallengeMod:changeAdminPassword(newPassword, noEvent)
 	end
 end
 
+function ChallengeMod:setDuration(duration, noEvent)
+	self.duration = duration
+
+	if duration == 0 then
+		self.trackDuration = false
+		g_messageCenter:unsubscribe(MessageType.PERIOD_CHANGED, self)
+	else
+		self.trackDuration = true
+		g_messageCenter:subscribe(MessageType.PERIOD_CHANGED, self.onPeriodChanged, self)
+	end
+
+	if noEvent == nil or not noEvent then
+		ChangeDurationEvent.sendEvent(duration)
+	end
+end
+
+function ChallengeMod:setFinalPointsForFarm(finalPoints, farmId, noEventSend)
+	CmUtil.debug("set final points of farmId %s to %s", farmId, finalPoints)
+	self.finalPoints[farmId] = finalPoints
+
+	if noEventSend == nil or not noEventSend then
+		ChallengeOverEvent.sendEvent(finalPoints, farmId)
+	end
+end
+
 function ChallengeMod:getAdminPassword()
 	return self.adminPassword
 end
 
 function ChallengeMod:getDefaultAdminPassword()
 	return self.defaultAdminPassword
+end
+
+function ChallengeMod:isTimeTracked()
+	return self.trackDuration
+end
+
+function ChallengeMod:isDurationOver()
+	return self.trackDuration and self.timePassed > self.duration
+end
+
+function ChallengeMod:getDuration()
+	return self.duration
+end
+
+function ChallengeMod:getTimePassed()
+	return self.timePassed
+end
+
+function ChallengeMod:getFinalPointList()
+	return self.finalPoints
+end
+
+function ChallengeMod:getFinalPointListForFarm(farmId)
+	return self.finalPoints[farmId]
+end
+
+function ChallengeMod:areFinalPointsSetForFarm(farmId)
+	return self.finalPoints[farmId] ~= nil
 end
 
 function ChallengeMod:loadMap()
@@ -142,8 +200,13 @@ end
 function ChallengeMod:registerXmlSchema()
 	self.xmlSchema = XMLSchema.new("ChallengeMod")
 	self.xmlSchema:register(XMLValueType.STRING, self.baseXmlKey .. "#password", "Admin password")
+	self.xmlSchema:register(XMLValueType.BOOL, self.baseXmlKey .. "#trackDuration", "Specifies if the duration is tracked or not", false)
 	self.xmlSchema:register(XMLValueType.INT, self.baseXmlKey .. ".Farms.Farm(?)#id", "Farm id")
 	self.xmlSchema:register(XMLValueType.BOOL, self.baseXmlKey .. ".Farms.Farm(?)#visible", "Farm visible", true)
+	self.xmlSchema:register(XMLValueType.INT, self.baseXmlKey .. ".Farms.Farm(?)#finalPoints", "Final points of farm when challenge is over.")
+	local key = self.baseXmlKey .. ".TimeLimit"
+	self.xmlSchema:register(XMLValueType.INT, key .. ".Duration", "How long the Challenge will go at most.")
+	self.xmlSchema:register(XMLValueType.INT, key .. ".TimePassed", "The current Month of the Challenge.", 1)
 	g_victoryPointManager:registerXmlSchema(self.xmlSchema, self.baseXmlKey)
 	g_ruleManager:registerXmlSchema(self.xmlSchema, self.baseXmlKey)
 
@@ -174,12 +237,26 @@ function ChallengeMod:saveToXMLFile(filename)
 	if xmlFile ~= nil then
 		CmUtil.debug("Challenge setup saved to %s.", filename)
 		xmlFile:setValue(self.baseXmlKey .. "#password", self.adminPassword)
+		xmlFile:setValue(self.baseXmlKey .. "#trackDuration", self.trackDuration)
 		local i = 0
 		for farmId, visible in pairs(self.visibleFarms) do
-			xmlFile:setValue(string.format("%s.Farms.Farm(%d)#id", self.baseXmlKey, i), farmId)
-			xmlFile:setValue(string.format("%s.Farms.Farm(%d)#visible", self.baseXmlKey, i), visible)
+			local key = string.format("%s.Farms.Farm(%d)", self.baseXmlKey, i)
+			xmlFile:setValue(key .. "#id", farmId)
+			xmlFile:setValue(key .. "#visible", visible)
+
+			if self:isDurationOver() and visible then
+				xmlFile:setValue(key .. "#finalPoints", self.finalPoints[farmId])
+			end
 			i = i + 1
 		end
+
+		if self.trackDuration then
+			local key = self.baseXmlKey .. ".TimeLimit"
+
+			xmlFile:setValue(key .. ".Duration", self.duration)
+			xmlFile:setValue(key .. ".TimePassed", self.timePassed)
+		end
+
 		g_ruleManager:saveToXMLFile(xmlFile, self.baseXmlKey)
 		g_victoryPointManager:saveToXMLFile(xmlFile, self.baseXmlKey)
 		xmlFile:save()
@@ -199,14 +276,32 @@ function ChallengeMod:loadFromXMLFile(filename)
 	local xmlFile = XMLFile.loadIfExists("xmlFile", filename, self.xmlSchema)
 	if xmlFile ~= nil then
 		CmUtil.debug("Challenge setup loaded from %s.", filename)
-		self.adminPassword = xmlFile:getValue(self.baseXmlKey .. "#password", self.adminPassword)
 		--maybe save password encrypted to increase user security. Many people use the same passwords everywhere so this could make them more attackable with a password saved in clear text
+		self.adminPassword = xmlFile:getValue(self.baseXmlKey .. "#password", self.adminPassword)
+
+		if not xmlFile:hasProperty(self.baseXmlKey .. "#trackDuration") then
+			self:setDuration(0)
+			self.trackDuration = false
+		else
+			self.trackDuration = xmlFile:getValue(self.baseXmlKey .. "#trackDuration")
+
+			if self.trackDuration then
+				local key = self.baseXmlKey .. ".TimeLimit"
+
+				self:setDuration(xmlFile:getValue(key .. ".Duration", 0))
+				self.timePassed = xmlFile:getValue(key .. ".TimePassed", 1)
+			end
+		end
 
 		xmlFile:iterate(self.baseXmlKey .. ".Farms.Farm", function(ix, key)
 			local id = xmlFile:getValue(key .. "#id")
 			local visible = xmlFile:getValue(key .. "#visible", true)
 			if id ~= nil then
 				self.visibleFarms[id] = visible
+			end
+
+			if self:isDurationOver() and visible then
+				self.finalPoints[id] = xmlFile:getValue(key .. "#finalPoints")
 			end
 		end)
 
@@ -236,8 +331,19 @@ function ChallengeMod:writeStream(streamId, connection)
 		streamWriteInt8(streamId, farmId)
 		streamWriteBool(streamId, visible)
 	end
-	streamWriteInt8(streamId, -1)
+	streamWriteInt8(streamId, -1) -- break stream reading for visible farms
 
+	streamWriteInt32(streamId, self.timePassed)
+	streamWriteInt32(streamId, self.duration)
+	if self:isDurationOver() then
+		local numFarms = #self.finalPoints
+		streamWriteInt8(streamId, numFarms)
+
+		for farmId, points in pairs(self.finalPoints) do
+			streamWriteInt8(streamId, farmId)
+			streamWriteInt32(streamId, points)
+		end
+	end
 	g_ruleManager:writeStream(streamId, connection)
 	g_victoryPointManager:writeStream(streamId, connection)
 end
@@ -257,6 +363,18 @@ function ChallengeMod:readStream(streamId, connection)
 		end
 		self.visibleFarms[id] = streamReadBool(streamId)
 	end
+	self.timePassed = streamReadInt32(streamId)
+	self:setDuration(streamReadInt32(streamId))
+
+	if self:isDurationOver() then
+		local numFarms = streamReadInt8(streamId)
+
+		for i = 1, numFarms do
+			local farmId = streamReadInt8(streamId)
+			self.finalPoints[farmId] = streamReadInt32(streamId)
+		end
+	end
+
 	g_ruleManager:readStream(streamId, connection)
 	g_victoryPointManager:readStream(streamId, connection)
 end
@@ -285,6 +403,25 @@ function ChallengeMod:saveToSaveGame()
 end
 
 ItemSystem.save = Utils.prependedFunction(ItemSystem.save, ChallengeMod.saveToSaveGame)
+
+function ChallengeMod:onPeriodChanged()
+	CmUtil.debug("month changed. Increase Time passed by 1")
+	self.timePassed = self.timePassed + 1
+
+	if self:isDurationOver() then
+		g_gui:showInfoDialog({
+			dialogType = DialogElement.TYPE_INFO,
+			text = g_i18n:getText("CM_dialog_challengeOver")
+		})
+		if g_currentMission:getIsServer() then
+			for _, farm in pairs(g_farmManager:getFarms()) do
+				local farmId = farm.farmId
+				g_victoryPointManager:calculatePoints(farmId)
+				self:setFinalPointsForFarm(g_victoryPointManager:getTotalPoints(farmId), farmId)
+			end
+		end
+	end
+end
 
 g_challengeMod = ChallengeMod.new()
 

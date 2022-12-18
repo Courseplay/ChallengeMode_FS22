@@ -2,6 +2,7 @@
 <l10n>
 	<texts>
 		<text name="CM_title" 													text="Challenge mode" />
+		<text name="CM_title_duration"											text="Month %s of %s"/>
 		<text name="CM_leftList_leftTitle" 										text="Farm" />
 		<text name="CM_leftList_rightTitle" 									text="Total points" />
 		<text name="CM_leftList_section_two" 									text="Settings" />
@@ -32,6 +33,10 @@
 		<text name="CM_dialog_adminChangePasswordTitle"							text="Current password: %s" />
 		<text name="CM_dialog_adminWrongPassword"								text="Wrong password (%s)"/>
 		<text name="CM_dialog_newGoal" 											text="Enter the new goal."/>
+		<text name="CM_dialog_newDuration"										text="Enter the duration in months.
+A duration of 0 months will deactivate the time limit."
+		/>
+		<text name="CM_dialog_challengeOver"									text="The challenge is over."/>
 
 		<text name="CM_dialog_addPoints_title"									text="Add Points"/>
 		<text name="CM_dialog_addPoints_pointsText"								text="Points"/>
@@ -41,6 +46,7 @@
 		<text name="CM_dialog_addPoints_error_zeroPoints" 						text="Points cannot be 0!"/>
 		<text name="CM_dialog_addPoints_error_notANumber" 						text="Points have to be a number!"/>
 		<text name="CM_dialog_setGoal_error_invalidGoal" 						text="Goal have to be a number!"/>
+		<text name="CM_dialog_setDuration_error_invalidDuration" 				text="Duration has to be a positive number!"/>
 
 		<text name="CM_VictoryPoints_leftTitle"									text=""/>
 		<text name="CM_VictoryPoints_middleTitle"								text="Factor"/>
@@ -89,11 +95,11 @@
 		<text name="CM_Rules_general_leaseVehicle_deactivated"					text="Deactivated"/>
 		<text name="CM_Rules_general_leaseVehicle_shopOnly"						text="Shop only"/>
 		<text name="CM_Rules_general_leaseVehicle_allowed"						text="Allowed"/>
-		<text name="CM_Rules_general_maxFillLevel_title"						text="Fill level cap: "/>
-		<text name="CM_Rules_general_maxFillLevel_deactivated"					text="Deactivated"/>			
-		<text name="CM_Rules_general_creditLimit_title"							text="Credit limit:"/>
+		<text name="CM_Rules_general_maxFillLevel_title"						text="Max amount of counting liters per fruit: "/>
+		<text name="CM_Rules_general_maxFillLevel_deactivated"					text="Deactivated"/>
+		<text name="CM_Rules_general_creditLimit_title"							text="Credit limit: "/>
 		<text name="CM_Rules_general_creditLimit_deactivated"					text="Deactivated"/>
-		<text name="CM_Rules_general_maxNumberOfAnimals_title" 					text="Max amount of counting Animals:"/>
+		<text name="CM_Rules_general_maxNumberOfAnimals_title" 					text="Max amount of counting Animals: "/>
 		<text name="CM_Rules_general_maxNumberOfAnimals_deactivated"			text="Deactivated"/>
 		<text name="CM_Rules_general_maxNumberOfAnimals_noLimit"				text="No Limit"/>
 

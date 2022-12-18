@@ -3,7 +3,12 @@
     <GuiElement type="empty" profile="uiInGameMenuFrame">
         <GuiElement type="empty" profile="ingameMenuFrameHeaderPanel">
             <GuiElement type="bitmap" profile="ingameMenuPriceHeaderIcon" />
-            <GuiElement type="text" profile="ingameMenuFrameHeaderText" id="header" text="$l10n_CM_title"/>
+            <GuiElement type="empty" profile="LeftHeaderBox">
+                <GuiElement type="text" profile="Header" id="header" text="$l10n_CM_title"/>
+            </GuiElement>
+            <GuiElement type="empty" profile="RightHeaderBox">
+                <GuiElement type="button" profile="RightHeader" id="headerDuration" onClick="onClickSetDuration"/>
+            </GuiElement>
         </GuiElement>
 
         <GuiElement type="empty" profile="ingameMenuSettingsBox" id="mainBox">
@@ -32,7 +37,7 @@
 
             <GuiElement type="empty" profile="ingameMenuPriceRightColumn" id="rightColumn">
                 <GuiElement type="boxLayout" profile="ingameCalendarHeaderBox" id="tableHeaderBox" size="680px 104px">
-                    <GuiElement type="button" profile="ingameMenuPriceHeader" size="330px 104px"  id="goal" text="" onClick="onClickSetGoal"/> 
+                    <GuiElement type="button" profile="ingameMenuPriceHeader" size="330px 104px"  id="goal" text="" onClick="onClickSetGoal"/>
                     <GuiElement type="text" profile="ingameMenuPriceHeader" size="180px 104px"  text="" id="rightList_middleTitle" />
                     <GuiElement type="text" profile="ingameMenuPriceHeader" size="160px 104px"  text="" id="rightList_rightTitle" textOffset="0 0" />
                 </GuiElement>
@@ -56,7 +61,7 @@
 
             <GuiElement type="empty" profile="ingameMenuPriceRightColumn" id="changelogColumn" visible="false">
                 <GuiElement type="boxLayout" profile="ingameCalendarHeaderBox" id="changelogColumnHeaderBox" size="680px 104px">
-                    <GuiElement type="text" profile="ingameMenuPriceHeader" size="190px 104px" text="$l10n_CM_changelogList_leftTitle" id="changelogList_leftTitle" /> 
+                    <GuiElement type="text" profile="ingameMenuPriceHeader" size="190px 104px" text="$l10n_CM_changelogList_leftTitle" id="changelogList_leftTitle" />
                     <GuiElement type="text" profile="ingameMenuPriceHeader" size="330px 104px" text="$l10n_CM_changelogList_middleTitle" id="changelogList_middleTitle" />
                     <GuiElement type="text" profile="ingameMenuPriceHeader" size="160px 104px" text="$l10n_CM_changelogList_rightTitle" id="changelogList_rightTitle" textOffset="0 0" />
                 </GuiElement>
