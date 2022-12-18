@@ -247,8 +247,8 @@ function VictoryPointManager:calculatePoints(farmId)
 	self.pointList[farmId] = self:getNewPointList(farmId)
 	self.totalPoints[farmId] = self.pointList[farmId]:count() + self:sumAdditionalPoints(farmId)
 
-	if g_challengeMod:isDurationOver() then
-		self.totalPoints = g_challengeMod:getFinalPointList()
+	if g_challengeMod:isDurationOver() and g_challengeMod:areFinalPointsSetForFarm(farmId) then
+		self.totalPoints[farmId] = g_challengeMod:getFinalPointListForFarm(farmId)
 	end
 end
 
