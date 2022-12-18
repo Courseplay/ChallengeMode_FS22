@@ -33,7 +33,9 @@
 		<text name="CM_dialog_adminChangePasswordTitle" 						text="Aktuelles Passwort: %s" />
 		<text name="CM_dialog_adminWrongPassword" 								text="Falsches Passwort! (%s)"/>
 		<text name="CM_dialog_newGoal" 											text="Gib das neue Ziel ein."/>
-		<text name="CM_dialog_newDuration"										text="Gib die Dauer in Monaten ein. \n Eine Dauer von 0 Monaten deaktiviert das Zeitlimit."/>
+		<text name="CM_dialog_newDuration"text="Gib die Dauer in Monaten ein.
+Eine Dauer von 0 Monaten deaktiviert das Zeitlimit."
+		/>
 		<text name="CM_dialog_challengeOver"									text="Der Wettkampf ist vorbei."/>
 
 		<text name="CM_dialog_addPoints_title"									text="Punkte hinzufügen"/>
