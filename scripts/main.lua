@@ -84,6 +84,15 @@ function ChallengeMod:setDuration(duration, noEvent)
 	end
 end
 
+function ChallengeMod:setFinalPointsForFarm(finalPoints, farmId, noEventSend)
+	CmUtil.debug("set final points of farmId %s to %s", farmId, finalPoints)
+	self.finalPoints[farmId] = finalPoints
+
+	if noEventSend == nil or not noEventSend then
+		ChallengeOverEvent.sendEvent(finalPoints, farmId)
+	end
+end
+
 function ChallengeMod:getAdminPassword()
 	return self.adminPassword
 end
@@ -110,6 +119,14 @@ end
 
 function ChallengeMod:getFinalPointList()
 	return self.finalPoints
+end
+
+function ChallengeMod:getFinalPointListForFarm(farmId)
+	return self.finalPoints[farmId]
+end
+
+function ChallengeMod:areFinalPointsSetForFarm(farmId)
+	return self.finalPoints[farmId] ~= nil
 end
 
 function ChallengeMod:loadMap()
@@ -400,7 +417,7 @@ function ChallengeMod:onPeriodChanged()
 			for _, farm in pairs(g_farmManager:getFarms()) do
 				local farmId = farm.farmId
 				g_victoryPointManager:calculatePoints(farmId)
-				self.finalPoints[farmId] = g_victoryPointManager:getTotalPoints(farmId)
+				self:setFinalPointsForFarm(g_victoryPointManager:getTotalPoints(farmId), farmId)
 			end
 		end
 	end
