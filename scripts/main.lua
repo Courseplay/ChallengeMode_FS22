@@ -35,6 +35,24 @@ function ChallengeMod.new(custom_mt)
 	return self
 end
 
+function ChallengeMod.updateGameStatsXML(currentMission)
+	-- Updates the server stats.
+	if g_dedicatedServer ~= nil then
+		print("gameStatsInterval: " .. g_dedicatedServer.gameStatsInterval/1000)
+		local statsPath = g_dedicatedServer.gameStatsPath
+		local key = "Server"
+		if fileExists(statsPath) then 
+			local xmlFile = loadXMLFile("serverStatsFile", statsPath)
+			if xmlFile ~= nil and xmlFile ~= 0 then 
+				g_victoryPointManager:updateGameStats(xmlFile, key)
+				saveXMLFile(xmlFile)
+				delete(xmlFile)
+			end
+		end
+	end
+end
+FSBaseMission.updateGameStatsXML = Utils.appendedFunction(FSBaseMission.updateGameStatsXML, ChallengeMod.updateGameStatsXML)
+
 function ChallengeMod:newFarmCreated(farmId)
 	self.visibleFarms[farmId] = true
 end
