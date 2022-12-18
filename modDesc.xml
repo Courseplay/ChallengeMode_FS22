@@ -111,6 +111,7 @@ V1.1.0.0
 		<sourceFile filename="events/ChangeFarmVisibilityEvent.lua"/>
 		<sourceFile filename="events/ChangeGoalEvent.lua"/>
 		<sourceFile filename="events/ChangeDurationEvent.lua"/>
+		<sourceFile filename="events/ChallengeOverEvent.lua"/>
 		<sourceFile filename="events/AddPointsEvent.lua"/>
 	</extraSourceFiles>
 
