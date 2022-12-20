@@ -143,18 +143,8 @@ function VictoryPointManager:readStream(streamId, connection)
 	end
 end
 
-function VictoryPointManager:updateGameStats(xmlFile, key)
-	self:update()
-	local i = 0
-	for _, farm in pairs(g_farmManager:getFarms()) do
-		if CmUtil.isValidFarm(farm.farmId, farm) then
-			local farmKey = string.format("%s.ChallengeMode.Farm(%d)", key, i)
-			setXMLInt(xmlFile, farmKey .. "#id", farm.farmId)
-			setXMLString(xmlFile, farmKey .. "#name", tostring(farm.name))
-			setXMLFloat(xmlFile, farmKey .. "#totalPoints", self:getTotalPoints(farm.farmId))
-			i = i + 1
-		end
-	end
+function VictoryPointManager:updateFarmGameStats(farmId, xmlFile, key)
+	setXMLFloat(xmlFile, key .. "#totalPoints", self:getTotalPoints(farmId))
 end
 
 function VictoryPointManager:addFillTypeFactors(category, factorData, farmId)
