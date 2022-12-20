@@ -101,10 +101,25 @@ function ChallengeMod.updateGameStatsXML(currentMission)
 					for i=0, 23 do
 						local forecast = g_currentMission.environment.weather.forecast:getHourlyForecast(i + 1)
 						setXMLInt(xmlFile, string.format("%s.Forecast.Hours.Hour(%d)#forecastType", environment_key, i), forecast.forecastType)
+						
+						local newHour = g_currentMission.environment.currentHour + i + 1
+						local dayOffset = 0
+						if newHour > 24 then 
+							dayOffset = 1
+							newHour = newHour - 24
+						end
+						local period = g_currentMission.environment:getPeriodFromDay(dayOffset)
+						local dayInPeriod = g_currentMission.environment:getDayInPeriodFromDay(dayOffset)
+						setXMLString(xmlFile, string.format("%s.Forecast.Hours.Hour(%d)#season", environment_key, i), HTMLUtil.encodeToHTML(g_i18n:formatDayInPeriod(dayInPeriod, period) ))
+						setXMLFloat(xmlFile, string.format("%s.Forecast.Hours.Hour(%d)#time", environment_key, i), newHour + g_currentMission.environment.currentMinute/100)
 					end
 					for i=0, 6 do
 						local forecast = g_currentMission.environment.weather.forecast:getDailyForecast(i + 1)
 						setXMLInt(xmlFile, string.format("%s.Forecast.Days.Day(%d)#forecastType", environment_key, i), forecast.forecastType)
+						local period = g_currentMission.environment:getPeriodFromDay(i + 1)
+						local dayInPeriod = g_currentMission.environment:getDayInPeriodFromDay(i + 1)
+						setXMLString(xmlFile, string.format("%s.Forecast.Days.Day(%d)#season", environment_key, i), HTMLUtil.encodeToHTML(g_i18n:formatDayInPeriod(dayInPeriod, period) or ""))
+						
 					end
 				end
 				saveXMLFile(xmlFile)
