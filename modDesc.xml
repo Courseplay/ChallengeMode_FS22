@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="72">
-    <version>1.1.0.0</version>
+    <version>1.1.0.1</version>
 	<author>Courseplay.devTeam, tn4799</author>
 	<title>
 		<en>Challenge Mode</en>
@@ -46,6 +46,9 @@ V1.0.0.1
 
 V1.1.0.0
  - added an option to set an amount of ingame months for how long the challange lasts. Once the end of the last month is reached no more new points will be counted. If you set the Months to 0 you turn off this feature
+
+V1.1.0.1
+ - fixed mp synchronization of start vehicles
 ]]>
 </en>
 		<de><![CDATA[
@@ -86,6 +89,9 @@ V1.0.0.1
 
 V1.1.0.0
  - Es kann nun eine Dauer des Wettkampfes in Spiel-Monaten angegeben werden. Wurde das Ende des letzten Monats erreicht, werden keine neuen Punkte mehr gezählt. Wenn man die Dauer auf 0 Monate setzt dann ist das Feature deaktiviert.
+
+V1.1.0.1
+ - Fehler mit der Synchronisierung der Startfahrzeuge behoben
 ]]></de>
     </description>
 
@@ -113,6 +119,7 @@ V1.1.0.0
 		<sourceFile filename="events/ChangeDurationEvent.lua"/>
 		<sourceFile filename="events/ChallengeOverEvent.lua"/>
 		<sourceFile filename="events/AddPointsEvent.lua"/>
+		<sourceFile filename="events/ChangeIsStartVehicleEvent.lua"/>
 	</extraSourceFiles>
 
 	<l10n filenamePrefix="translations/translation" />

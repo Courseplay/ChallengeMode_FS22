@@ -154,6 +154,8 @@ function ChallengeMod:setup()
 			ChallengeMod.setButtonText(vehicle)
 
 			g_currentMission.shopMenu:updateButtonsPanel(g_currentMission.shopMenu.pageShopItemDetails)
+
+			ChangeIsStartVehicleEvent.sendEvent(vehicle)
 		end
 	}
 end
