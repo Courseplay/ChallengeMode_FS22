@@ -237,7 +237,7 @@ function ChallengeMod:saveToXMLFile(filename)
 	if xmlFile ~= nil then
 		CmUtil.debug("Challenge setup saved to %s.", filename)
 		xmlFile:setValue(self.baseXmlKey .. "#password", self.adminPassword)
-		xmlFile:setValue(self.baseXmlKey .. "#trackDuration", self.trackDuration)
+		xmlFile:setValue(self.baseXmlKey .. "#trackDuration", self.trackDuration or false)
 		local i = 0
 		for farmId, visible in pairs(self.visibleFarms) do
 			local key = string.format("%s.Farms.Farm(%d)", self.baseXmlKey, i)

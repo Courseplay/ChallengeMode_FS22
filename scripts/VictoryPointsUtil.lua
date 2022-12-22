@@ -1,7 +1,7 @@
 VictoryPointsUtil = {}
 
 function VictoryPointsUtil.getStorageAmount(farmId, maxFillLevel)
-	if farmId == nil then 
+	if farmId == nil then
 		return VictoryPointsUtil.getFillTypes()
 	end
 	maxFillLevel = maxFillLevel == Rule.MAX_FILL_LEVEL_DISABLED and math.huge or maxFillLevel
@@ -41,7 +41,7 @@ function VictoryPointsUtil.getStorageAmount(farmId, maxFillLevel)
 end
 
 function VictoryPointsUtil.getBaleAmount(farmId, maxFillLevel)
-	if farmId == nil then 
+	if farmId == nil then
 		local fillTypes = {}
 		for i, bale in pairs(g_baleManager.bales) do
 			for _,data in pairs(bale.fillTypes) do
@@ -54,8 +54,8 @@ function VictoryPointsUtil.getBaleAmount(farmId, maxFillLevel)
 
 	local baleFillLevels = {}
 	for _, object in pairs(g_currentMission.nodeToObject) do
-		if object:isa(Bale) and object:getOwnerFarmId(farmId) == farmId and not object.isMissionBale then 
-			if baleFillLevels[object.fillType] == nil then 
+		if object:isa(Bale) and object:getOwnerFarmId(farmId) == farmId and not object.isMissionBale then
+			if baleFillLevels[object.fillType] == nil then
 				baleFillLevels[object.fillType] = 0
 			end
 			baleFillLevels[object.fillType] = baleFillLevels[object.fillType] + math.min(object.fillLevel, maxFillLevel)
@@ -65,7 +65,7 @@ function VictoryPointsUtil.getBaleAmount(farmId, maxFillLevel)
 end
 
 function VictoryPointsUtil.getPalletAmount(farmId, maxFillLevel, totalFillLevels)
-	if farmId == nil then 
+	if farmId == nil then
 		return VictoryPointsUtil.getFillTypes()
 	end
 	maxFillLevel = maxFillLevel == Rule.MAX_FILL_LEVEL_DISABLED and math.huge or maxFillLevel
@@ -74,7 +74,7 @@ function VictoryPointsUtil.getPalletAmount(farmId, maxFillLevel, totalFillLevels
 			local fillUnitIndex = object.spec_pallet.fillUnitIndex
 			local fillLevel = object:getFillUnitFillLevel(fillUnitIndex)
 			local fillType = object:getFillUnitFillType(fillUnitIndex)
-			if totalFillLevels[fillType] == nil then 
+			if totalFillLevels[fillType] == nil then
 				totalFillLevels[fillType] = 0
 			end
 			totalFillLevels[fillType] = totalFillLevels[fillType] + math.min(fillLevel, maxFillLevel)
@@ -102,8 +102,8 @@ function VictoryPointsUtil.getAnimalAmount(farmId, maxNumberOfAnimals)
 
 			return husbandries
 		end
-		--needed because giants function is buggy. maybe after a patch it will work as intended 
-		--but until then the backup function will be used. 
+		--needed because giants function is buggy. maybe after a patch it will work as intended
+		--but until then the backup function will be used.
 		--Ive coded it this way so that giants' function will be used if it works without having to update our code.
 		local husbandries = {xpcall(function ()
 			return g_currentMission.husbandrySystem:getPlaceablesByFarm(farmId, animalType)
@@ -122,7 +122,7 @@ function VictoryPointsUtil.getAnimalAmount(farmId, maxNumberOfAnimals)
 				end
 			end
 
-			numberOfAnimals[animalType] = (numberOfAnimals[animalType] or 0) + math.min(numberOfAnimalsInHusbandary, maxNumberOfAnimals)
+			numberOfAnimals[animalType] = math.min((numberOfAnimals[animalType] or 0) + numberOfAnimalsInHusbandary, maxNumberOfAnimals)
 		end
 	end
 
@@ -130,7 +130,7 @@ function VictoryPointsUtil.getAnimalAmount(farmId, maxNumberOfAnimals)
 end
 
 function VictoryPointsUtil.getTotalArea(farmId)
-	if farmId == nil then 
+	if farmId == nil then
 		return 0
 	end
 	local totalArea = 0
@@ -189,7 +189,7 @@ function VictoryPointsUtil.addFillTypeFactors(fillLevels, category, factorData)
 		return g_fillTypeManager:getFillTypeTitleByIndex(a) < g_fillTypeManager:getFillTypeTitleByIndex(b)
 	end)
 
-	for _, fillType in pairs(orderedFillLevels) do 
+	for _, fillType in pairs(orderedFillLevels) do
 		factorData.name = g_fillTypeManager:getFillTypeNameByIndex(fillType)
 		factorData.title = g_fillTypeManager:getFillTypeTitleByIndex(fillType)
 		category:addElement(VictoryPoint.createFromXml(factorData, fillLevels[fillType]))
