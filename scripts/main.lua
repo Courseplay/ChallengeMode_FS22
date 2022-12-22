@@ -19,11 +19,8 @@ function ChallengeMod.new(custom_mt)
 	local self = setmetatable({}, custom_mt or ChallengeMod_mt)
 	self.isServer = g_server
 	self.visibleFarms = {}
-	self.finalPoints = {}
 	self.isAdminModeActive = false
-	self.trackDuration = false
-	self.timePassed = 1
-	self.duration = 0
+	self:resetTimeTrackingValues()
 
 	g_messageCenter:subscribe(MessageType.FARM_CREATED, self.newFarmCreated, self)
 
@@ -71,9 +68,11 @@ end
 function ChallengeMod:setDuration(duration, noEvent)
 	self.duration = duration
 
-	if duration == 0 then
+	if duration == 0 then --pause challenge duration tracking. All stored data is saved.
 		self.trackDuration = false
 		g_messageCenter:unsubscribe(MessageType.PERIOD_CHANGED, self)
+	elseif duration == -1 then -- reset challenge duration tracking data. All saved data is lost
+		self:resetTimeTrackingValues()
 	else
 		self.trackDuration = true
 		g_messageCenter:subscribe(MessageType.PERIOD_CHANGED, self.onPeriodChanged, self)
@@ -106,7 +105,7 @@ function ChallengeMod:isTimeTracked()
 end
 
 function ChallengeMod:isDurationOver()
-	return self.trackDuration and self.timePassed > self.duration
+	return (self.trackDuration or self:areFinalPointsSet()) and self.timePassed > self.duration
 end
 
 function ChallengeMod:getDuration()
@@ -123,6 +122,10 @@ end
 
 function ChallengeMod:getFinalPointListForFarm(farmId)
 	return self.finalPoints[farmId]
+end
+
+function ChallengeMod:areFinalPointsSet()
+	return self.finalPoints ~= {}
 end
 
 function ChallengeMod:areFinalPointsSetForFarm(farmId)
@@ -421,6 +424,15 @@ function ChallengeMod:onPeriodChanged()
 			end
 		end
 	end
+end
+
+function ChallengeMod:resetTimeTrackingValues()
+	self.trackDuration = false
+	self.duration = 0
+	self.finalPoints = {}
+	self.timePassed = 1
+
+	g_messageCenter:unsubscribe(MessageType.PERIOD_CHANGED, self)
 end
 
 g_challengeMod = ChallengeMod.new()

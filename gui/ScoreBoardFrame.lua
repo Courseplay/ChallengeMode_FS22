@@ -746,7 +746,7 @@ function ScoreBoardFrame:onTextInputChangeDuration(text, clickOk)
 	if clickOk then
 		local newDuration = tonumber(text)
 
-		if newDuration == nil or newDuration < 0 then
+		if newDuration == nil or newDuration < -1 then
 			g_gui:showInfoDialog({
 				dialogType = DialogElement.TYPE_WARNING,
 				text = self.translations.dialogs.errors.invalidDuration,
