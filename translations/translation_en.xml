@@ -33,6 +33,7 @@
 		<text name="CM_dialog_adminChangePasswordTitle"							text="Current password: %s" />
 		<text name="CM_dialog_adminWrongPassword"								text="Wrong password (%s)"/>
 		<text name="CM_dialog_newGoal" 											text="Enter the new goal."/>
+		<text name="CM_dialog_dataDeleted" 										text="Do you really want do delete all data connected to the challenge duration?"/>
 		<text name="CM_dialog_newDuration"										text="Enter the duration in months.
 A duration of 0 months will deactivate the time limit.
 A duration of -1 will reset all data connected to the challenge duration."

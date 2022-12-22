@@ -33,6 +33,8 @@
 		<text name="CM_dialog_adminChangePasswordTitle" 						text="Aktuelles Passwort: %s" />
 		<text name="CM_dialog_adminWrongPassword" 								text="Falsches Passwort! (%s)"/>
 		<text name="CM_dialog_newGoal" 											text="Gib das neue Ziel ein."/>
+		<text name="CM_dialog_dataDeleted" 										text="Möchtest du wirklich alle Daten bezüglich der Wettkampfdauer löschen?"/>
+
 		<text name="CM_dialog_newDuration"text="Gib die Dauer in Monaten ein.
 Eine Dauer von 0 Monaten deaktiviert das Zeitlimit.
 Eine Dauer von -1 setzt alle Daten bezüglich der Wettkampfdauer zurück."
