@@ -58,6 +58,7 @@ ScoreBoardFrame.translations = {
 		value = g_i18n:getText("CM_dialog_changeTitle"),
 		newGoal = g_i18n:getText("CM_dialog_newGoal"),
 		newDuration = g_i18n:getText("CM_dialog_newDuration"),
+		dataDeleted = g_i18n:getText("CM_dialog_dataDeleted"),
 		errors = {
 			missingReason = g_i18n:getText("CM_dialog_addPoints_error_missingReason"),
 			zeroPoints = g_i18n:getText("CM_dialog_addPoints_error_zeroPoints"),
@@ -754,6 +755,18 @@ function ScoreBoardFrame:onTextInputChangeDuration(text, clickOk)
 				target = self
 			})
 		else
+			if newDuration == -1 then
+				g_gui:showYesNoDialog({
+					text = self.translations.dialogs.dataDeleted,
+					callback = function (yes)
+						--if the user does not want to delete all data dont set the duration. to avoid boiler plate code we just set the new duration to the current duration so no changes are applied.
+						if not yes then
+							newDuration = g_challengeMod:getDuration()
+						end
+					end
+				})
+
+			end
 			g_challengeMod:setDuration(newDuration)
 			self:updateFrame()
 			self.headerDuration.overlayState = GuiOverlay.STATE_NORMAL
