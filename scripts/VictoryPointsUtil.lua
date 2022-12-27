@@ -36,6 +36,18 @@ function VictoryPointsUtil.getStorageAmount(farmId, maxFillLevel)
 		end
 	end
 
+	if g_isModLoaded.FS22_ObjectStorage then
+		local objectStorages = g_objectStorageManager:getStorages()
+
+		for _, storage in pairs(objectStorages) do
+			for _, storageArea in pairs(storage.indexedStorageAreas) do
+				for _, objectAttributes in pairs(storageArea.objects) do
+					totalFillLevels[objectAttributes.fillType] = totalFillLevels[objectAttributes.fillType] + math.min(objectAttributes.fillLevel, maxFillLevel)
+				end
+			end
+		end
+	end
+
 	CmUtil.debug("Total storage of: %.2f", totalFillLevel )
 	return totalFillLevels
 end
