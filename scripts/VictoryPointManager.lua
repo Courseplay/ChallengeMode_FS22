@@ -143,6 +143,10 @@ function VictoryPointManager:readStream(streamId, connection)
 	end
 end
 
+function VictoryPointManager:updateFarmGameStats(farmId, xmlFile, key)
+	setXMLFloat(xmlFile, key .. "#totalPoints", self:getTotalPoints(farmId))
+end
+
 function VictoryPointManager:addFillTypeFactors(category, factorData, farmId)
 	local maxFillLevel = g_ruleManager:getGeneralRuleValue("maxFillLevel")
 	local fillLevels = VictoryPointsUtil.getStorageAmount(farmId, maxFillLevel)
@@ -250,6 +254,9 @@ function VictoryPointManager:calculatePoints(farmId)
 	if g_challengeMod:isDurationOver() and g_challengeMod:areFinalPointsSetForFarm(farmId) then
 		self.totalPoints[farmId] = g_challengeMod:getFinalPointListForFarm(farmId)
 	end
+
+	CmUtil.debug("Total points are: %.2f", self.totalPoints[farmId])
+
 end
 
 function VictoryPointManager:sumAdditionalPoints(farmId)
