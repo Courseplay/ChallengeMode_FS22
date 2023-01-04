@@ -18,7 +18,7 @@ function VictoryPointsUtil.getStorageAmount(farmId, maxFillLevel)
 				if totalFillLevels[fillType] == nil then
 					totalFillLevels[fillType] = 0
 				end
-				totalFillLevels[fillType] = totalFillLevels[fillType] + math.min(v, maxFillLevel)
+				totalFillLevels[fillType] = math.min(totalFillLevels[fillType] + v, maxFillLevel)
 			end
 		end
 	end
@@ -32,7 +32,7 @@ function VictoryPointsUtil.getStorageAmount(farmId, maxFillLevel)
 			if totalFillLevels[fillType] == nil then
 				totalFillLevels[fillType] = 0
 			end
-			totalFillLevels[fillType] = totalFillLevels[fillType] + math.min(fillLevel, maxFillLevel)
+			totalFillLevels[fillType] = math.min(totalFillLevels[fillType] + fillLevel, maxFillLevel)
 		end
 	end
 
@@ -58,7 +58,7 @@ function VictoryPointsUtil.getBaleAmount(farmId, maxFillLevel)
 			if baleFillLevels[object.fillType] == nil then
 				baleFillLevels[object.fillType] = 0
 			end
-			baleFillLevels[object.fillType] = baleFillLevels[object.fillType] + math.min(object.fillLevel, maxFillLevel)
+			baleFillLevels[object.fillType] = math.min(baleFillLevels[object.fillType] + object.fillLevel, maxFillLevel)
 		end
 	end
 	return baleFillLevels
@@ -77,7 +77,7 @@ function VictoryPointsUtil.getPalletAmount(farmId, maxFillLevel, totalFillLevels
 			if totalFillLevels[fillType] == nil then
 				totalFillLevels[fillType] = 0
 			end
-			totalFillLevels[fillType] = totalFillLevels[fillType] + math.min(fillLevel, maxFillLevel)
+			totalFillLevels[fillType] = math.min(totalFillLevels[fillType] + fillLevel, maxFillLevel)
 		end
 	end
 	return totalFillLevels
