@@ -58,6 +58,7 @@ ScoreBoardFrame.translations = {
 		value = g_i18n:getText("CM_dialog_changeTitle"),
 		newGoal = g_i18n:getText("CM_dialog_newGoal"),
 		newDuration = g_i18n:getText("CM_dialog_newDuration"),
+		spyOnOtherTeams = g_i18n:getText("CM_dialog_spyOnOtherTeams"),
 		errors = {
 			missingReason = g_i18n:getText("CM_dialog_addPoints_error_missingReason"),
 			zeroPoints = g_i18n:getText("CM_dialog_addPoints_error_zeroPoints"),
@@ -279,6 +280,7 @@ end
 function ScoreBoardFrame:updateLists()
 	self.victoryPointManager:update()
 	self.farms = self:getValidFarms()
+	self.leftList:setSelectedIndex(self:getSelectedIndexByFarmId(g_currentMission.player.farmId))
 	self.leftList:reloadData()
 	self.rightList:reloadData()
 	self.changelogList:reloadData()
@@ -393,7 +395,28 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 				cell:getAttribute("title"):setText(element:getTitle())
 
 				local pointsText = element:getText()
-				cell:getAttribute("value"):setText(element:getText())
+				local spyingRule = g_ruleManager:getGeneralRuleValue("spyOnOtherTeams")
+				if self:getSelectedFarmId() ~= g_currentMission.player.farmId then
+					if spyingRule == 0 then
+						pointsText = "X"
+					elseif spyingRule == 1 then
+						local function callback (yes)
+							if yes then
+							else
+								pointsText = "X"
+							end
+						end
+
+						g_gui:showYesNoDialog({
+							text = ScoreBoardFrame.translations.dialogs.spyOnOtherTeams,
+							callback = callback,
+							yesButton = g_i18n:getText("button_continue"),
+							noButton = g_i18n:getText("button_cancel")
+						})
+					end
+				end
+
+				cell:getAttribute("value"):setText(pointsText)
 
 				cell:getAttribute("conversionValue"):setText(element:getFactorText())
 			end
@@ -457,6 +480,16 @@ function ScoreBoardFrame:getSelectedFarmId()
 		CmUtil.debug("Current farm id not found for %s.", tostring(ix))
 		printCallstack()
 	end
+end
+
+function ScoreBoardFrame:getSelectedIndexByFarmId(farmId)
+	for idx, farm in pairs(self.farms) do
+		if farm.farmId ==farmId then
+			return idx
+		end
+	end
+
+	return 1
 end
 
 function ScoreBoardFrame:getElement(section, index)
