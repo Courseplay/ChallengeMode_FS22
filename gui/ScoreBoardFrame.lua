@@ -333,7 +333,7 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 		end
 	elseif list == self.rightList then
 		if list:getIsVisible() then
-			local farmId = self:getCurrentFarmId()
+			local farmId = self:getSelectedFarmId()
 			local sx, ix = self.leftList:getSelectedPath()
 			local l = self.managers[sx](farmId)
 
@@ -350,7 +350,7 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 		end
 	else
 		if list:getIsVisible() then
-			local farmId = self:getCurrentFarmId()
+			local farmId = self:getSelectedFarmId()
 			local points = g_victoryPointManager:getAdditionalPointsForFarm(farmId) or {}
 
 			return #points or 0
@@ -392,13 +392,14 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 			if element then
 				cell:getAttribute("title"):setText(element:getTitle())
 
+				local pointsText = element:getText()
 				cell:getAttribute("value"):setText(element:getText())
 
 				cell:getAttribute("conversionValue"):setText(element:getFactorText())
 			end
 		end
 	else
-		local farmId = self:getCurrentFarmId()
+		local farmId = self:getSelectedFarmId()
 		local points = g_victoryPointManager:getAdditionalPointsForFarm(farmId)
 		local point = points[index]
 
@@ -445,7 +446,7 @@ function ScoreBoardFrame:getValidFarms()
 	return farms, farmsById
 end
 
-function ScoreBoardFrame:getCurrentFarmId()
+function ScoreBoardFrame:getSelectedFarmId()
 	local sx, ix = self.leftList:getSelectedPath()
 	if sx ~= self.LEFT_SECTIONS.POINTS then
 		return
@@ -465,7 +466,7 @@ function ScoreBoardFrame:getElement(section, index)
 		return
 	end
 	local sx, ix = self.leftList:getSelectedPath()
-	local farmId = self:getCurrentFarmId()
+	local farmId = self:getSelectedFarmId()
 	local list = self.managers[sx](farmId)
 	if list == nil then
 		CmUtil.debug("Element not found for (%s|%s).", tostring(section), tostring(index))
@@ -500,7 +501,7 @@ function ScoreBoardFrame:onClickAdminChangePassword()
 end
 
 function ScoreBoardFrame:onClickChangeFarmVisibility()
-	local farmId = self:getCurrentFarmId()
+	local farmId = self:getSelectedFarmId()
 	if farmId == nil then
 		CmUtil.debug("No farm is selected!")
 		return
@@ -527,7 +528,7 @@ function ScoreBoardFrame:onClickAddPoints()
 		return
 	end
 
-	local farmId = self:getCurrentFarmId()
+	local farmId = self:getSelectedFarmId()
 	self:showAddPointsDialog(farmId)
 end
 
@@ -555,7 +556,7 @@ end
 
 function ScoreBoardFrame:onDoubleClickPoint(list, section, index, cell)
 	if self.selectedList == self.changelogList then
-		local farmId = self:getCurrentFarmId()
+		local farmId = self:getSelectedFarmId()
 		local point = g_victoryPointManager:getAdditionalPointsForFarm(farmId)[index]
 
 		g_gui:showInfoDialog({
