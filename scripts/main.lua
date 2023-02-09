@@ -66,7 +66,15 @@ function ChallengeMod:changeAdminPassword(newPassword, noEvent)
 end
 
 function ChallengeMod:setDuration(duration, noEvent)
+	if self.duration < duration and not (self.timePassed > duration) then
+		self.finalPoints = {}
+	end
+
 	self.duration = duration
+
+	if self:isDurationOver() then
+		self:finalizePoints()
+	end
 
 	if duration == 0 then --pause challenge duration tracking. All stored data is saved.
 		self.trackDuration = false
@@ -81,6 +89,13 @@ function ChallengeMod:setDuration(duration, noEvent)
 	if noEvent == nil or not noEvent then
 		ChangeDurationEvent.sendEvent(duration)
 	end
+end
+
+function ChallengeMod:finalizePoints()
+	g_victoryPointManager:calculatePoints(farmId)
+	local totalPoints = g_victoryPointManager:getTotalPoints(farmId)
+	local additionalPoints = g_victoryPointManager:sumAdditionalPoints(farmId)
+	self:setFinalPointsForFarm(totalPoints - additionalPoints, farmId)
 end
 
 function ChallengeMod:setFinalPointsForFarm(finalPoints, farmId, noEventSend)
@@ -419,8 +434,7 @@ function ChallengeMod:onPeriodChanged()
 		if g_currentMission:getIsServer() then
 			for _, farm in pairs(g_farmManager:getFarms()) do
 				local farmId = farm.farmId
-				g_victoryPointManager:calculatePoints(farmId)
-				self:setFinalPointsForFarm(g_victoryPointManager:getTotalPoints(farmId), farmId)
+				self:finalizePoints()
 			end
 		end
 	end
