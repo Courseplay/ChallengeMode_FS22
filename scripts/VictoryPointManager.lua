@@ -185,6 +185,7 @@ end
 function VictoryPointManager:addLoanFactor(category, factorData, farmId)
 	local farm = g_farmManager:getFarmById(farmId)
 	local loan = farm and farm.loan or 0
+	loan = -loan
 	category:addElement(VictoryPoint.createFromXml(factorData, loan))
 end
 
