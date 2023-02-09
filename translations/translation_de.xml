@@ -62,6 +62,7 @@ Eine Dauer von 0 Monaten deaktiviert das Zeitlimit."
 
 		<text name="CM_VictoryPoints_general_input_text" 						text=""/>
 		<text name="CM_VictoryPoints_general_money_input_text" 					text="Gib ein wie viel Geld einem Punkt entspricht."/>
+		<text name="CM_VictoryPoints_general_loan_input_text" 					text="Gib ein wie viel Kredit einem Strafpunkt entspricht."/>
 		<text name="CM_VictoryPoints_general_area_input_text" 					text="Gib ein wie viel Hektar Land einem Punkt entsprechen."/>
 		<text name="CM_VictoryPoints_general_ownedBuildingValue_input_text" 	text="Gib ein wie viel Gebäudeverkaufswert einem Punkt entspricht."/>
 		<text name="CM_VictoryPoints_general_ownedVehicleValue_input_text" 		text="Gib ein wie viel Fahrzeugverkaufswert einem Punkt entspricht."/>

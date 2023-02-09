@@ -61,6 +61,7 @@ A duration of 0 months will deactivate the time limit."
 
 		<text name="CM_VictoryPoints_general_input_text" 						text=""/>
 		<text name="CM_VictoryPoints_general_money_input_text" 					text="Please enter how much money equals one point."/>
+		<text name="CM_VictoryPoints_general_loan_input_text" 					text="Please enter how much loan equals one punishment point."/>
 		<text name="CM_VictoryPoints_general_area_input_text" 					text="Please enter how much hectares of land equals one point."/>
 		<text name="CM_VictoryPoints_general_ownedBuildingValue_input_text" 	text="Please enter how much building sell value equals one point."/>
 		<text name="CM_VictoryPoints_general_ownedVehicleValue_input_text" 		text="Please enter how much vehicle sell value equals one point."/>

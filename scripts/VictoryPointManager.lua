@@ -180,6 +180,12 @@ function VictoryPointManager:addMoneyFactor(category, factorData, farmId)
 	category:addElement(VictoryPoint.createFromXml(factorData, money))
 end
 
+function VictoryPointManager:addLoanFactor(category, factorData, farmId)
+	local farm = g_farmManager:getFarmById(farmId)
+	local loan = farm and farm.loan or 0
+	category:addElement(VictoryPoint.createFromXml(factorData, loan))
+end
+
 function VictoryPointManager:addAreaFactor(category, factorData, farmId)
 	local area = VictoryPointsUtil.getTotalArea(farmId)
 	category:addElement(VictoryPoint.createFromXml(factorData, area))
