@@ -48,13 +48,13 @@ Eine Dauer von 0 Monaten deaktiviert das Zeitlimit."
 		<text name="CM_dialog_setGoal_error_invalidGoal" 						text="Ziel muss eine Zahl sein!"/>
 		<text name="CM_dialog_setDuration_error_invalidDuration" 				text="Dauer muss eine positive Zahl sein!"/>
 
-
 		<text name="CM_VictoryPoints_leftTitle" 								text=""/>
 		<text name="CM_VictoryPoints_middleTitle" 								text="Faktor"/>
 		<text name="CM_VictoryPoints_rightTitle" 								text="Wert"/>
 
 		<text name="CM_VictoryPoints_general_title" 							text=""/>
 		<text name="CM_VictoryPoints_general_money_title"						text="Geld ohne Kredit"/>
+		<text name="CM_VictoryPoints_general_loan_title"						text="Kreditstrafe"/>
 		<text name="CM_VictoryPoints_general_area_title" 						text="Fläche"/>
 		<text name="CM_VictoryPoints_general_ownedBuildingValue_title" 			text="Gebäude Verkaufswert"/>
 		<text name="CM_VictoryPoints_general_ownedVehicleValue_title" 			text="Fahrzeuge Verkaufswert"/>

@@ -54,6 +54,7 @@ A duration of 0 months will deactivate the time limit."
 
 		<text name="CM_VictoryPoints_general_title"								text=""/>
 		<text name="CM_VictoryPoints_general_money_title"						text="Money without credit"/>
+		<text name="CM_VictoryPoints_general_loan_title"						text="Loan punishment"/>
 		<text name="CM_VictoryPoints_general_area_title"						text="Area"/>
 		<text name="CM_VictoryPoints_general_ownedBuildingValue_title"			text="Building sell value"/>
 		<text name="CM_VictoryPoints_general_ownedVehicleValue_title"			text="Vehicle sell value"/>
