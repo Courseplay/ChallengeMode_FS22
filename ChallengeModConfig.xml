@@ -3,6 +3,7 @@
 	<VictoryPoints prefix="CM_VictoryPoints" goal="1000000">
 		<Category name="general">
 			<Element genericFunc="addMoneyFactor" unitTextFunc="MONEY_TEXT" name="money" default="1" />
+			<Element genericFunc="addLoanFactor" unitTextFunc="MONEY_TEXT" name="loan" default="1" />
 			<Element genericFunc="addAreaFactor" unitTextFunc="AREA_TEXT" name="area" default="1" />
 			<Element genericFunc="addBuildingsFactor" unitTextFunc="MONEY_TEXT" name="ownedBuildingValue" default="1" />
 			<Element genericFunc="addVehiclesFactor" unitTextFunc="MONEY_TEXT" name="ownedVehicleValue" default="1" />

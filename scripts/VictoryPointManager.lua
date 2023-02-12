@@ -177,7 +177,16 @@ end
 function VictoryPointManager:addMoneyFactor(category, factorData, farmId)
 	local farm = g_farmManager:getFarmById(farmId)
 	local money = farm and farm.money - farm.loan or 0
+	-- prevents negative points if loan is higher than money
+	money = math.max(money, 0)
 	category:addElement(VictoryPoint.createFromXml(factorData, money))
+end
+
+function VictoryPointManager:addLoanFactor(category, factorData, farmId)
+	local farm = g_farmManager:getFarmById(farmId)
+	local loan = farm and farm.loan or 0
+	loan = -loan
+	category:addElement(VictoryPoint.createFromXml(factorData, loan))
 end
 
 function VictoryPointManager:addAreaFactor(category, factorData, farmId)

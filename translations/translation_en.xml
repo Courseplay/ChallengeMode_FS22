@@ -54,6 +54,7 @@ A duration of 0 months will deactivate the time limit."
 
 		<text name="CM_VictoryPoints_general_title"								text=""/>
 		<text name="CM_VictoryPoints_general_money_title"						text="Money without credit"/>
+		<text name="CM_VictoryPoints_general_loan_title"						text="Loan punishment"/>
 		<text name="CM_VictoryPoints_general_area_title"						text="Area"/>
 		<text name="CM_VictoryPoints_general_ownedBuildingValue_title"			text="Building sell value"/>
 		<text name="CM_VictoryPoints_general_ownedVehicleValue_title"			text="Vehicle sell value"/>
@@ -61,6 +62,7 @@ A duration of 0 months will deactivate the time limit."
 
 		<text name="CM_VictoryPoints_general_input_text" 						text=""/>
 		<text name="CM_VictoryPoints_general_money_input_text" 					text="Please enter how much money equals one point."/>
+		<text name="CM_VictoryPoints_general_loan_input_text" 					text="Please enter how much loan equals one punishment point."/>
 		<text name="CM_VictoryPoints_general_area_input_text" 					text="Please enter how much hectares of land equals one point."/>
 		<text name="CM_VictoryPoints_general_ownedBuildingValue_input_text" 	text="Please enter how much building sell value equals one point."/>
 		<text name="CM_VictoryPoints_general_ownedVehicleValue_input_text" 		text="Please enter how much vehicle sell value equals one point."/>
