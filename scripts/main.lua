@@ -120,6 +120,10 @@ function ChallengeMod:isTimeTracked()
 end
 
 function ChallengeMod:isDurationOver()
+	if self.duration <= 0 then
+		return false
+	end
+
 	return (self.trackDuration or self:areFinalPointsSet()) and self.timePassed > self.duration
 end
 
