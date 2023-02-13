@@ -91,7 +91,7 @@ function ChallengeMod:setDuration(duration, noEvent)
 	end
 end
 
-function ChallengeMod:finalizePoints()
+function ChallengeMod:finalizePoints(farmId)
 	g_victoryPointManager:calculatePoints(farmId)
 	local totalPoints = g_victoryPointManager:getTotalPoints(farmId)
 	local additionalPoints = g_victoryPointManager:sumAdditionalPoints(farmId)
@@ -438,7 +438,7 @@ function ChallengeMod:onPeriodChanged()
 		if g_currentMission:getIsServer() then
 			for _, farm in pairs(g_farmManager:getFarms()) do
 				local farmId = farm.farmId
-				self:finalizePoints()
+				self:finalizePoints(farmId)
 			end
 		end
 	end
