@@ -73,7 +73,10 @@ function ChallengeMod:setDuration(duration, noEvent)
 	self.duration = duration
 
 	if self:isDurationOver() then
-		self:finalizePoints()
+		for _, farm in pairs(g_farmManager:getFarms()) do
+			local farmId = farm.farmId
+			self:finalizePoints(farmId)
+		end
 	end
 
 	if duration == 0 then --pause challenge duration tracking. All stored data is saved.
