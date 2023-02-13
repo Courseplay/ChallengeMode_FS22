@@ -42,7 +42,7 @@ function VictoryPointsUtil.getStorageAmount(farmId, maxFillLevel)
 		for _, storage in pairs(objectStorages) do
 			for _, storageArea in pairs(storage.indexedStorageAreas) do
 				for _, objectAttributes in pairs(storageArea.objects) do
-					totalFillLevels[objectAttributes.fillType] = totalFillLevels[objectAttributes.fillType] + math.min(objectAttributes.fillLevel, maxFillLevel)
+					totalFillLevels[objectAttributes.fillType] = math.min(totalFillLevels[objectAttributes.fillType] + objectAttributes.fillLevel, maxFillLevel)
 				end
 			end
 		end
