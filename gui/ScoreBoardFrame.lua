@@ -402,6 +402,7 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 					elseif spyingRule == 1 then
 						local function callback (yes)
 							if yes then
+								--TODO: pay money
 							else
 								pointsText = "X"
 							end

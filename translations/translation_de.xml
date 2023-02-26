@@ -33,9 +33,8 @@
 		<text name="CM_dialog_adminChangePasswordTitle" 						text="Aktuelles Passwort: %s" />
 		<text name="CM_dialog_adminWrongPassword" 								text="Falsches Passwort! (%s)"/>
 		<text name="CM_dialog_newGoal" 											text="Gib das neue Ziel ein."/>
-		<text name="CM_dialog_newDuration"text="Gib die Dauer in Monaten ein.
-Eine Dauer von 0 Monaten deaktiviert das Zeitlimit."
-		/>
+		<text name="CM_dialog_newDuration" 										text="Gib die Dauer in Monaten ein.
+Eine Dauer von 0 Monaten deaktiviert das Zeitlimit."/>
 		<text name="CM_dialog_challengeOver"									text="Der Wettkampf ist vorbei."/>
 
 		<text name="CM_dialog_addPoints_title"									text="Punkte hinzufügen"/>
@@ -104,6 +103,10 @@ Eine Dauer von 0 Monaten deaktiviert das Zeitlimit."
 		<text name="CM_Rules_general_maxNumberOfAnimals_title" 					text="Maximale Anzahl zählender Tiere: "/>
 		<text name="CM_Rules_general_maxNumberOfAnimals_deactivated"			text="Deaktiviert"/>
 		<text name="CM_Rules_general_maxNumberOfAnimals_noLimit"				text="Kein Limit"/>
+		<text name="CM_Rules_general_spyOnOtherTeams_title" 					text="Spionieren"/>
+		<text name="CM_Rules_general_spyOnOtherTeams_deactivated"				text="Keine Werte anzeigen"/>
+		<text name="CM_Rules_general_spyOnOtherTeams_payToSpy"					text="Bezahlen zum Spionieren"/>
+		<text name="CM_Rules_general_spyOnOtherTeams_showAll"					text="Alle Werte anzeigen"/>
 
 		<text name="CM_Rules_visibleFarms_title" 								text="Farmen:"/>
 		<text name="CM_Rules_visibleFarms_visible" 								text="Sichtbar"/>
