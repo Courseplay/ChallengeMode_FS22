@@ -19,11 +19,8 @@ function ChallengeMod.new(custom_mt)
 	local self = setmetatable({}, custom_mt or ChallengeMod_mt)
 	self.isServer = g_server
 	self.visibleFarms = {}
-	self.finalPoints = {}
 	self.isAdminModeActive = false
-	self.trackDuration = false
-	self.timePassed = 1
-	self.duration = 0
+	self:resetTimeTrackingValues()
 
 	g_messageCenter:subscribe(MessageType.FARM_CREATED, self.newFarmCreated, self)
 
@@ -69,11 +66,24 @@ function ChallengeMod:changeAdminPassword(newPassword, noEvent)
 end
 
 function ChallengeMod:setDuration(duration, noEvent)
+	if self.duration < duration and not (self.timePassed > duration) then
+		self.finalPoints = {}
+	end
+
 	self.duration = duration
 
-	if duration == 0 then
+	if self:isDurationOver() then
+		for _, farm in pairs(g_farmManager:getFarms()) do
+			local farmId = farm.farmId
+			self:finalizePoints(farmId)
+		end
+	end
+
+	if duration == 0 then --pause challenge duration tracking. All stored data is saved.
 		self.trackDuration = false
 		g_messageCenter:unsubscribe(MessageType.PERIOD_CHANGED, self)
+	elseif duration == -1 then -- reset challenge duration tracking data. All saved data is lost
+		self:resetTimeTrackingValues()
 	else
 		self.trackDuration = true
 		g_messageCenter:subscribe(MessageType.PERIOD_CHANGED, self.onPeriodChanged, self)
@@ -82,6 +92,13 @@ function ChallengeMod:setDuration(duration, noEvent)
 	if noEvent == nil or not noEvent then
 		ChangeDurationEvent.sendEvent(duration)
 	end
+end
+
+function ChallengeMod:finalizePoints(farmId)
+	g_victoryPointManager:calculatePoints(farmId)
+	local totalPoints = g_victoryPointManager:getTotalPoints(farmId)
+	local additionalPoints = g_victoryPointManager:sumAdditionalPoints(farmId)
+	self:setFinalPointsForFarm(totalPoints - additionalPoints, farmId)
 end
 
 function ChallengeMod:setFinalPointsForFarm(finalPoints, farmId, noEventSend)
@@ -106,7 +123,11 @@ function ChallengeMod:isTimeTracked()
 end
 
 function ChallengeMod:isDurationOver()
-	return self.trackDuration and self.timePassed > self.duration
+	if self.duration <= 0 then
+		return false
+	end
+
+	return (self.trackDuration or self:areFinalPointsSet()) and self.timePassed > self.duration
 end
 
 function ChallengeMod:getDuration()
@@ -123,6 +144,10 @@ end
 
 function ChallengeMod:getFinalPointListForFarm(farmId)
 	return self.finalPoints[farmId]
+end
+
+function ChallengeMod:areFinalPointsSet()
+	return self.finalPoints ~= {}
 end
 
 function ChallengeMod:areFinalPointsSetForFarm(farmId)
@@ -418,11 +443,19 @@ function ChallengeMod:onPeriodChanged()
 		if g_currentMission:getIsServer() then
 			for _, farm in pairs(g_farmManager:getFarms()) do
 				local farmId = farm.farmId
-				g_victoryPointManager:calculatePoints(farmId)
-				self:setFinalPointsForFarm(g_victoryPointManager:getTotalPoints(farmId), farmId)
+				self:finalizePoints(farmId)
 			end
 		end
 	end
+end
+
+function ChallengeMod:resetTimeTrackingValues()
+	self.trackDuration = false
+	self.duration = 0
+	self.finalPoints = {}
+	self.timePassed = 1
+
+	g_messageCenter:unsubscribe(MessageType.PERIOD_CHANGED, self)
 end
 
 g_challengeMod = ChallengeMod.new()
