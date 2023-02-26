@@ -120,6 +120,7 @@ V1.1.0.1
 		<sourceFile filename="events/ChallengeOverEvent.lua"/>
 		<sourceFile filename="events/AddPointsEvent.lua"/>
 		<sourceFile filename="events/ChangeIsStartVehicleEvent.lua"/>
+		<sourceFile filename="events/PayToSpyEvent.lua"/>
 	</extraSourceFiles>
 
 	<l10n filenamePrefix="translations/translation" />
