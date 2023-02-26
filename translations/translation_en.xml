@@ -39,6 +39,7 @@ A duration of 0 months will deactivate the time limit.
 A duration of -1 will reset all data connected to the challenge duration."
 		/>
 		<text name="CM_dialog_challengeOver"									text="The challenge is over."/>
+		<text name="CM_dialog_spyOnOtherTeams" 									text="Do you want to pay %s to see the values of farm %s?"/>
 
 		<text name="CM_dialog_addPoints_title"									text="Add Points"/>
 		<text name="CM_dialog_addPoints_pointsText"								text="Points"/>

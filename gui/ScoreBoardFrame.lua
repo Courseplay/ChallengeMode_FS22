@@ -409,8 +409,11 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 							end
 						end
 
+						local spyingCostText = g_i18n:format(g_ruleManager:getGeneralRuleValue("spyingCost"))
+						local farm = g_farmManager:getFarmById(self:getSelectedFarmId()).name
+						local text = string.format(ScoreBoardFrame.translations.dialogs.spyOnOtherTeams, spyingCostText, farm)
 						g_gui:showYesNoDialog({
-							text = ScoreBoardFrame.translations.dialogs.spyOnOtherTeams,
+							text = ,
 							callback = callback,
 							yesButton = g_i18n:getText("button_continue"),
 							noButton = g_i18n:getText("button_cancel")
