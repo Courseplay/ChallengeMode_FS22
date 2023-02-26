@@ -104,6 +104,9 @@ A duration of 0 months will deactivate the time limit."
 		<text name="CM_Rules_general_maxNumberOfAnimals_title" 					text="Max amount of counting Animals: "/>
 		<text name="CM_Rules_general_maxNumberOfAnimals_deactivated"			text="Deactivated"/>
 		<text name="CM_Rules_general_maxNumberOfAnimals_noLimit"				text="No Limit"/>
+		<text name="CM_Rules_general_spyOnOtherTeams_deactivated"				text="No values shown"/>
+		<text name="CM_Rules_general_spyOnOtherTeams_payToSpy"					text="Pay to spy"/>
+		<text name="CM_Rules_general_spyOnOtherTeams_showAll"					text="All values shown"/>
 
 		<text name="CM_Rules_visibleFarms_title"								text="Farms:"/>
 		<text name="CM_Rules_visibleFarms_visible"								text="Visible"/>
