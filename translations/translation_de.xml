@@ -39,6 +39,7 @@
 Eine Dauer von 0 Monaten deaktiviert das Zeitlimit.
 Eine Dauer von -1 setzt alle Daten bezüglich der Wettkampfdauer zurück."
 		<text name="CM_dialog_challengeOver"									text="Der Wettkampf ist vorbei."/>
+		<text name="CM_dialog_spyOnOtherTeams" 									text="Möchten Sie %s bezahlen, um die Werte von Farm %s zu sehen?"/>
 
 		<text name="CM_dialog_addPoints_title"									text="Punkte hinzufügen"/>
 		<text name="CM_dialog_addPoints_pointsText"								text="Punkte"/>
@@ -49,8 +50,6 @@ Eine Dauer von -1 setzt alle Daten bezüglich der Wettkampfdauer zurück."
 		<text name="CM_dialog_addPoints_error_notANumber" 						text="Punkte müssen eine Zahl sein!"/>
 		<text name="CM_dialog_setGoal_error_invalidGoal" 						text="Ziel muss eine Zahl sein!"/>
 		<text name="CM_dialog_setDuration_error_invalidDuration" 				text="Dauer muss eine positive Zahl sein!"/>
-		<text name="CM_dialog_spyOnOtherTeams" 									text="Möchten Sie %s bezahlen, um die Werte von Farm %s zu sehen?"/>
-
 
 		<text name="CM_VictoryPoints_leftTitle" 								text=""/>
 		<text name="CM_VictoryPoints_middleTitle" 								text="Faktor"/>
