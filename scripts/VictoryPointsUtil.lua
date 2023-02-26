@@ -40,9 +40,11 @@ function VictoryPointsUtil.getStorageAmount(farmId, maxFillLevel)
 		local objectStorages = g_objectStorageManager:getStorages()
 
 		for _, storage in pairs(objectStorages) do
-			for _, storageArea in pairs(storage.indexedStorageAreas) do
-				for _, objectAttributes in pairs(storageArea.objects) do
-					totalFillLevels[objectAttributes.fillType] = math.min(totalFillLevels[objectAttributes.fillType] + objectAttributes.fillLevel, maxFillLevel)
+			if storage.ownerFarmId == farmId then
+				for _, storageArea in pairs(storage.indexedStorageAreas) do
+					for _, objectAttributes in pairs(storageArea.objects) do
+						totalFillLevels[objectAttributes.fillType] = math.min(totalFillLevels[objectAttributes.fillType] + objectAttributes.fillLevel, maxFillLevel)
+					end
 				end
 			end
 		end
