@@ -403,7 +403,8 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 					elseif spyingRule == 1 then
 						local function callback (yes)
 							if yes then
-								--TODO: pay money
+								local price = g_ruleManager:getGeneralRuleValue("spyingCost")
+								self.client:getServerConnection():sendEvent(FarmlandStateEvent.new(self.selectedFarmland.id, g_currentMission:getFarmId(), price))
 							else
 								pointsText = "X"
 							end
@@ -413,7 +414,7 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 						local farm = g_farmManager:getFarmById(self:getSelectedFarmId()).name
 						local text = string.format(ScoreBoardFrame.translations.dialogs.spyOnOtherTeams, spyingCostText, farm)
 						g_gui:showYesNoDialog({
-							text = ,
+							text = text,
 							callback = callback,
 							yesButton = g_i18n:getText("button_continue"),
 							noButton = g_i18n:getText("button_cancel")
