@@ -37,7 +37,7 @@
 
 		<text name="CM_dialog_newDuration" 										text="Gib die Dauer in Monaten ein.
 Eine Dauer von 0 Monaten deaktiviert das Zeitlimit.
-Eine Dauer von -1 setzt alle Daten bezüglich der Wettkampfdauer zurück."
+Eine Dauer von -1 setzt alle Daten bezüglich der Wettkampfdauer zurück."/>
 		<text name="CM_dialog_challengeOver"									text="Der Wettkampf ist vorbei."/>
 		<text name="CM_dialog_spyOnOtherTeams" 									text="Möchten Sie %s bezahlen, um die Werte von Farm %s zu sehen?"/>
 
