@@ -110,6 +110,7 @@ A duration of -1 will reset all data connected to the challenge duration."
 		<text name="CM_Rules_general_spyOnOtherTeams_deactivated"				text="No values shown"/>
 		<text name="CM_Rules_general_spyOnOtherTeams_payToSpy"					text="Pay to spy"/>
 		<text name="CM_Rules_general_spyOnOtherTeams_showAll"					text="All values shown"/>
+		<text name="CM_Rules_general_spyingCost_title" 							text="Spying Cost"/>
 
 		<text name="CM_Rules_visibleFarms_title"								text="Farms:"/>
 		<text name="CM_Rules_visibleFarms_visible"								text="Visible"/>
