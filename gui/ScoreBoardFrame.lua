@@ -281,7 +281,6 @@ end
 function ScoreBoardFrame:updateLists()
 	self.victoryPointManager:update()
 	self.farms = self:getValidFarms()
-	self.leftList:setSelectedIndex(self:getSelectedIndexByFarmId(g_currentMission.player.farmId))
 	self.leftList:reloadData()
 	self.rightList:reloadData()
 	self.changelogList:reloadData()
@@ -396,8 +395,9 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 				cell:getAttribute("title"):setText(element:getTitle())
 
 				local pointsText = element:getText()
-				local spyingRule = g_ruleManager:getGeneralRuleValue("spyOnOtherTeams")
-				if self:getSelectedFarmId() ~= g_currentMission.player.farmId then
+				local sx, ix = self.leftList:getSelectedPath()
+				if self:getSelectedFarmId() ~= g_currentMission.player.farmId and sx == self.LEFT_SECTIONS.POINTS then
+					local spyingRule = g_ruleManager:getGeneralRuleValue("spyOnOtherTeams")
 					if spyingRule == 0 then
 						pointsText = "X"
 					elseif spyingRule == 1 then
@@ -619,11 +619,14 @@ end
 
 function ScoreBoardFrame:onClickLeftListCallback(list, section, index, cell)
 	self.selectedList = self.leftList
+	print("onClick left list")
+	print("section: " .. section)
 
 	if self.leftList:getSelectedSection() ~= self.LEFT_SECTIONS.POINTS then
 		self.showChangelog = false
 
 		self:updateRightColumn()
+		print("update selected item")
 		self:updateFrame()
 	end
 
