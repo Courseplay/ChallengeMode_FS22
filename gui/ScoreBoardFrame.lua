@@ -396,26 +396,23 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 
 				local pointsText = element:getText()
 				local sx, ix = self.leftList:getSelectedPath()
-				if self:getSelectedFarmId() ~= g_currentMission.player.farmId and sx == self.LEFT_SECTIONS.POINTS then
+				local playerFarmId = g_currentMission.player.farmId
+				local selectedFarmId = self:getSelectedFarmId()
+
+				if selectedFarmId ~= playerFarmId and sx == self.LEFT_SECTIONS.POINTS and not g_challengeMod:getIsFarmAllowedToSpyFarm(playerFarmId, selectedFarmId)then
 					local spyingRule = g_ruleManager:getGeneralRuleValue("spyOnOtherTeams")
 					if spyingRule == 0 then
 						pointsText = "X"
 					elseif spyingRule == 1 then
-						local function callback (yes)
-							if yes then
-								local price = g_ruleManager:getGeneralRuleValue("spyingCost")
-								self.client:getServerConnection():sendEvent(FarmlandStateEvent.new(self.selectedFarmland.id, g_currentMission:getFarmId(), price))
-							else
-								pointsText = "X"
-							end
-						end
-
-						local spyingCostText = g_i18n:format(g_ruleManager:getGeneralRuleValue("spyingCost"))
-						local farm = g_farmManager:getFarmById(self:getSelectedFarmId()).name
+						local spyingCostText = g_i18n:formatMoney(g_ruleManager:getGeneralRuleValue("spyingCost"))
+						local farm = g_farmManager:getFarmById(selected).name
 						local text = string.format(ScoreBoardFrame.translations.dialogs.spyOnOtherTeams, spyingCostText, farm)
+
 						g_gui:showYesNoDialog({
 							text = text,
-							callback = callback,
+							callback = self.onPayToSpy,
+							target = self,
+							args = pointsText,
 							yesButton = g_i18n:getText("button_continue"),
 							noButton = g_i18n:getText("button_cancel")
 						})
@@ -813,5 +810,17 @@ function ScoreBoardFrame:onTextInputChangeDuration(text, clickOk)
 			self:updateFrame()
 			self.headerDuration.overlayState = GuiOverlay.STATE_NORMAL
 		end
+	end
+end
+
+function ScoreBoardFrame:onPayToSpy(yes, args)
+	print("in callback of spy yesNoDialog")
+	if yes then
+		print("yes clicked")
+		local price = g_ruleManager:getGeneralRuleValue("spyingCost")
+		g_client:getServerConnection():sendEvent(PayToSpyEvent.new(price, self:getSelectedFarmId()))
+	else
+		print("no clicked")
+		args = "X"
 	end
 end
