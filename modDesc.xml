@@ -5,12 +5,13 @@
 	<title>
 		<en>Challenge Mode</en>
 		<de>Wettkampfmodus</de>
+		<fr>Challenge Mode</fr>
 	</title>
 
 	<description>
         <en><![CDATA[
 Challenge Time!
-This mod provides everything you need to create your own challange.
+This mod provides everything you need to create your own challenge.
 Custom Ingame UI with extra password to configure the rule set and values to your needs.
 The password can only be changed by the server admin.
 
@@ -93,6 +94,49 @@ V1.1.0.0
 V1.1.0.1
  - Fehler mit der Synchronisierung der Startfahrzeuge behoben
 ]]></de>
+       <fr><![CDATA[
+Voici le Farming compétitif !
+Ce mod vous permet de définir un ensemble de règles pour vous fixer un défi en solo ou en multi.
+Configurer les paramètres du challenge via le nouvel onglet dans le menu du jeu.
+Le mot de passe ne peut être changé que par l'administrateur du serveur.
+
+Les données suivantes peuvent servir à attribuer des points :
+- Combien d'agent sur le compte (déduction faite des emprunts).
+- Combien de litres de chaque culture.
+- Combien de surface possédée (Ha).
+- Combien d'animaux adultes.
+
+Règles supplémentaires:
+- Combien de points sont nécessaire pour gagner
+- Stockage maximum. Tout excédent ne sera pas comptabilisé.
+- Limite d'ouvriers 0-6.
+- Limite de stabulations 0-6.
+- Location de véhicules pour les contrats, depuis le magasin ou complètement interdite.
+- Suppression de certains types de contrats.
+- Limite de contrats actifs en même temps par ferme de 0 à 8.
+- Emprunt autorisé/interdit/jusqu'à un montant défini.
+- Désignation des véhicules et outils de démarrage comme exclus du comptage de points.
+- Ajout ou soustraction de points à une ferme possible avec justification (exemple : pénalité, bon esprit, bonification) avec suivi des actions ! La justification apparait en double cliquant sur l'entrée du journal.
+- Masquage d'une ferme ne participant pas au challenge (exemple une ETA ou une ferme Admin). Cette ferme n'aura pas de limites, pour utiliser des ouvriers et louer des véhicules.
+
+Dans les évolutions futures:
+- Integration du mod de limitation des revenus journaliers au sein des règles dans la même interface.
+
+Nous vous suggérons d'utiliser un serveur dédié 24/24 7/7 si vous utilisez la limitation des revenus journaliers pour plus d'équité.
+
+Pour plus d'imformations, demande de support ou déclaration de bugs, rendez-vous sur le <a href="https://github.com/Courseplay/ChallengeMode_FS22">github</a>.
+
+Changelog
+V1.0.0.1
+ - correction du bug de visibilité des fermes
+
+V1.1.0.0
+ - ajout d'une option pour définir la durée du challenge exprimée en mois. Une fois la fin du dernier mois du challenge atteinte, les points ne seront plus comptés. Cette fonction peut être désactivée en mettant la valeur à 0
+
+V1.1.0.1
+ - correction de la synchronisation des véhicules de démarrage
+]]>
+</fr>
     </description>
 
 	<iconFilename>Icon_ChallengeMode.dds</iconFilename>
