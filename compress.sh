@@ -14,6 +14,8 @@ declare -a fd_toZip=(
 	"translations/"
 )
 
+declare zip_name="FS22_ChallengeMode.zip"
+
 # delete old temp folder + create new one
 [[ -e "temp-zip-folder/" ]] && rm -rf "temp-zip-folder/"
 mkdir -p "temp-zip-folder/"
@@ -30,14 +32,14 @@ done
 
 
 # delete old zip folder if exists
-[[ -e "FS22_ChallengeMode.zip" ]] && rm -f "FS22_ChallengeMode.zip"
+[[ -e "$zip_name" ]] && rm -f "$zip_name"
 # zip temp folder
-powershell "Compress-Archive -Path temp-zip-folder/* -DestinationPath FS22_ChallengeMode.zip"
+powershell "Compress-Archive -Path temp-zip-folder/* -DestinationPath $zip_name"
 
 # delete temp zip folder
 [[ -e "temp-zip-folder/" ]] && rm -rf "temp-zip-folder/"
 
 # confirm execution
 echo "zip is done"
-mv FS22_ChallengeMode.zip ..
+mv "$zip_name" ..
 #exec $SHELL		# remove this if you want the console to close on finish
