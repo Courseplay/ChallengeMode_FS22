@@ -405,7 +405,7 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 						pointsText = "X"
 					elseif spyingRule == 1 then
 						local spyingCostText = g_i18n:formatMoney(g_ruleManager:getGeneralRuleValue("spyingCost"))
-						local farm = g_farmManager:getFarmById(selected).name
+						local farm = g_farmManager:getFarmById(selectedFarmId).name
 						local text = string.format(ScoreBoardFrame.translations.dialogs.spyOnOtherTeams, spyingCostText, farm)
 
 						g_gui:showYesNoDialog({
