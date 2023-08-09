@@ -113,8 +113,8 @@ function ChallengeMod:setFinalPointsForFarm(finalPoints, farmId, noEventSend)
 	end
 end
 
-function ChallengeMod:setFarmAllowedToSpyFarm(ownerFarm, farmToSpy)
-	self.spyingAllowedForFarm[ownerFarm][farmToSpy] = true
+function ChallengeMod:setFarmAllowedToSpyFarm(ownerFarm, farmToSpy, canSpy)
+	self.spyingAllowedForFarm[ownerFarm][farmToSpy] = canSpy
 end
 
 function ChallengeMod:getAdminPassword()
