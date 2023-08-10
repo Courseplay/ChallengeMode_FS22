@@ -825,6 +825,6 @@ function ScoreBoardFrame:onPayToSpy(yes)
 		local getSelectedFarmId = self:getSelectedFarmId()
 		g_challengeMod:setFarmAllowedToSpyFarm(playerFarmId, getSelectedFarmId)
 		g_client:getServerConnection():sendEvent(PayToSpyEvent.new(-price, playerFarmId, getSelectedFarmId))
-		self:updateLists()
+		self:updateFrame()
 	end
 end
