@@ -620,8 +620,13 @@ function ScoreBoardFrame:onClickLeftListCallback(list, section, index, cell)
 		local text = string.format(ScoreBoardFrame.translations.dialogs.spyOnOtherTeams, spyingCostText, farm)
 		local playerFarmId = g_currentMission.player.farmId
 		local selectedFarmId = self:getSelectedFarmId()
+		local spyingRule = g_ruleManager:getGeneralRuleValue("spyOnOtherTeams")
 
-		if selectedFarmId ~= playerFarmId and not g_challengeMod:getIsFarmAllowedToSpyFarm(playerFarmId, selectedFarmId) then
+		if spyingRule == 1 and
+			playerFarmId ~= 0 and
+			selectedFarmId ~= playerFarmId and
+			not g_challengeMod:getIsFarmAllowedToSpyFarm(playerFarmId, selectedFarmId)
+		then
 			g_gui:showYesNoDialog({
 				text = text,
 				callback = self.onPayToSpy,
