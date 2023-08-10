@@ -270,6 +270,7 @@ function ScoreBoardFrame:onFrameClose()
 	self.showChangelog = false
 	self:updateRightColumn()
 	self:updateFrame()
+	g_challengeMod:resetSpyingForFarm(g_currentMission.player.farmId)
 end
 
 function ScoreBoardFrame:updateFrame()
@@ -820,7 +821,10 @@ end
 function ScoreBoardFrame:onPayToSpy(yes)
 	if yes then
 		local price = g_ruleManager:getGeneralRuleValue("spyingCost")
-		g_client:getServerConnection():sendEvent(PayToSpyEvent.new(price, g_currentMission.player.farmId, self:getSelectedFarmId()))
+		local playerFarmId = g_currentMission.player.farmId
+		local getSelectedFarmId = self:getSelectedFarmId()
+		g_challengeMod:setFarmAllowedToSpyFarm(playerFarmId, getSelectedFarmId)
+		g_client:getServerConnection():sendEvent(PayToSpyEvent.new(-price, playerFarmId, getSelectedFarmId))
 		self:updateLists()
 	end
 end
