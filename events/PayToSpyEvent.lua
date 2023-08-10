@@ -37,5 +37,4 @@ function PayToSpyEvent:run(connection)
 
         g_server:broadcastEvent(self, true)
     end
-    g_challengeMod:setFarmAllowedToSpyFarm(self.ownFarmId, self.farmToSpy, true)
 end
