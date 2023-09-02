@@ -19,10 +19,13 @@ function ChallengeMod.new(custom_mt)
 	local self = setmetatable({}, custom_mt or ChallengeMod_mt)
 	self.isServer = g_server
 	self.visibleFarms = {}
+	self.spyingAllowedForFarm = {}
 	self.isAdminModeActive = false
 	self:resetTimeTrackingValues()
 
 	g_messageCenter:subscribe(MessageType.FARM_CREATED, self.newFarmCreated, self)
+	g_messageCenter:subscribe(MessageType.HOUR_CHANGED, self.onHourChanged, self)
+	g_messageCenter:subscribe(MessageType.SAVEGAME_LOADED, self.onSavegameLoaded, self)
 
 	if ChallengeMod.isDevelopmentVersion then
 		addConsoleCommand('CmGenerateContracts', 'Generates new contracts', 'consoleGenerateFieldMission', g_missionManager)
@@ -34,6 +37,7 @@ end
 
 function ChallengeMod:newFarmCreated(farmId)
 	self.visibleFarms[farmId] = true
+	self.spyingAllowedForFarm[farmId] = {}
 end
 
 function ChallengeMod:changeFarmVisibility(farmId, visible, noEvent)
@@ -110,12 +114,20 @@ function ChallengeMod:setFinalPointsForFarm(finalPoints, farmId, noEventSend)
 	end
 end
 
+function ChallengeMod:setFarmAllowedToSpyFarm(ownerFarm, farmToSpy)
+	self.spyingAllowedForFarm[ownerFarm][farmToSpy] = true
+end
+
 function ChallengeMod:getAdminPassword()
 	return self.adminPassword
 end
 
 function ChallengeMod:getDefaultAdminPassword()
 	return self.defaultAdminPassword
+end
+
+function ChallengeMod:getIsFarmAllowedToSpyFarm(ownerFarm, farmToSpy)
+	return self.spyingAllowedForFarm[ownerFarm][farmToSpy] or self.isAdminModeActive or not self.visibleFarms[ownerFarm]
 end
 
 function ChallengeMod:isTimeTracked()
@@ -431,6 +443,12 @@ end
 
 ItemSystem.save = Utils.prependedFunction(ItemSystem.save, ChallengeMod.saveToSaveGame)
 
+function ChallengeMod:onHourChanged()
+	for farmId, _ in pairs(self.spyingAllowedForFarm) do
+		self.spyingAllowedForFarm[farmId] = {}
+	end
+end
+
 function ChallengeMod:onPeriodChanged()
 	CmUtil.debug("month changed. Increase Time passed by 1")
 	self.timePassed = self.timePassed + 1
@@ -447,6 +465,23 @@ function ChallengeMod:onPeriodChanged()
 			end
 		end
 	end
+end
+
+function ChallengeMod:onSavegameLoaded()
+	for _, farm in pairs(g_farmManager:getFarms()) do
+		local farmId = farm.farmId
+		if self.spyingAllowedForFarm[farmId] == nil then
+			self.spyingAllowedForFarm[farmId] = {}
+		end
+
+		if self.visibleFarms[farmId] == nil then
+			self.visibleFarms[farmId] = true
+		end
+	end
+end
+
+function ChallengeMod:resetSpyingForFarm(farmId)
+		self.spyingAllowedForFarm[farmId] = {}
 end
 
 function ChallengeMod:resetTimeTrackingValues()
