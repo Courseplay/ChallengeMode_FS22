@@ -75,8 +75,9 @@ ScoreBoardFrame.translations = {
 	changelogSections = {
 		""
 	}
-
 }
+
+ScoreBoardFrame.refreshRate = 1000
 
 local ScoreBoardFrame_mt = Class(ScoreBoardFrame, TabbedMenuFrameElement)
 ---@class ScoreBoardFrame
@@ -92,7 +93,7 @@ function ScoreBoardFrame.new(target, custom_mt)
 	self.farms = {}
 	self.showChangelog = false
 	self.selectedList = self.leftList
-
+	
 	return self
 end
 
@@ -262,6 +263,8 @@ function ScoreBoardFrame:onFrameOpen()
 	FocusManager:setFocus(self.leftList)
 	self:setSoundSuppressed(false)
 	ScoreBoardFrame:superClass().onFrameOpen(self)
+	self.timerRefresh = 0
+	g_messageCenter:subscribe(MessageType.MONEY_CHANGED, self.onMoneyChanged, self)
 end
 
 function ScoreBoardFrame:onFrameClose()
@@ -271,6 +274,18 @@ function ScoreBoardFrame:onFrameClose()
 	self:updateRightColumn()
 	self:updateFrame()
 	g_challengeMod:resetSpyingForFarm(g_currentMission.player.farmId)
+	g_messageCenter:unsubscribe(MessageType.MONEY_CHANGED, self)
+end
+
+function ScoreBoardFrame:update(dt)
+	ScoreBoardFrame:superClass().update(self, dt)
+
+	self.timerRefresh = self.timerRefresh + dt
+
+	if self.timerRefresh > self.refreshRate then
+		self:updateLists()
+		self.timerRefresh = 0
+	end
 end
 
 function ScoreBoardFrame:updateFrame()
@@ -681,6 +696,10 @@ end
 
 function ScoreBoardFrame:isHideChangelogButtonEnabled()
 	return self.showChangelog
+end
+
+function ScoreBoardFrame:onMoneyChanged(farmId, money)
+	self:updateFrame()
 end
 
 ----------------------------------------------------
