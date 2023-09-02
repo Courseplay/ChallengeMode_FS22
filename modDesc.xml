@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
-<modDesc descVersion="72">
-    <version>1.1.0.1</version>
+<modDesc descVersion="77">
+    <version>1.2.0.0</version>
 	<author>Courseplay.devTeam, tn4799</author>
 	<title>
 		<en>Challenge Mode</en>
@@ -49,6 +49,10 @@ V1.1.0.0
 
 V1.1.0.1
  - fixed mp synchronization of start vehicles
+
+V1.2.0.0
+ - Added an option for decreasing points if farm has a loan
+ - Added an option to manage if a farm can look at the points of the other farms
 ]]>
 </en>
 		<de><![CDATA[
@@ -92,6 +96,10 @@ V1.1.0.0
 
 V1.1.0.1
  - Fehler mit der Synchronisierung der Startfahrzeuge behoben
+
+V1.2.0.0
+ - Option hinzugefügt, dass ein Hof Punkte verliert, sollte der Hof einen Kredit haben
+ - Optrion zur Verwaltung der Sichtbarkeit der Punkte der anderen Höfe hinzugefügt
 ]]></de>
     </description>
 
