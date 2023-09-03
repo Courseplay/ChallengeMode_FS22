@@ -143,6 +143,24 @@
 					<Value name="ANIMAL_NO_LIMIT" text="noLimit">-1</Value>
 				</Values>
 			</Element>
+			<Element name="spyOnOtherTeams" default="1">
+				<Values>
+					<Value name="SPYING_DISABLED" text="deactivated">0</Value>
+					<Value name="PAY_TO_SPY" text="payToSpy">1</Value>
+					<Value name="SHOW_ALL" text="showAll">2</Value>
+				</Values>
+			</Element>
+			<Element name="spyingCost" default="4">
+				<Values>
+					<Value>1000</Value>
+					<Value>2000</Value>
+					<Value>5000</Value>
+					<Value>10000</Value>
+					<Value>20000</Value>
+					<Value>50000</Value>
+					<Value>100000</Value>
+				</Values>
+			</Element>
 		</Category>
 		<Category name="animalHusbandryLimits">
 			<Element genericFunc="addAnimalHusbandryLimitRules" default="1">

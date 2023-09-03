@@ -59,6 +59,7 @@ ScoreBoardFrame.translations = {
 		newGoal = g_i18n:getText("CM_dialog_newGoal"),
 		newDuration = g_i18n:getText("CM_dialog_newDuration"),
 		dataDeleted = g_i18n:getText("CM_dialog_dataDeleted"),
+		spyOnOtherTeams = g_i18n:getText("CM_dialog_spyOnOtherTeams"),
 		errors = {
 			missingReason = g_i18n:getText("CM_dialog_addPoints_error_missingReason"),
 			zeroPoints = g_i18n:getText("CM_dialog_addPoints_error_zeroPoints"),
@@ -74,8 +75,9 @@ ScoreBoardFrame.translations = {
 	changelogSections = {
 		""
 	}
-
 }
+
+ScoreBoardFrame.refreshRate = 1000
 
 local ScoreBoardFrame_mt = Class(ScoreBoardFrame, TabbedMenuFrameElement)
 ---@class ScoreBoardFrame
@@ -91,7 +93,7 @@ function ScoreBoardFrame.new(target, custom_mt)
 	self.farms = {}
 	self.showChangelog = false
 	self.selectedList = self.leftList
-
+	
 	return self
 end
 
@@ -261,6 +263,8 @@ function ScoreBoardFrame:onFrameOpen()
 	FocusManager:setFocus(self.leftList)
 	self:setSoundSuppressed(false)
 	ScoreBoardFrame:superClass().onFrameOpen(self)
+	self.timerRefresh = 0
+	g_messageCenter:subscribe(MessageType.MONEY_CHANGED, self.onMoneyChanged, self)
 end
 
 function ScoreBoardFrame:onFrameClose()
@@ -269,6 +273,19 @@ function ScoreBoardFrame:onFrameClose()
 	self.showChangelog = false
 	self:updateRightColumn()
 	self:updateFrame()
+	g_challengeMod:resetSpyingForFarm(g_currentMission.player.farmId)
+	g_messageCenter:unsubscribe(MessageType.MONEY_CHANGED, self)
+end
+
+function ScoreBoardFrame:update(dt)
+	ScoreBoardFrame:superClass().update(self, dt)
+
+	self.timerRefresh = self.timerRefresh + dt
+
+	if self.timerRefresh > self.refreshRate then
+		self:updateLists()
+		self.timerRefresh = 0
+	end
 end
 
 function ScoreBoardFrame:updateFrame()
@@ -334,7 +351,7 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 		end
 	elseif list == self.rightList then
 		if list:getIsVisible() then
-			local farmId = self:getCurrentFarmId()
+			local farmId = self:getSelectedFarmId()
 			local sx, ix = self.leftList:getSelectedPath()
 			local l = self.managers[sx](farmId)
 
@@ -351,7 +368,7 @@ function ScoreBoardFrame:getNumberOfItemsInSection(list, section)
 		end
 	else
 		if list:getIsVisible() then
-			local farmId = self:getCurrentFarmId()
+			local farmId = self:getSelectedFarmId()
 			local points = g_victoryPointManager:getAdditionalPointsForFarm(farmId) or {}
 
 			return #points or 0
@@ -393,13 +410,29 @@ function ScoreBoardFrame:populateCellForItemInSection(list, section, index, cell
 			if element then
 				cell:getAttribute("title"):setText(element:getTitle())
 
-				cell:getAttribute("value"):setText(element:getText())
+				local pointsText = element:getText()
+				local sx, ix = self.leftList:getSelectedPath()
+				local playerFarmId = g_currentMission.player.farmId
+				local selectedFarmId = self:getSelectedFarmId()
+
+				if selectedFarmId ~= playerFarmId and sx == self.LEFT_SECTIONS.POINTS and not g_challengeMod:getIsFarmAllowedToSpyFarm(playerFarmId, selectedFarmId)then
+					local spyingRule = g_ruleManager:getGeneralRuleValue("spyOnOtherTeams")
+					if spyingRule == 0 then
+						pointsText = "X"
+					elseif spyingRule == 1 then
+						if not g_challengeMod:getIsFarmAllowedToSpyFarm(playerFarmId, selectedFarmId) then
+							pointsText = "X"
+						end
+					end
+				end
+
+				cell:getAttribute("value"):setText(pointsText)
 
 				cell:getAttribute("conversionValue"):setText(element:getFactorText())
 			end
 		end
 	else
-		local farmId = self:getCurrentFarmId()
+		local farmId = self:getSelectedFarmId()
 		local points = g_victoryPointManager:getAdditionalPointsForFarm(farmId)
 		local point = points[index]
 
@@ -446,7 +479,7 @@ function ScoreBoardFrame:getValidFarms()
 	return farms, farmsById
 end
 
-function ScoreBoardFrame:getCurrentFarmId()
+function ScoreBoardFrame:getSelectedFarmId()
 	local sx, ix = self.leftList:getSelectedPath()
 	if sx ~= self.LEFT_SECTIONS.POINTS then
 		return
@@ -459,6 +492,16 @@ function ScoreBoardFrame:getCurrentFarmId()
 	end
 end
 
+function ScoreBoardFrame:getSelectedIndexByFarmId(farmId)
+	for idx, farm in pairs(self.farms) do
+		if farm.farmId ==farmId then
+			return idx
+		end
+	end
+
+	return 1
+end
+
 function ScoreBoardFrame:getElement(section, index)
 	if section == nil or index == nil then
 		CmUtil.debug("Index or section is nil (%s|%s).", tostring(section), tostring(index))
@@ -466,7 +509,7 @@ function ScoreBoardFrame:getElement(section, index)
 		return
 	end
 	local sx, ix = self.leftList:getSelectedPath()
-	local farmId = self:getCurrentFarmId()
+	local farmId = self:getSelectedFarmId()
 	local list = self.managers[sx](farmId)
 	if list == nil then
 		CmUtil.debug("Element not found for (%s|%s).", tostring(section), tostring(index))
@@ -501,7 +544,7 @@ function ScoreBoardFrame:onClickAdminChangePassword()
 end
 
 function ScoreBoardFrame:onClickChangeFarmVisibility()
-	local farmId = self:getCurrentFarmId()
+	local farmId = self:getSelectedFarmId()
 	if farmId == nil then
 		CmUtil.debug("No farm is selected!")
 		return
@@ -528,7 +571,7 @@ function ScoreBoardFrame:onClickAddPoints()
 		return
 	end
 
-	local farmId = self:getCurrentFarmId()
+	local farmId = self:getSelectedFarmId()
 	self:showAddPointsDialog(farmId)
 end
 
@@ -556,7 +599,7 @@ end
 
 function ScoreBoardFrame:onDoubleClickPoint(list, section, index, cell)
 	if self.selectedList == self.changelogList then
-		local farmId = self:getCurrentFarmId()
+		local farmId = self:getSelectedFarmId()
 		local point = g_victoryPointManager:getAdditionalPointsForFarm(farmId)[index]
 
 		g_gui:showInfoDialog({
@@ -586,6 +629,27 @@ function ScoreBoardFrame:onClickLeftListCallback(list, section, index, cell)
 
 		self:updateRightColumn()
 		self:updateFrame()
+	else
+		local spyingCostText = g_i18n:formatMoney(g_ruleManager:getGeneralRuleValue("spyingCost"))
+		local farm = g_farmManager:getFarmById(self:getSelectedFarmId()).name
+		local text = string.format(ScoreBoardFrame.translations.dialogs.spyOnOtherTeams, spyingCostText, farm)
+		local playerFarmId = g_currentMission.player.farmId
+		local selectedFarmId = self:getSelectedFarmId()
+		local spyingRule = g_ruleManager:getGeneralRuleValue("spyOnOtherTeams")
+
+		if spyingRule == 1 and
+			playerFarmId ~= 0 and
+			selectedFarmId ~= playerFarmId and
+			not g_challengeMod:getIsFarmAllowedToSpyFarm(playerFarmId, selectedFarmId)
+		then
+			g_gui:showYesNoDialog({
+				text = text,
+				callback = self.onPayToSpy,
+				target = self,
+				yesButton = g_i18n:getText("button_continue"),
+				noButton = g_i18n:getText("button_cancel")
+			})
+		end
 	end
 
 	self:updateMenuButtons()
@@ -632,6 +696,10 @@ end
 
 function ScoreBoardFrame:isHideChangelogButtonEnabled()
 	return self.showChangelog
+end
+
+function ScoreBoardFrame:onMoneyChanged(farmId, money)
+	self:updateFrame()
 end
 
 ----------------------------------------------------
@@ -771,5 +839,16 @@ function ScoreBoardFrame:onTextInputChangeDuration(text, clickOk)
 			self:updateFrame()
 			self.headerDuration.overlayState = GuiOverlay.STATE_NORMAL
 		end
+	end
+end
+
+function ScoreBoardFrame:onPayToSpy(yes)
+	if yes then
+		local price = g_ruleManager:getGeneralRuleValue("spyingCost")
+		local playerFarmId = g_currentMission.player.farmId
+		local getSelectedFarmId = self:getSelectedFarmId()
+		g_challengeMod:setFarmAllowedToSpyFarm(playerFarmId, getSelectedFarmId)
+		g_client:getServerConnection():sendEvent(PayToSpyEvent.new(-price, playerFarmId, getSelectedFarmId))
+		self:updateFrame()
 	end
 end

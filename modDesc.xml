@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
-<modDesc descVersion="72">
-    <version>1.1.0.1</version>
+<modDesc descVersion="77">
+    <version>1.2.0.0</version>
 	<author>Courseplay.devTeam, tn4799</author>
 	<title>
 		<en>Challenge Mode</en>
@@ -50,6 +50,10 @@ V1.1.0.0
 
 V1.1.0.1
  - fixed mp synchronization of start vehicles
+
+V1.2.0.0
+ - Added an option for decreasing points if farm has a loan
+ - Added an option to hide the other farms points, or pay to spy on the points as long as you are inside the menu
 ]]>
 </en>
 		<de><![CDATA[
@@ -93,6 +97,10 @@ V1.1.0.0
 
 V1.1.0.1
  - Fehler mit der Synchronisierung der Startfahrzeuge behoben
+
+V1.2.0.0
+ - Option hinzugefügt, dass ein Hof Punkte verliert, sollte der Hof einen Kredit haben
+ - Option hinzugefügt um die Punktezusammensetzung der anderen Farmen zu verstecken, oder bazahle um die Punkte zu sehen solange du im Menü bist
 ]]></de>
        <fr><![CDATA[
 Voici le Farming compétitif !
@@ -164,6 +172,7 @@ V1.1.0.1
 		<sourceFile filename="events/ChallengeOverEvent.lua"/>
 		<sourceFile filename="events/AddPointsEvent.lua"/>
 		<sourceFile filename="events/ChangeIsStartVehicleEvent.lua"/>
+		<sourceFile filename="events/PayToSpyEvent.lua"/>
 	</extraSourceFiles>
 
 	<l10n filenamePrefix="translations/translation" />
