@@ -39,6 +39,7 @@ Une durée de 0 mois désactivera la limite de temps.
 Une durée de -1 mois réinitialisera toutes les données générées pendant la durée du challenge."
 		/>
 		<text name="CM_dialog_challengeOver"									text="Le challenge est terminé."/>
+		<text name="CM_dialog_spyOnOtherTeams" 									text="Souhaitez-vous payer %s pour voir les points de la ferme %s?"/>																																															  
 
 		<text name="CM_dialog_addPoints_title"									text="Ajouter des points"/>
 		<text name="CM_dialog_addPoints_pointsText"								text="Points"/>
@@ -106,6 +107,10 @@ Une durée de -1 mois réinitialisera toutes les données générées pendant la
 		<text name="CM_Rules_general_maxNumberOfAnimals_title" 					text="Quantité maximum d'animaux: "/>
 		<text name="CM_Rules_general_maxNumberOfAnimals_deactivated"			text="Désactivée"/>
 		<text name="CM_Rules_general_maxNumberOfAnimals_noLimit"				text="Pas de limite"/>
+		<text name="CM_Rules_general_spyOnOtherTeams_deactivated"				text="Points invisibles"/>
+		<text name="CM_Rules_general_spyOnOtherTeams_payToSpy"					text="Payer pour espionner"/>
+		<text name="CM_Rules_general_spyOnOtherTeams_showAll"					text="Points visibles"/>
+		<text name="CM_Rules_general_spyingCost_title" 							text="Coûts d'espionnage"/>																					  
 
 		<text name="CM_Rules_visibleFarms_title"								text="Fermes:"/>
 		<text name="CM_Rules_visibleFarms_visible"								text="Visible"/>

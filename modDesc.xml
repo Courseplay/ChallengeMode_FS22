@@ -143,6 +143,10 @@ V1.1.0.0
 
 V1.1.0.1
  - correction de la synchronisation des véhicules de démarrage
+
+V1.2.0.0
+ - Ajout d'une option permettant de réduire les points si la ferme a un emprunt
+ - Ajout d'une option permettant de cacher les points des autres fermes ou alors de payer pour les espionner tant que vous restez dans le menu
 ]]>
 </fr>
     </description>
