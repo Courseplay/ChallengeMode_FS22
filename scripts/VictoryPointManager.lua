@@ -108,9 +108,9 @@ function VictoryPointManager:writeStream(streamId, connection)
 	streamWriteInt32(streamId, self.victoryGoal)
 
 	--tell client number of elements
-	streamWriteInt32(streamId, #self.additionalPoints)
+	streamWriteInt32(streamId, table.size(self.additionalPoints))
 	for farmId, points in pairs(self.additionalPoints) do
-		streamWriteInt32(streamId, #points)
+		streamWriteInt32(streamId, table.size(points))
 		for _, point in pairs(points) do
 			streamWriteInt8(streamId, farmId)
 			streamWriteInt32(streamId, point.points)
