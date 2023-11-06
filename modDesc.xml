@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="77">
-    <version>1.2.0.0</version>
+    <version>1.2.0.1</version>
 	<author>Courseplay.devTeam, tn4799</author>
 	<title>
 		<en>Challenge Mode</en>
@@ -54,6 +54,9 @@ V1.1.0.1
 V1.2.0.0
  - Added an option for decreasing points if farm has a loan
  - Added an option to hide the other farms points, or pay to spy on the points as long as you are inside the menu
+
+V1.2.0.1
+ - Fixed a bug with the synchronization of additional points
 ]]>
 </en>
 		<de><![CDATA[
@@ -101,6 +104,9 @@ V1.1.0.1
 V1.2.0.0
  - Option hinzugefügt, dass ein Hof Punkte verliert, sollte der Hof einen Kredit haben
  - Option hinzugefügt um die Punktezusammensetzung der anderen Farmen zu verstecken, oder bazahle um die Punkte zu sehen solange du im Menü bist
+
+V1.2.0.1
+ - Fehler bei der Synchronisation der zusätzlichen Punkte behoben
 ]]></de>
        <fr><![CDATA[
 Voici le Farming compétitif !
