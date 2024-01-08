@@ -69,7 +69,7 @@ function VictoryPointsUtil.getBaleAmount(farmId, maxFillLevel)
 
 			for _, abstractObject in pairs(objectStorageSpec.storedObjects) do
 				local baleObject = abstractObject.baleObject
-				if abstractObject:isa(AbstractBaleObject) and baleObject:getOwnerFarmId(farmId) == farmId then
+				if abstractObject:isa(AbstractBaleObject) and baleObject:getOwnerFarmId(farmId) == farmId and not baleObject.isMissionBale then
 					if baleFillLevels[baleObject.fillType] == nil then
 						baleFillLevels[baleObject.fillType] = 0
 					end
