@@ -61,6 +61,23 @@ function VictoryPointsUtil.getBaleAmount(farmId, maxFillLevel)
 			baleFillLevels[object.fillType] = math.min(baleFillLevels[object.fillType] + object.fillLevel, maxFillLevel)
 		end
 	end
+
+	-- add support for object storage (giants variant)
+	for _, placeable in pairs(g_currentMission.placeables) do
+		if SpecializationUtil.hasSpecialization(PlaceableObjectStorage, placeable.specializations) then
+			local objectStorageSpec = placeable.spec_objectStorage
+
+			for _, abstractObject in pairs(objectStorageSpec.storedObjects) do
+				local baleObject = abstractObject.baleObject
+				if abstractObject:isa(AbstractBaleObject) and baleObject:getOwnerFarmId(farmId) == farmId then
+					if baleFillLevels[baleObject.fillType] == nil then
+						baleFillLevels[baleObject.fillType] = 0
+					end
+					baleFillLevels[baleObject.fillType] = math.min(baleFillLevels[baleObject.fillType] + baleObject.fillLevel, maxFillLevel)
+				end
+			end
+		end
+	end
 	return baleFillLevels
 end
 
