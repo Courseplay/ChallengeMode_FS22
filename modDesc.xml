@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
-<modDesc descVersion="77">
-    <version>1.2.0.1</version>
+<modDesc descVersion="79">
+    <version>1.2.0.3</version>
 	<author>Courseplay.devTeam, tn4799</author>
 	<title>
 		<en>Challenge Mode</en>
@@ -57,6 +57,12 @@ V1.2.0.0
 
 V1.2.0.1
  - Fixed a bug with the synchronization of additional points
+
+V1.2.0.2
+ - Added support for object storage (only giants version)
+
+V1.2.0.3
+ - Fixed a bug where bales lose on the map gave double points
 ]]>
 </en>
 		<de><![CDATA[
@@ -107,6 +113,12 @@ V1.2.0.0
 
 V1.2.0.1
  - Fehler bei der Synchronisation der zusätzlichen Punkte behoben
+
+V1.2.0.2
+ - Unterstützung für Objektlager hinzugefügt (nur Giants-Version)
+
+V1.2.0.3
+ - Fehler behoben, der dazu führte, dass Ballen auf der Karte doppelte Punkte brachten
 ]]></de>
        <fr><![CDATA[
 Voici le Farming compétitif !
