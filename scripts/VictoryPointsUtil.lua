@@ -36,6 +36,24 @@ function VictoryPointsUtil.getStorageAmount(farmId, maxFillLevel)
 		end
 	end
 
+	local objectStorages = table.filter(g_currentMission.placeableSystem.placeables, function (placeable)
+        return SpecializationUtil.hasSpecialization(PlaceableObjectStorage, placeable.specializations)
+    end)
+	-- add support for object storage (giants variant)
+	for _, placeable in pairs(objectStorages) do
+        local objectStorageSpec = placeable.spec_objectStorage
+
+        for _, abstractObject in pairs(objectStorageSpec.storedObjects) do
+			local palletObject = abstractObject.palletAttributes
+			if palletObject ~= nil and palletObject.ownerFarmId == farmId then
+                if totalFillLevels[palletObject.fillType] == nil then
+                    totalFillLevels[palletObject.fillType] = 0
+                end
+                totalFillLevels[palletObject.fillType] = math.min(totalFillLevels[palletObject.fillType] + palletObject.fillLevel, maxFillLevel)
+            end
+        end
+	end
+
 	CmUtil.debug("Total storage of: %.2f", totalFillLevel )
 	return totalFillLevels
 end
@@ -53,13 +71,32 @@ function VictoryPointsUtil.getBaleAmount(farmId, maxFillLevel)
 	maxFillLevel = maxFillLevel == Rule.MAX_FILL_LEVEL_DISABLED and math.huge or maxFillLevel
 
 	local baleFillLevels = {}
-	for _, object in pairs(g_currentMission.nodeToObject) do
-		if object:isa(Bale) and object:getOwnerFarmId(farmId) == farmId and not object.isMissionBale then
-			if baleFillLevels[object.fillType] == nil then
-				baleFillLevels[object.fillType] = 0
+	for _, object in pairs(g_currentMission.itemSystem.itemsToSave) do
+		local bale = object.item
+		if bale:isa(Bale) and bale.ownerFarmId == farmId and not bale.isMissionBale then
+			if baleFillLevels[bale.fillType] == nil then
+				baleFillLevels[bale.fillType] = 0
 			end
-			baleFillLevels[object.fillType] = math.min(baleFillLevels[object.fillType] + object.fillLevel, maxFillLevel)
+			baleFillLevels[bale.fillType] = math.min(baleFillLevels[bale.fillType] + bale.fillLevel, maxFillLevel)
 		end
+	end
+
+    local objectStorages = table.filter(g_currentMission.placeableSystem.placeables, function (placeable)
+        return SpecializationUtil.hasSpecialization(PlaceableObjectStorage, placeable.specializations)
+    end)
+	-- add support for object storage (giants variant)
+	for _, placeable in pairs(objectStorages) do
+        local objectStorageSpec = placeable.spec_objectStorage
+
+        for _, abstractObject in pairs(objectStorageSpec.storedObjects) do
+			local baleObject = abstractObject.baleAttributes
+			if baleObject ~= nil and baleObject.farmId == farmId and not baleObject.isMissionBale then
+                if baleFillLevels[baleObject.fillType] == nil then
+                    baleFillLevels[baleObject.fillType] = 0
+                end
+                baleFillLevels[baleObject.fillType] = math.min(baleFillLevels[baleObject.fillType] + baleObject.fillLevel, maxFillLevel)
+            end
+        end
 	end
 	return baleFillLevels
 end

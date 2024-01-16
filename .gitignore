@@ -1,3 +1,7 @@
+# Giants Studio project files
+*.gsp
+*.gspu
+
 # Compiled Lua sources
 luac.out
 
