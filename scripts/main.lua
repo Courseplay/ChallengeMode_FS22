@@ -35,6 +35,101 @@ function ChallengeMod.new(custom_mt)
 	return self
 end
 
+function ChallengeMod.updateGameStatsXML(currentMission)
+	-- Updates the server stats.
+	if g_dedicatedServer ~= nil then
+		print("gameStatsInterval: " .. g_dedicatedServer.gameStatsInterval/1000)
+		local statsPath = g_dedicatedServer.gameStatsPath
+		local key = "Server"
+		if fileExists(statsPath) then 
+			local xmlFile = loadXMLFile("serverStatsFile", statsPath)
+			if xmlFile ~= nil and xmlFile ~= 0 then 
+				--- Farms 
+				g_victoryPointManager:update()
+				local i = 0
+				for _, farm in pairs(g_farmManager:getFarms()) do
+					if CmUtil.isValidFarm(farm.farmId, farm) then
+						local farmKey = string.format("%s.ChallengeMode.Farms.Farm(%d)", key, i)
+						setXMLInt(xmlFile, farmKey .. "#id", farm.farmId)
+						setXMLString(xmlFile, farmKey .. "#name", HTMLUtil.encodeToHTML(farm.name))
+						for _, name in pairs(FarmStats.STAT_NAMES) do 
+							setXMLString(xmlFile, farmKey .. ".Stats#" .. name, tostring(farm.stats:getTotalValue(name)))
+						end
+
+						g_victoryPointManager:updateFarmGameStats(farm.farmId, xmlFile, farmKey)
+						i = i + 1
+					end
+				end
+				-- Adding vehicles and equipment on sale.
+				local itemsOnSale = g_currentMission.vehicleSaleSystem:getItems()
+				local i = 0
+				for _, item in pairs(itemsOnSale) do
+					local sale_key = string.format("%s.ChallengeMode.VehiclesOnSale.VehicleOnSale(%d)", key, i)
+					setXMLInt(xmlFile, sale_key .. "#id", item.id)
+					setXMLInt(xmlFile, sale_key .. "#timeLeft", item.timeLeft)
+					setXMLInt(xmlFile, sale_key .. "#age", item.age)
+					setXMLInt(xmlFile, sale_key .. "#price", item.price)
+					setXMLFloat(xmlFile, sale_key .. "#damage", item.damage)
+					setXMLFloat(xmlFile, sale_key .. "#wear", item.wear)
+					setXMLFloat(xmlFile, sale_key .. "#operatingTime", item.operatingTime / 1000)
+					setXMLString(xmlFile, sale_key .. "#xmlFilename", HTMLUtil.encodeToHTML(NetworkUtil.convertToNetworkFilename(item.xmlFilename)))
+					local storeItem = g_storeManager:getItemByXMLFilename(item.xmlFilename)
+					if storeItem.imageFilename then
+						setXMLString(xmlFile, sale_key .. "#imageFilename", HTMLUtil.encodeToHTML(NetworkUtil.convertToNetworkFilename(storeItem.imageFilename)))
+					end
+					setXMLString(xmlFile, sale_key .. "#name", HTMLUtil.encodeToHTML(storeItem.name))
+					setXMLInt(xmlFile, sale_key .. "#defaultPrice", storeItem.price)
+					i = i + 1
+				end
+				-- Environment
+				if g_currentMission.environment then
+					local environment_key = string.format("%s.ChallengeMode.Environment", key)
+					setXMLString(xmlFile, environment_key .. "#season", HTMLUtil.encodeToHTML(g_i18n:formatDayInPeriod() or ""))
+					setXMLFloat(xmlFile, environment_key .. "#time", g_currentMission.environment:getEnvironmentTime() or 0)
+					setXMLInt(xmlFile, environment_key .. "#currentWeatherType", g_currentMission.environment.weather:getCurrentWeatherType() or 0)
+					--[[
+					MIXED = 3,
+					HAIL = 7,
+					SNOW = 6,
+					THUNDER = 9,
+					RAIN = 5,
+					FOG = 8,
+					CLEAR = 1,
+					WINDY = 4,
+					CLOUDY = 2
+					]]--
+					for i=0, 23 do
+						local forecast = g_currentMission.environment.weather.forecast:getHourlyForecast(i + 1)
+						setXMLInt(xmlFile, string.format("%s.Forecast.Hours.Hour(%d)#forecastType", environment_key, i), forecast.forecastType)
+						
+						local newHour = g_currentMission.environment.currentHour + i + 1
+						local dayOffset = 0
+						if newHour > 24 then 
+							dayOffset = 1
+							newHour = newHour - 24
+						end
+						local period = g_currentMission.environment:getPeriodFromDay(dayOffset)
+						local dayInPeriod = g_currentMission.environment:getDayInPeriodFromDay(dayOffset)
+						setXMLString(xmlFile, string.format("%s.Forecast.Hours.Hour(%d)#season", environment_key, i), HTMLUtil.encodeToHTML(g_i18n:formatDayInPeriod(dayInPeriod, period) ))
+						setXMLFloat(xmlFile, string.format("%s.Forecast.Hours.Hour(%d)#time", environment_key, i), newHour + g_currentMission.environment.currentMinute/100)
+					end
+					for i=0, 6 do
+						local forecast = g_currentMission.environment.weather.forecast:getDailyForecast(i + 1)
+						setXMLInt(xmlFile, string.format("%s.Forecast.Days.Day(%d)#forecastType", environment_key, i), forecast.forecastType)
+						local period = g_currentMission.environment:getPeriodFromDay(i + 1)
+						local dayInPeriod = g_currentMission.environment:getDayInPeriodFromDay(i + 1)
+						setXMLString(xmlFile, string.format("%s.Forecast.Days.Day(%d)#season", environment_key, i), HTMLUtil.encodeToHTML(g_i18n:formatDayInPeriod(dayInPeriod, period) or ""))
+						
+					end
+				end
+				saveXMLFile(xmlFile)
+				delete(xmlFile)
+			end
+		end
+	end
+end
+FSBaseMission.updateGameStatsXML = Utils.appendedFunction(FSBaseMission.updateGameStatsXML, ChallengeMod.updateGameStatsXML)
+
 function ChallengeMod:newFarmCreated(farmId)
 	self.visibleFarms[farmId] = true
 	self.spyingAllowedForFarm[farmId] = {}
